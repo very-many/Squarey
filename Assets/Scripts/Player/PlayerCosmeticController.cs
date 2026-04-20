@@ -18,7 +18,7 @@ public class PlayerCosmeticController : NetworkBehaviour
     public void PlayerCosmeticsSetup()
     {
         PlayerSprite.color = PlayerCosmetics[GetComponent<PlayerObjectController>().PlayerCosmetic];
-        Debug.Log("Set color to " + PlayerSprite.color);
+        //Debug.Log("Set color to " + PlayerSprite.color);
     }
 
     private void Update()

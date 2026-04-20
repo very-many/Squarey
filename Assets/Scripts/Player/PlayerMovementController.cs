@@ -36,6 +36,8 @@ public class PlayerMovementController : NetworkBehaviour
     [Header("Input")]
     public Vector2 movement;
 
+    private bool requestedTeleport = false;
+
 
     void Start()
     {
@@ -46,24 +48,45 @@ public class PlayerMovementController : NetworkBehaviour
 
     void Update()
     {
-        if (SceneManager.GetActiveScene().name == "Game")
-        {
-            if (PlayerObject.activeSelf == false && isOwned)
-            {
-                SetPosition();
-                PlayerObject.SetActive(true);
-            }
+        if (SceneManager.GetActiveScene().name != "Game")
+            return;
 
-            if (isOwned)
-            {
-                Tick();
-            }
+        PlayerObject.SetActive(true);
+
+        if (isOwned && !requestedTeleport)
+        {
+            if (!NetworkClient.isConnected || !NetworkClient.ready)
+                return;
+
+            Debug.Log("Requesting teleport");
+            requestedTeleport = true;
+
+            Vector2 pos = new Vector2(Random.Range(-7, 7), 10);
+            CmdClientChosenTeleport(pos);
+        }
+
+        if (isOwned)
+        {
+            Tick();
         }
     }
 
-    public void SetPosition()
+    [Command]
+    private void CmdClientChosenTeleport(Vector2 pos)
     {
-        transform.position = new Vector2(Random.Range(-7, 7), 10);
+        transform.position = pos;
+        rb.linearVelocity = Vector2.zero;
+        rb.position = pos;
+
+        RpcApplyTeleport(pos);
+    }
+
+    [ClientRpc]
+    private void RpcApplyTeleport(Vector2 pos)
+    {
+        transform.position = pos;
+        rb.linearVelocity = Vector2.zero;
+        rb.position = pos;
     }
 
     private void Tick()
@@ -77,8 +100,6 @@ public class PlayerMovementController : NetworkBehaviour
         {
             wallJumped = false;
         }
-
-        rb.gravityScale = 3;
 
         if (coll.onWall && !coll.onGround && x != 0)
         {
@@ -166,5 +187,4 @@ public class PlayerMovementController : NetworkBehaviour
         yield return new WaitForSeconds(time);
         canMove = true;
     }
-
 }

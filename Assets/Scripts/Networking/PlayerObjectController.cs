@@ -4,6 +4,8 @@ using Steamworks;
 
 public class PlayerObjectController : NetworkBehaviour
 {
+    private const string PrefKeyCosmeticIndex = "CurrentCosmeticIndex";
+
     //Player Data
     [SyncVar] public int ConnectionID;
     [SyncVar] public int PlayerID;
@@ -68,6 +70,9 @@ public class PlayerObjectController : NetworkBehaviour
         gameObject.name = "LocalGamePlayer";
         LobbyController.Instance.FindLocalPlayer();
         LobbyController.Instance.UpdateLobbyName();
+
+        int cosmeticIndex = PlayerPrefs.GetInt(PrefKeyCosmeticIndex, 0);
+        CmdUpdatePlayerCosmetic(cosmeticIndex);
     }
 
     public override void OnStartClient()
