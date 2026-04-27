@@ -132,6 +132,21 @@ public class PlayerMovementController : NetworkBehaviour
             WallJump();
     }
 
+    public void OnCast_1(InputAction.CallbackContext context)
+    {
+
+    }
+
+    public void OnCast_2(InputAction.CallbackContext context)
+    {
+
+    }
+
+    public void OnCast_3(InputAction.CallbackContext context)
+    {
+
+    }
+
     private void WallJump()
     {
         StopCoroutine(DisableMovement(0));
