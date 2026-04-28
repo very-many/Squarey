@@ -25,6 +25,8 @@ public class BetterJumping : NetworkBehaviour
 
     void Update()
     {
+        if (!isOwned)
+            return;
         if (rb.linearVelocity.y < 0)
         {
             rb.linearVelocity += (FallMultiplier - 1) * Physics2D.gravity.y * Time.deltaTime * Vector2.up;
