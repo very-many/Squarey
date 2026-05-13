@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 
 public class DragAndDropManipulator : PointerManipulator
 {
+    private VisualElement _dummyIcon;
     // Write a constructor to set target and store a reference to the
     // root of the visual tree.
     public DragAndDropManipulator(VisualElement target)
@@ -44,31 +45,39 @@ public class DragAndDropManipulator : PointerManipulator
     // makes target capture the pointer, and denotes that a drag is now in progress.
     private void PointerDownHandler(PointerDownEvent evt)
     {
-        // Use local transform position
-        targetStartPosition = target.transform.position;
-        pointerStartPosition = evt.position;
         target.CapturePointer(evt.pointerId);
+        pointerStartPosition = evt.position;
         enabled = true;
 
-        // Bring to front so it doesn't go "under" other slots while dragging
-        target.BringToFront();
+        //create copy
+        _dummyIcon = new VisualElement();
+        foreach (var className in target.GetClasses())
+        {
+            _dummyIcon.AddToClassList(className);
+        }
+        _dummyIcon.style.backgroundImage = target.resolvedStyle.backgroundImage;
+        _dummyIcon.style.unityBackgroundImageTintColor = target.resolvedStyle.unityBackgroundImageTintColor;
+        _dummyIcon.style.position = Position.Absolute;
+
+        //align copy
+        _dummyIcon.style.left = evt.position.x - (target.resolvedStyle.width / 2);
+        _dummyIcon.style.top = evt.position.y - (target.resolvedStyle.height / 2);
+
+        // add to drag layer
+        VisualElement dragLayer = target.panel.visualTree.Q("drag-layer");
+        dragLayer.Add(_dummyIcon);
+
+        // hide originaö
+        target.style.visibility = Visibility.Hidden;
     }
 
-    // This method checks whether a drag is in progress and whether target has captured the pointer.
-    // If both are true, calculates a new position for target within the bounds of the window.
     private void PointerMoveHandler(PointerMoveEvent evt)
     {
-        if (enabled && target.HasPointerCapture(evt.pointerId))
+        if (enabled && target.HasPointerCapture(evt.pointerId) && _dummyIcon != null)
         {
-            // Calculate how far the mouse has moved from the start point
-            Vector3 pointerDelta = evt.position - pointerStartPosition;
-
-            // Apply that delta directly to the starting position
-            // We remove the "Clamping" logic for now to ensure it moves freely
-            target.transform.position = new Vector3(
-                targetStartPosition.x + pointerDelta.x,
-                targetStartPosition.y + pointerDelta.y,
-                0);
+            // Move the dummy directly to the mouse
+            _dummyIcon.style.left = evt.position.x - (_dummyIcon.resolvedStyle.width / 2);
+            _dummyIcon.style.top = evt.position.y - (_dummyIcon.resolvedStyle.height / 2);
         }
     }
 
@@ -82,30 +91,22 @@ public class DragAndDropManipulator : PointerManipulator
         }
     }
 
-    // This method checks whether a drag is in progress. If true, queries the root
-    // of the visual tree to find all slots, decides which slot is the closest one
-    // that overlaps target, and sets the position of target so that it rests on top
-    // of that slot. Sets the position of target back to its original position
-    // if there is no overlapping slot.
     private void PointerCaptureOutHandler(PointerCaptureOutEvent evt)
     {
         if (enabled)
         {
-            // FIX 1: Look at the panel's visualTree (the entire window) 
-            // instead of just the immediate parent.
             VisualElement rootVisualTree = target.panel.visualTree;
-
-            UQueryBuilder<VisualElement> allSlots =
-                rootVisualTree.Query<VisualElement>(className: "slot");
+            UQueryBuilder<VisualElement> allSlots = rootVisualTree.Query<VisualElement>(className: "slot");
 
             VisualElement closestOverlappingSlot = null;
             float bestDistance = float.MaxValue;
 
             foreach (var slot in allSlots.ToList())
             {
-                if (target.worldBound.Overlaps(slot.worldBound))
+                // IMPORTANT: Check overlap against the DUMMY, as the target is hidden/static
+                if (_dummyIcon.worldBound.Overlaps(slot.worldBound))
                 {
-                    float dist = Vector2.Distance(target.worldBound.center, slot.worldBound.center);
+                    float dist = Vector2.Distance(_dummyIcon.worldBound.center, slot.worldBound.center);
                     if (dist < bestDistance)
                     {
                         bestDistance = dist;
@@ -114,47 +115,20 @@ public class DragAndDropManipulator : PointerManipulator
                 }
             }
 
-            // FIX 2: Handle the move or the reset
-            if (closestOverlappingSlot != null)
+            if (closestOverlappingSlot != null && closestOverlappingSlot.childCount == 0)
             {
-                // Only move if the slot is empty (Noita style)
-                if (closestOverlappingSlot.childCount == 0)
-                {
-                    closestOverlappingSlot.Add(target);
-                }
+                closestOverlappingSlot.Add(target);
             }
 
-            // FIX 3: Reset local position to zero.
-            // Because we use 'Add(target)', the spell is now a child of the slot.
-            // Setting position to Zero centers it perfectly in the new slot.
+            // Cleanup
+            _dummyIcon?.RemoveFromHierarchy();
+            _dummyIcon = null;
+
+            target.style.visibility = Visibility.Visible;
             target.transform.position = Vector3.zero;
 
             enabled = false;
         }
-    }
-
-    private bool OverlapsTarget(VisualElement slot)
-    {
-        return target.worldBound.Overlaps(slot.worldBound);
-    }
-
-    private VisualElement FindClosestSlot(UQueryBuilder<VisualElement> slots)
-    {
-        List<VisualElement> slotsList = slots.ToList();
-        float bestDistanceSq = float.MaxValue;
-        VisualElement closest = null;
-        foreach (VisualElement slot in slotsList)
-        {
-            Vector3 displacement =
-                RootSpaceOfSlot(slot) - target.transform.position;
-            float distanceSq = displacement.sqrMagnitude;
-            if (distanceSq < bestDistanceSq)
-            {
-                bestDistanceSq = distanceSq;
-                closest = slot;
-            }
-        }
-        return closest;
     }
 
     private Vector3 RootSpaceOfSlot(VisualElement slot)

@@ -1,33 +1,44 @@
+using Mono.Cecil;
+using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class StaffDragAndDropWindow : EditorWindow
+public class StaffDragAndDrop : MonoBehaviour
 {
-    [MenuItem("Window/UI Toolkit/Staff Editor")]
-    public static void ShowExample() => GetWindow<StaffDragAndDropWindow>("Staff Editor");
+    public StyleSheet styleSheet;
+    public MultiStaffObject staff;
 
-    public void CreateGUI()
+    private VisualElement _root;
+
+    public void Start()
     {
-        VisualElement root = rootVisualElement;
+        InitializeUI();
 
-        // Load Styles
+        // LoadStaff();
+       
+    }
+
+    private void InitializeUI()
+    {
+        _root = GetComponent<UIDocument>().rootVisualElement;
+
         var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/Staff/DragAndDrop/StaffDragAndDrop.uss");
-        if (styleSheet != null) root.styleSheets.Add(styleSheet);
+        if (styleSheet != null) _root.styleSheets.Add(styleSheet);
 
-        // Container for our 4 rows
         VisualElement mainContainer = new VisualElement() { name = "slots-container" };
-        root.Add(mainContainer);
+        _root.Add(mainContainer);
 
-        // Create 4 Rows
-        for (int i = 0; i < 4; i++)
+        // Create 5 Rows (3 Staff, 2 for storage)
+        for (int i = 0; i < 5; i++)
         {
             VisualElement row = new VisualElement();
             row.AddToClassList("staff-row");
 
             // Row Label (The "Staff" Image or Icon)
             VisualElement staffIcon = new VisualElement();
-            staffIcon.AddToClassList("staff-icon");
+            staffIcon.AddToClassList(i < 3 ? "staff-icon" : "storage-icon");
             staffIcon.Add(new Label(i < 3 ? $"Staff {i + 1}" : "Storage"));
             row.Add(staffIcon);
 
@@ -36,7 +47,7 @@ public class StaffDragAndDropWindow : EditorWindow
             slotContainer.AddToClassList("slot-container");
 
             // Create some empty slots for each row
-            for (int s = 0; s < 5; s++)
+            for (int s = 0; s < 10; s++)
             {
                 VisualElement slot = new VisualElement();
                 slot.AddToClassList("slot");
@@ -47,35 +58,81 @@ public class StaffDragAndDropWindow : EditorWindow
             mainContainer.Add(row);
         }
 
+        VisualElement spellTrashCan = new VisualElement();
+        spellTrashCan.AddToClassList("spellTrashCan-icon");
+        _root.Add(spellTrashCan);
+
         // Spawn Button for Spells
-        Button spawnButton = new Button(() => SpawnSpell()) { text = "Add Spell to Storage" };
-        root.Add(spawnButton);
+        Button spawnButton = new Button(() => SpawnRandomSpell()) { text = "Add Spell to Storage" };
+        _root.Add(spawnButton);
+
+        CreateDragLayer();
     }
 
-    void SpawnSpell()
+    private void CreateDragLayer()
     {
-        // Find the 4th row (Storage)
-        var rows = rootVisualElement.Query(className: "slot-container").ToList();
+        VisualElement dragLayer = new VisualElement();
+        dragLayer.name = "drag-layer";
+        dragLayer.style.position = Position.Absolute;
+        dragLayer.style.left = 0;
+        dragLayer.style.top = 0;
+        dragLayer.style.width = Length.Percent(100);
+        dragLayer.style.height = Length.Percent(100);
+        dragLayer.pickingMode = PickingMode.Ignore;
+
+        _root.Add(dragLayer);
+    }
+
+    private void LoadStaff()
+    {
+        throw new System.NotImplementedException();
+
+        //move the spells from the spell object into the UI
+
+    }
+
+    void SpawnRandomSpell()
+    {
+        var rows = _root.Query(className: "slot-container").ToList();
         VisualElement storage = rows[3];
+        VisualElement storage2 = rows[4];
+
+        var allStorageSlots = rows[3].Children().Concat(rows[4].Children()).ToList();
+
+        Spell spell = new Firebolt();
 
         // Find the first empty slot in storage
-        foreach (var slot in storage.Children())
+        foreach (var slot in allStorageSlots)
         {
             if (slot.childCount == 0)
             {
-                VisualElement spell = new VisualElement();
-                spell.AddToClassList("object");
-
-                // Give it a random color to represent different spells
-                spell.style.backgroundColor = new StyleColor(Random.ColorHSV());
+                VisualElement draggableSpell = new VisualElement();
+                draggableSpell.AddToClassList("object");
 
                 // Attach the manipulator
-                spell.AddManipulator(new DragAndDropManipulator(spell));
+                draggableSpell.AddManipulator(new DragAndDropManipulator(draggableSpell));
 
-                slot.Add(spell);
-                break;
+                // Add link to Spell to the userData of the VisualElement
+                draggableSpell.userData = spell;
+
+                // Add image from spell object
+                Sprite spellSprite = Resources.Load<Sprite>(spell.spellImagePath);
+                draggableSpell.style.backgroundImage = new StyleBackground(spellSprite);
+                draggableSpell.style.unityBackgroundScaleMode = ScaleMode.ScaleToFit;
+
+                slot.Add(draggableSpell);
+                return;
             }
         }
+    }
+
+    private void OnDisable()
+    {
+        //write staffs to your player staffs
+
+        //write storage rows to your storage
+
+        //clean up
     }
 }
 

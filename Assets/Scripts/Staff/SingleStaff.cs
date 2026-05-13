@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class SingleStaff : MonoBehaviour
 {
+    public MultiStaffObject ParentStaffObject;
     public List<Spell> SpellList;
     public float spellCoolDownTimer = 0;
 
@@ -20,9 +21,9 @@ public class SingleStaff : MonoBehaviour
         foreach (Spell spell in SpellList)
         {
             spell.CastSpell(staff, targetPosition, targetRotation);
-            cooldownTime = cooldownTime + spell.spellRecoveryTime;
+            cooldownTime = cooldownTime + (spell.spellRecoveryTime/ParentStaffObject.Recovery);
 
-            if (false) { break; } //TODO if the staff isn't being cast anymore; break
+            if (false || cooldownTime > 10) { break; } //TODO if the staff isn't being cast anymore; break
         }
         spellCoolDownTimer = cooldownTime;
     }

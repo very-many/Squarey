@@ -14,6 +14,27 @@
     align-items: center;
     margin-right: 10px;
     border-radius: 5px;
+    background-image: resource("Assets/ImageAssetImports(Josa)/Wizard Staff.png")
+}
+
+.storage-icon{
+    width: 80px;
+    height: 60px;
+    background-color: #444;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+.spellTrashCan-icon {
+    width: 500px;
+    height: 60px;
+    background-color: #444;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    border-radius: 5px;
 }
 
 .slot-container {
@@ -35,9 +56,12 @@
 }
 
 .object {
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
     border-radius: 5px;
     border-width: 2px;
     border-color: white;
+    background-color: #444;
+    position: relative;
+    background-image: resource("Assets/ImageAssetImports(Josa)/Sprite_MissingNo.png") !important
 }
