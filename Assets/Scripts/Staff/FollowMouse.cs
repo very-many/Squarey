@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class DirectStaff : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class DirectStaff : MonoBehaviour
     public bool onlinePlayer = false;
     public float intensity = 1f;
     public float speed = 0.5f;
+    public Quaternion quaternionAngle;
 
     // Update is called once per frame
     void Update()
@@ -32,8 +34,9 @@ public class DirectStaff : MonoBehaviour
 
         float angle = Mathf.Atan2(offset.y, offset.x) * Mathf.Rad2Deg;
         angle = (angle -  120) % 360;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
-        
+        quaternionAngle = Quaternion.Euler(0, 0, angle);
+        transform.rotation = quaternionAngle;
+
 
         /* Get a vector pointing from initialPosition to the target. Vector shouldn't be longer than maxDistance. */
         var originToMouse = mouseWorldCoord - player.transform.position;

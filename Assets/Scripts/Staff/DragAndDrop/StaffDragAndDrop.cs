@@ -1,4 +1,6 @@
 using Mono.Cecil;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -8,7 +10,7 @@ using UnityEngine.UIElements;
 public class StaffDragAndDrop : MonoBehaviour
 {
     public StyleSheet styleSheet;
-    public MultiStaffObject staff;
+    public MultiStaffObject staffMulti;
 
     private VisualElement _root;
 
@@ -16,7 +18,7 @@ public class StaffDragAndDrop : MonoBehaviour
     {
         InitializeUI();
 
-        // LoadStaff();
+        LoadStaff();
        
     }
 
@@ -39,7 +41,7 @@ public class StaffDragAndDrop : MonoBehaviour
             // Row Label (The "Staff" Image or Icon)
             VisualElement staffIcon = new VisualElement();
             staffIcon.AddToClassList(i < 3 ? "staff-icon" : "storage-icon");
-            staffIcon.Add(new Label(i < 3 ? $"Staff {i + 1}" : "Storage"));
+            staffIcon.Add(new Label(i < 3 ? $"Staff {i + 1}" : "Storage")); //!! The names in this label are relevant for the code in OnDisable
             row.Add(staffIcon);
 
             // The actual drop zone for this row
@@ -58,15 +60,30 @@ public class StaffDragAndDrop : MonoBehaviour
             mainContainer.Add(row);
         }
 
+        VisualElement finalRow = new VisualElement();
+        finalRow.AddToClassList("staff-row");
+        mainContainer.Add(finalRow);
+
         VisualElement spellTrashCan = new VisualElement();
         spellTrashCan.AddToClassList("spellTrashCan-icon");
-        _root.Add(spellTrashCan);
+        finalRow.Add(spellTrashCan);
 
-        // Spawn Button for Spells
-        Button spawnButton = new Button(() => SpawnRandomSpell()) { text = "Add Spell to Storage" };
-        _root.Add(spawnButton);
+        Button acceptChangesButton = new Button(() => AcceptChanges()) { text = "Done!" };
+        acceptChangesButton.AddToClassList("acceptChanges-button");
+        finalRow.Add(acceptChangesButton);
+
+        if (staffMulti == null)
+        {
+            Button spawnButton = new Button(() => SpawnRandomSpell()) { text = "Add Spell to Storage" };
+            mainContainer.Add(spawnButton);
+        }
 
         CreateDragLayer();
+    }
+
+    private object AcceptChanges()
+    {
+        throw new NotImplementedException();
     }
 
     private void CreateDragLayer()
@@ -85,11 +102,32 @@ public class StaffDragAndDrop : MonoBehaviour
 
     private void LoadStaff()
     {
-        throw new System.NotImplementedException();
+        List<VisualElement> rows = _root.Query<VisualElement>(className: "staff-row").ToList();
 
-        //move the spells from the spell object into the UI
+        foreach (VisualElement row in rows)
+        {
+            if (row.Q<Label>().text == "Staff 1")
+            {
+                LoadSpellsToUI(row, staffMulti.Staff_1.SpellList);
+            }
+            if (row.Q<Label>().text == "Staff 2")
+            {
+                LoadSpellsToUI(row, staffMulti.Staff_2.SpellList);
+            }
+            if (row.Q<Label>().text == "Staff 3")
+            {
+                LoadSpellsToUI(row, staffMulti.Staff_3.SpellList);
+            }
+            if (row.Q<Label>().text == "Storage")
+            {
+                LoadSpellsToUI(row, staffMulti.Spellstorage);
+            }
+
+        }
 
     }
+
+
 
     void SpawnRandomSpell()
     {
@@ -99,30 +137,16 @@ public class StaffDragAndDrop : MonoBehaviour
 
         var allStorageSlots = rows[3].Children().Concat(rows[4].Children()).ToList();
 
-        Spell spell = new Firebolt();
+        SpellLibrary spellLibrary = new SpellLibrary();
+
+        Spell spell = spellLibrary.RandomSpell();
 
         // Find the first empty slot in storage
         foreach (var slot in allStorageSlots)
         {
             if (slot.childCount == 0)
             {
-                VisualElement draggableSpell = new VisualElement();
-                draggableSpell.AddToClassList("object");
-
-                // Attach the manipulator
-                draggableSpell.AddManipulator(new DragAndDropManipulator(draggableSpell));
-
-                // Add link to Spell to the userData of the VisualElement
-                draggableSpell.userData = spell;
-
-                Debug.Log($"Attempting to load: {spell.spellImagePath}");
-
-                // Add image from spell object
-                Sprite spellSprite = Resources.Load<Sprite>(spell.spellImagePath);
-                draggableSpell.style.backgroundImage = new StyleBackground(spellSprite);
-                draggableSpell.style.unityBackgroundScaleMode = ScaleMode.ScaleToFit;
-
-                slot.Add(draggableSpell);
+                AddSpellToSlot(slot, spell);
                 return;
             }
         }
@@ -130,11 +154,89 @@ public class StaffDragAndDrop : MonoBehaviour
 
     private void OnDisable()
     {
-        //write staffs to your player staffs
 
-        //write storage rows to your storage
+        //parse the UI and move the spells from the UI into the staff object
+        List<VisualElement> rows = _root.Query<VisualElement>(className: "staff-row").ToList();
 
-        //clean up
+        foreach (VisualElement row in rows) {
+            if (row.Q<Label>().text == "Staff 1")
+            {
+                WriteSpellsToStaff(row, staffMulti.Staff_1.SpellList);
+            }
+            if (row.Q<Label>().text == "Staff 2")
+            {
+                WriteSpellsToStaff(row, staffMulti.Staff_2.SpellList);
+            }
+            if (row.Q<Label>().text == "Staff 3")
+            {
+                WriteSpellsToStaff(row, staffMulti.Staff_3.SpellList);
+            }
+            if (row.Q<Label>().text == "Storage")
+            {
+                WriteSpellsToStaff(row, staffMulti.Spellstorage);
+            }
+
+        }
+    }
+
+    private void WriteSpellsToStaff(VisualElement staffRow, List<Spell> spellList)
+    {
+        List<VisualElement> slots = staffRow.Query<VisualElement>(className: "slot").ToList();
+        foreach (VisualElement slot in slots)
+        {
+            if (slot.childCount > 0)
+            {
+                VisualElement spellElement = slot.Children().First();
+                Spell spell = spellElement.userData as Spell;
+                if (spell != null)
+                {
+                    spellList.Add(spell);
+                }
+            }
+        }
+    }
+
+    private void LoadSpellsToUI(VisualElement row, List<Spell> spellList)
+    {
+        List<VisualElement> slots = row.Query<VisualElement>(className: "slot").ToList();
+
+        int slotIndex = 0;
+
+        foreach (Spell spell in spellList)
+        {
+            if (slotIndex >= slots.Count)
+            {
+                Debug.LogWarning($"Not enough slots in row to fit all {spellList.Count} spells!");
+                break;
+            }
+
+            VisualElement targetSlot = slots[slotIndex];
+
+            AddSpellToSlot(targetSlot, spell);
+
+            slotIndex++;
+        }
+    }
+
+    private void AddSpellToSlot(VisualElement slot, Spell spell)
+    {
+        VisualElement draggableSpell = new VisualElement();
+        draggableSpell.AddToClassList("draggable-spell");
+
+        // Attach the manipulator
+        draggableSpell.AddManipulator(new DragAndDropManipulator(draggableSpell));
+
+        // Add link to Spell to the userData of the VisualElement
+        draggableSpell.userData = spell;
+
+        Debug.Log($"Attempting to load: {spell.spellImagePath}");
+
+        // Add image from spell object
+        Sprite spellSprite = Resources.Load<Sprite>(spell.spellImagePath);
+        draggableSpell.style.backgroundImage = new StyleBackground(spellSprite);
+        draggableSpell.style.unityBackgroundScaleMode = ScaleMode.ScaleToFit;
+
+        slot.Add(draggableSpell);
     }
 }
 

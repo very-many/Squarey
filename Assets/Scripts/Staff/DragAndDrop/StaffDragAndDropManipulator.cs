@@ -98,6 +98,7 @@ public class DragAndDropManipulator : PointerManipulator
         {
             VisualElement rootVisualTree = target.panel.visualTree;
             UQueryBuilder<VisualElement> allSlots = rootVisualTree.Query<VisualElement>(className: "slot");
+            UQueryBuilder<VisualElement> trash = rootVisualTree.Query<VisualElement>(className: "spellTrashCan-icon");
 
             VisualElement closestOverlappingSlot = null;
             float bestDistance = float.MaxValue;
@@ -116,20 +117,33 @@ public class DragAndDropManipulator : PointerManipulator
                 }
             }
 
+            foreach (var trashCan in trash.ToList())
+            {
+                if (_dummyIcon.worldBound.Overlaps(trashCan.worldBound))
+                {
+                    trashCan.Add(target);
+                    PointerCaptureOutHandlerCleanup();
+                    target.style.visibility = Visibility.Hidden;
+                    return;
+                }
+            }
+
             if (closestOverlappingSlot != null && closestOverlappingSlot.childCount == 0)
             {
                 closestOverlappingSlot.Add(target);
             }
-
-            // Cleanup
-            _dummyIcon?.RemoveFromHierarchy();
-            _dummyIcon = null;
-
-            target.style.visibility = Visibility.Visible;
-            target.transform.position = Vector3.zero;
-
-            enabled = false;
+            PointerCaptureOutHandlerCleanup();
         }
+    }
+
+    private void PointerCaptureOutHandlerCleanup()
+    {
+        // Cleanup
+        _dummyIcon?.RemoveFromHierarchy();
+        _dummyIcon = null;
+        target.style.visibility = Visibility.Visible;
+        target.transform.position = Vector3.zero;
+        enabled = false;
     }
 }
 

@@ -10,7 +10,7 @@ public class Firebolt : Spell
     float Spell.spellCastTime => fireBoltCastTime;
     string Spell.spellImagePath => "Spells/Firebolt";
 
-    public void CastSpell(MultiStaffObject staff, Vector3 targetPosition, Quaternion targetRotation)
+    public void CastSpell(MultiStaffObject statStaffMulti, Vector3 targetPosition, Quaternion targetRotation)
     {
         throw new System.NotImplementedException();
     }
