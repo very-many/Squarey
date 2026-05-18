@@ -1,2 +1,18 @@
 fileFormatVersion: 2
 guid: b8925714e4c1e104484b2b8e7e96695c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - LobbyNameText: {instanceID: 0}
+  - PlayerListViewContent: {instanceID: 0}
+  - PlayerListItemPrefab: {fileID: 1741083354205497195, guid: 55c05d56fca4df24f8e7558e4e99d4ae, type: 3}
+  - LocalPlayerObject: {instanceID: 0}
+  - LocalPlayerController: {instanceID: 0}
+  - StartGameButton: {instanceID: 0}
+  - ReadyButtonText: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

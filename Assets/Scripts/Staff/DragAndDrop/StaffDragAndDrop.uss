@@ -1,0 +1,80 @@
+.staff-row {
+    flex-direction: row;
+    background-color: rgba(0,0,0,0.2);
+    margin: 5px;
+    padding: 10px;
+    align-items: center;
+}
+
+.staff-icon {
+    width: 80px;
+    height: 60px;
+    color: transparent;
+    background-color: #444;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    border-radius: 5px;
+    background-image: resource("Assets/ImageAssetImports(Josa)/Wizard Staff.png")
+}
+
+.storage-icon{
+    width: 80px;
+    height: 60px;
+    background-color: #444;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    border-radius: 5px;
+    color: transparent;
+    background-image: resource("Assets/Resources/Spellstoring Chest.png")
+}
+
+.spellTrashCan-icon {
+    width: 500px;
+    height: 60px;
+    background-image: resource("Assets/Resources/Trash-void.png");
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+.acceptChanges-button {
+    width: 500px;
+    height: 60px;
+    background-color: green;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+.slot-container {
+    flex-direction: row;
+    flex-grow: 1;
+}
+
+.slot {
+    width: 60px;
+    height: 60px;
+    margin: 5px;
+    background-color: #222;
+    border-width: 2px;
+    border-color: #555;
+    justify-content: center;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.draggable-spell {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    border-width: 2px;
+    border-color: white;
+    background-color: #444;
+    position: relative;
+    background-image: resource("Assets/Resources/Sprite_MissingNo.png") !important
+}
