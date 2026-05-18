@@ -11,6 +11,7 @@ public class DirectStaff : MonoBehaviour
     public float speed = 0.5f;
     public Quaternion quaternionAngle;
 
+
     // Update is called once per frame
     void Update()
     {
@@ -26,11 +27,7 @@ public class DirectStaff : MonoBehaviour
 
     private void FollowMouse()
     {
-        Camera camera = Camera.main;
-        /* Get the mouse position in world spaaace rather than screen space. */
-        var mouseWorldCoord = camera.ScreenPointToRay(Mouse.current.position.ReadValue()).origin;
-
-        Vector2 offset = new Vector2(mouseWorldCoord.x - this.transform.position.x, mouseWorldCoord.y - this.transform.position.y);
+        Vector2 offset = new Vector2(Input.mousePosition.x - this.transform.position.x, Input.mousePosition.y - this.transform.position.y);
 
         float angle = Mathf.Atan2(offset.y, offset.x) * Mathf.Rad2Deg;
         angle = (angle -  120) % 360;
@@ -39,7 +36,7 @@ public class DirectStaff : MonoBehaviour
 
 
         /* Get a vector pointing from initialPosition to the target. Vector shouldn't be longer than maxDistance. */
-        var originToMouse = mouseWorldCoord - player.transform.position;
+        var originToMouse = Input.mousePosition - player.transform.position;
         originToMouse = Vector3.ClampMagnitude(originToMouse, intensity);
 
         /* Linearly interpolate from current position to mouse's position. */

@@ -793,6 +793,8 @@ GameObject:
   - component: {fileID: 3327559430433585903}
   - component: {fileID: 8140610524751975026}
   - component: {fileID: 3890450645484997893}
+  - component: {fileID: 1440856973706387701}
+  - component: {fileID: 3688680632892157790}
   m_Layer: 3
   m_Name: PlayerObject
   m_TagString: Untagged
@@ -1113,6 +1115,18 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 9ea365e4-5db5-4c5c-91bc-f63d475b2b54
     m_ActionName: 'Player/Fire[/Mouse/leftButton]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 078c38da-21cf-4691-b33e-24ba907ce347
+    m_ActionName: 'Player/Cast_1[/Mouse/leftButton]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7279ce89-6137-489e-a787-b1f1b4b6b402
+    m_ActionName: 'Player/Cast_2[/Mouse/rightButton]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 73161980-15d9-4065-b677-a6737a6d0480
+    m_ActionName: 'Player/Cast_3[/Keyboard/shift]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -1176,3 +1190,32 @@ MonoBehaviour:
   maxHealth: 100
   currentHealth: 0
   healthBar: {fileID: 9160002307464732421}
+--- !u!114 &1440856973706387701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7407786158499650943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb4d2cf2609a5b74e99e264c06e68f37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MultiStaffObject
+  MagicPower: 100
+  Recovery: 1
+  ProjectileSize: 1
+  ProjectileSpeed: 1
+--- !u!114 &3688680632892157790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7407786158499650943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dcd99b74683d59488ad17c66ab254f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  player: {fileID: 7407786158499650943}

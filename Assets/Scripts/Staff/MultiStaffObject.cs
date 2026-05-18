@@ -1,10 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class MultiStaffObject
-{
-    public int MagicPower = 100;
+public class MultiStaffObject : MonoBehaviour {
+
+    public GameObject player;
+    public Quaternion castAngle;
+    public Vector2 castPosition;
+    public Vector2 targetPosition;
+    public bool isCasting = false;
+
+    public float MagicPower = 100;
     public float Recovery = 1f;
     public float ProjectileSize = 1f;
     public float ProjectileSpeed = 1f;
@@ -24,10 +32,36 @@ public class MultiStaffObject
     }
 
     //TODO needs a connection to the player and to use the players Update Function
-    public void FrameTicUpdate()
+    public void Update()
     {
         Staff_1.FrameTicUpdate();
         Staff_2.FrameTicUpdate();
-        Staff_2.FrameTicUpdate();
+        Staff_3.FrameTicUpdate();
+    }
+
+    public void OnCast_1(InputAction.CallbackContext context)
+    {
+        if (isCasting) { return; }
+        isCasting = true;
+        Staff_1.CastSpells(this, context, Input.mousePosition, castAngle);
+    }
+
+    public void OnCast_2(InputAction.CallbackContext context)
+    {
+        if (isCasting) { return; }
+        isCasting = true;
+        Staff_2.CastSpells(this, context, Input.mousePosition, castAngle);
+    }
+
+    public void OnCast_3(InputAction.CallbackContext context)
+    {
+        if (isCasting) { return; }
+        isCasting = true;
+        Staff_3.CastSpells(this, context, Input.mousePosition, castAngle);
+    }
+
+    public void FinishCast()
+    {
+        isCasting = false;
     }
 }

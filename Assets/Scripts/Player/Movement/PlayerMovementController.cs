@@ -37,11 +37,6 @@ public class PlayerMovementController : NetworkBehaviour
     [Header("Input")]
     public Vector2 movement;
 
-    [Space]
-    [Header("Staff")]
-    MultiStaffObject staffMulti;
-    DirectStaff directStaff;
-
     private bool requestedTeleport = false;
 
 
@@ -50,8 +45,6 @@ public class PlayerMovementController : NetworkBehaviour
         coll = GetComponent<PlayerCollisionController>();
         rb = GetComponent<Rigidbody2D>();
         PlayerObject.SetActive(false);
-
-        //gimme Staff :3
     }
 
     void Update()
@@ -77,8 +70,6 @@ public class PlayerMovementController : NetworkBehaviour
         {
             Tick();
         }
-
-        staffMulti.FrameTicUpdate();
     }
 
     [Command]
@@ -140,21 +131,6 @@ public class PlayerMovementController : NetworkBehaviour
             Jump(Vector2.up);
         else if (coll.onWall)
             WallJump();
-    }
-
-    public void OnCast_1(InputAction.CallbackContext context)
-    {
-        staffMulti.Staff_1.CastSpells(staffMulti, Input.mousePosition, directStaff.quaternionAngle);
-    }
-
-    public void OnCast_2(InputAction.CallbackContext context)
-    {
-        staffMulti.Staff_2.CastSpells(staffMulti, Input.mousePosition, directStaff.quaternionAngle);
-    }
-
-    public void OnCast_3(InputAction.CallbackContext context)
-    {
-        staffMulti.Staff_3.CastSpells(staffMulti, Input.mousePosition, directStaff.quaternionAngle);
     }
 
     private void WallJump()

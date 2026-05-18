@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class Health : NetworkBehaviour
 {
-    [SerializeField] private int maxHealth = 100;
+    [SerializeField] public int maxHealth = 100;
     [SyncVar(hook = nameof(OnHealthChanged))]
-    [SerializeField] private int currentHealth;
+    [SerializeField] public int currentHealth;
 
 
     [SerializeField] private HealthBar healthBar;
