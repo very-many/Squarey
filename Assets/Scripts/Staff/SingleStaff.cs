@@ -11,7 +11,8 @@ public class SingleStaff
     public MultiStaffObject ParentStaffMulti;
     public List<Spell> SpellList;
     public float spellCoolDownTimer = 0;
-    public float spellCastTimer = 0;
+
+    private bool isCasting = false;
 
     public SingleStaff(MultiStaffObject parentStaffMulti, List<Spell>? spellList)
     {
@@ -23,7 +24,7 @@ public class SingleStaff
         }
     }
 
-    public async Task CastSpells(MultiStaffObject staffMulti, InputAction.CallbackContext context, Vector3 targetPosition, Quaternion targetRotation)
+    public void CastSpells(MultiStaffObject staffMulti, InputAction.CallbackContext context, Vector3 targetPosition, Quaternion targetRotation)
     {
         if (spellCoolDownTimer > 0)
         {
@@ -34,17 +35,27 @@ public class SingleStaff
 
         foreach (Spell spell in SpellList)
         {
+            CastTime(spell.spellCastTime);
+
             spell.CastSpell(staffMulti, targetPosition, targetRotation);
             cooldownTime = cooldownTime + (spell.spellRecoveryTime/ParentStaffMulti.Recovery);
 
-            while (spellCoolDownTimer > 0) { await Task.Yield(); }
+            while (isCasting) { var v = Task.Yield(); } // Wait until the cast time is over before proceeding to the next spell
 
-            if (false || cooldownTime > 10) { break; } //TODO if the staff isn't being cast anymore; break
+            if (false || cooldownTime > 10) { break; }
             if (context.canceled) { break; }
         }
         spellCoolDownTimer = cooldownTime;
         staffMulti.FinishCast();
     }
+
+    IEnumerator CastTime(float duration)
+    {
+        isCasting = true;
+        yield return new WaitForSeconds(duration);
+        isCasting = false;
+    }
+
 
     public void AddSpell(Spell spell)
     {
@@ -54,9 +65,6 @@ public class SingleStaff
     public void FrameTicUpdate() { 
         if (spellCoolDownTimer > 0) {
             spellCoolDownTimer -= Time.deltaTime;
-        }
-        if (spellCastTimer > 0) {
-            spellCastTimer -= Time.deltaTime;
         }
     }
 }
