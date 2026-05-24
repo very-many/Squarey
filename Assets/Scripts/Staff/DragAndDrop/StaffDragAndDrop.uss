@@ -50,11 +50,6 @@
     border-radius: 5px;
 }
 
-.slot-container {
-    flex-direction: row;
-    flex-grow: 1;
-}
-
 .slot {
     width: 60px;
     height: 60px;

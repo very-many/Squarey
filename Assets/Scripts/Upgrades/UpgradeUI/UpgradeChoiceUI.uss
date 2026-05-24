@@ -1,0 +1,44 @@
+.upgrade-row {
+    flex-direction: row;
+    background-color: rgba(0,0,0,0.2);
+    margin: 15px;
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.upgrade-icon {
+    width: 150px;
+    height: 150px;
+    background-color: #444;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    border-width: 2px;
+    border-color: white;
+    background-image: resource("Assets/Resources/Sprite_MissingNo.png")
+}
+
+.upgrade-card {
+    width: 250px;
+    height: 250px;
+    background-color: rgba(0,0,100,0.5);
+    justify-content: center;
+    align-items: center;
+    margin-right: 50px;
+    border-radius: 5px;
+    justify-content: center;
+}
+
+.upgrade-text {
+    width: 300px;
+    height: 60px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    white-space: normal;
+    flex-wrap: wrap;
+    max-width: 90%;
+    text-align: center;
+    -unity-text-align: middle-center;
+}

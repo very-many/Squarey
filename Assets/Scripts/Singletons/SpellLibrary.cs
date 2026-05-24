@@ -6,13 +6,39 @@ public class SpellLibrary : MonoBehaviour
 {
     public static SpellLibrary instance;
 
-    public List<Spell> allSpellList = new List<Spell> { new Firebolt() };
+    private List<Spell> _allSpellList = new List<Spell> { new Firebolt() };
 
     public Spell RandomSpell()
     {
-        int randomIndex = Random.Range(0, allSpellList.Count);
-        Spell selectedSpell = allSpellList[randomIndex];
+        int randomNumber = Random.Range(0, GetTotalSpellProbabilityWeight());
+        Spell selectedSpell = _allSpellList[GetSpellIndexFromRandomNumber(randomNumber)];
         return (Spell)System.Activator.CreateInstance(selectedSpell.GetType());
+    }
+
+    private int GetTotalSpellProbabilityWeight()
+    {
+        int totalWeight = 0;
+        for (int i = 0; i < _allSpellList.Count; i++)
+        {
+            totalWeight = totalWeight + _allSpellList[i].probabilityWeight;
+
+        }
+        return totalWeight;
+    }
+
+    private int GetSpellIndexFromRandomNumber(int randomWeightResult)
+    {
+        for (int i = 0; i < _allSpellList.Count; i++)
+        {
+            randomWeightResult = randomWeightResult - _allSpellList[i].probabilityWeight;
+            if (randomWeightResult <= 0)
+            {
+                return i;
+            }
+
+        }
+        // this line should never be executed and is a failsafe
+        return Random.RandomRange(0, _allSpellList.Count);
     }
 
     private void Awake()

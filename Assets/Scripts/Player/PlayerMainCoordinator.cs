@@ -1,19 +1,26 @@
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerMainCoordinator : MonoBehaviour
 {
     public GameObject player;
+    
+    public List<Upgrade> Upgrades = new List<Upgrade>();
+    public List<Spell> SpellPool = new List<Spell>();
+
     private Health healthObject;
     private PlayerMovementController playerMovementController;
     private MultiStaffObject staffMulti;
 
-    private int baseMaxHealth;
-    private float baseMovementSpeed;
-    private float baseJumpForce;
-    private float baseMagicPower;
-    private float baseRecovery;
-    private float baseProjectileSize;
-    private float baseProjectileSpeed;
+    private int _baseMaxHealth;
+    private float _baseMovementSpeed;
+    private float _baseJumpForce;
+    private float _baseMagicPower;
+    private float _baseRecovery;
+    private float _baseProjectileSize;
+    private float _baseProjectileSpeed;
 
     public void Awake()
     {
@@ -21,24 +28,36 @@ public class PlayerMainCoordinator : MonoBehaviour
         playerMovementController = player.GetComponent<PlayerMovementController>();
         staffMulti = player.GetComponent<MultiStaffObject>();
 
-        baseMaxHealth = GetMaxHealth();
-        baseMovementSpeed = GetMovementSpeed();
-        baseJumpForce = GetJumpForce();
-        baseMagicPower = GetStaffPower();
-        baseRecovery = GetStaffRecovery();
-        baseProjectileSize = GetStaffProjectileSize();
-        baseProjectileSpeed = GetStaffProjectileSpeed();
+        _baseMaxHealth = GetMaxHealth();
+        _baseMovementSpeed = GetMovementSpeed();
+        _baseJumpForce = GetJumpForce();
+        _baseMagicPower = GetStaffPower();
+        _baseRecovery = GetStaffRecovery();
+        _baseProjectileSize = GetStaffProjectileSize();
+        _baseProjectileSpeed = GetStaffProjectileSpeed();
+    }
+
+    public void ApplyUpgrades()
+    {
+        ResetStats();
+
+        for (int i = 0; i < Upgrades.Count - 1; i++)
+        {
+            Upgrades[i].ReApplyUpgradeStats(this);
+        }
+
+        Upgrades.Last().ApplyUpgrade(this);
     }
 
     public void ResetStats()
     {
-        SetMaxHealth(baseMaxHealth);
-        SetMovementSpeed(baseMovementSpeed);
-        SetJumpForce(baseJumpForce);
-        SetStaffPower(baseMagicPower);
-        SetStaffRecovery(baseRecovery);
-        SetStaffProjectileSize(baseProjectileSize);
-        SetStaffProjectileSpeed(baseProjectileSpeed);
+        SetMaxHealth(_baseMaxHealth);
+        SetMovementSpeed(_baseMovementSpeed);
+        SetJumpForce(_baseJumpForce);
+        SetStaffPower(_baseMagicPower);
+        SetStaffRecovery(_baseRecovery);
+        SetStaffProjectileSize(_baseProjectileSize);
+        SetStaffProjectileSpeed(_baseProjectileSpeed);
     }
 
     public void SetMaxHealth(int maxHealth) { healthObject.maxHealth = maxHealth; }

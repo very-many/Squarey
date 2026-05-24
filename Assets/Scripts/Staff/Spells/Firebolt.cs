@@ -9,6 +9,7 @@ public class Firebolt : Spell
     float Spell.spellRecoveryTime => fireBoltRecoveryTime;  
     float Spell.spellCastTime => fireBoltCastTime;
     string Spell.spellImagePath => "Spells/Firebolt";
+    int Spell.probabilityWeight => 10;
 
     public void CastSpell(MultiStaffObject statStaffMulti, Vector3 targetPosition, Quaternion targetRotation)
     {
