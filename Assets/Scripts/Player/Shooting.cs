@@ -27,10 +27,13 @@ public class Shooting : NetworkBehaviour
 
     private double _nextFireTime;
 
+    private SoundEffectsPlayer src;
+
     void Start()
     {
         safeState1 = transform.localScale.y;
         safeState2 = -1 * transform.localScale.y;
+        src = GetComponent<SoundEffectsPlayer>();
     }
 
     void Update()
@@ -49,6 +52,7 @@ public class Shooting : NetworkBehaviour
         if (context.performed)
         {
             isFiring = true;
+            src.PlaySpell();
         }
         if (context.canceled)
         {
