@@ -8,7 +8,7 @@
 
 .staff-icon {
     width: 80px;
-    height: 60px;
+    height: 80px;
     color: transparent;
     background-color: #444;
     justify-content: center;
@@ -50,6 +50,11 @@
     border-radius: 5px;
 }
 
+.slot-container {
+    flex-direction: row;
+    flex-grow: 1;
+}
+
 .slot {
     width: 60px;
     height: 60px;
@@ -57,8 +62,6 @@
     background-color: #222;
     border-width: 2px;
     border-color: #555;
-    justify-content: center;
-    align-items: center;
     justify-content: center;
     align-items: center;
 }

@@ -14,7 +14,7 @@ public class SingleStaff
 
     private bool isCasting = false;
 
-    public SingleStaff(MultiStaffObject parentStaffMulti, List<Spell>? spellList)
+    public SingleStaff(MultiStaffObject parentStaffMulti, List<Spell> spellList)
     {
         ParentStaffMulti = parentStaffMulti;
         SpellList = spellList;
