@@ -47,7 +47,7 @@ public class Shooting : NetworkBehaviour
         //    ShouldShoot();
     }
 
-    public void onFire(InputAction.CallbackContext context)
+    public void OnFire(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
@@ -101,14 +101,14 @@ public class Shooting : NetworkBehaviour
         }
         transform.localScale = scale;
 
-        if (transform.eulerAngles.z > 0 && transform.eulerAngles.z < 180)
-        {
-            weaponRenderer.sortingOrder = characterRenderer.sortingOrder - 2;
-        }
-        else
-        {
-            weaponRenderer.sortingOrder = characterRenderer.sortingOrder + 2;
-        }
+        //if (transform.eulerAngles.z > 0 && transform.eulerAngles.z < 180)
+        //{
+        //    weaponRenderer.sortingOrder = characterRenderer.sortingOrder - 2;
+        //}
+        //else
+        //{
+        //    weaponRenderer.sortingOrder = characterRenderer.sortingOrder + 2;
+        //}
     }
 
     private Vector2 GetPointerInput()

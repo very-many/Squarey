@@ -1103,7 +1103,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8546185508910951106}
         m_TargetAssemblyTypeName: Shooting, Assembly-CSharp
-        m_MethodName: onFire
+        m_MethodName: OnFire
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1113,10 +1113,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: 9ea365e4-5db5-4c5c-91bc-f63d475b2b54
-    m_ActionName: 'Player/Fire[/Mouse/leftButton]'
-  - m_PersistentCalls:
-      m_Calls: []
     m_ActionId: 078c38da-21cf-4691-b33e-24ba907ce347
     m_ActionName: 'Player/Cast_1[/Mouse/leftButton]'
   - m_PersistentCalls:
