@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Firebolt : Spell
@@ -11,8 +12,12 @@ public class Firebolt : Spell
     string Spell.spellImagePath => "Spells/Firebolt";
     int Spell.probabilityWeight => 10;
 
-    public void CastSpell(MultiStaffObject statStaffMulti, Vector3 targetPosition, Quaternion targetRotation)
+    public void CastSpell(MultiStaffObject statStaffMulti, Vector2 castDirection, Vector2 castPosition, Quaternion targetRotation)
     {
-        throw new System.NotImplementedException();
+        float damage = 1f * statStaffMulti.MagicPower;
+        float health = 0.1f * statStaffMulti.MagicPower;
+        float size = 0.5f * statStaffMulti.ProjectileSize;
+
+        statStaffMulti.spellcasting.castBullet(castDirection, castPosition, targetRotation, damage, health, size, new List<Bullet.BulletType> { Bullet.BulletType.Normal });
     }
 }

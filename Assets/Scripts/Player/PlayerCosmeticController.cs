@@ -10,6 +10,11 @@ public class PlayerCosmeticController : NetworkBehaviour
     [Header("Child Player Object")]
     public GameObject PlayerObject;
 
+    private void Awake()
+    {
+        PlayerObject = gameObject;
+    }
+
     private void Start()
     {
         PlayerSprite = PlayerObject.GetComponentInChildren<SpriteRenderer>();

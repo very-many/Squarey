@@ -24,6 +24,8 @@ public class PlayerMainCoordinator : MonoBehaviour
 
     public void Awake()
     {
+        player = gameObject;
+
         healthObject = player.GetComponent<Health>();
         playerMovementController = player.GetComponent<PlayerMovementController>();
         staffMulti = player.GetComponent<MultiStaffObject>();

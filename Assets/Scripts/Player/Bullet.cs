@@ -8,17 +8,22 @@ public class Bullet : NetworkBehaviour
 {
 
     private Rigidbody2D rb;
-    Vector3 direction;
+    Vector2 direction;
 
     [Header("Bullet Stats")]
     [SerializeField]
     private LayerMask whatDestroysBullet;
     [SerializeField]
-    private int timeToLive = 3;
-    public BulletType bulletType;
+    private int timeToLive = 5;
+    public List<BulletType> bulletTypes;
     [SerializeField]
-    private int bulletDamage = 10;
-
+    private float bulletDamage = 10;
+    [SerializeField]
+    private float bulletHealth = 1;
+    [SerializeField]
+    private float bulletSize = 1;
+    [SerializeField]
+    private float bulletSpeed = 1;
 
     [Header("Normal Bullets")]
     [SerializeField]
@@ -34,8 +39,8 @@ public class Bullet : NetworkBehaviour
 
     public enum BulletType
     {
-        Normal,
-        Physics
+        Normal, //straight velocity, no gravity
+        Physics, //affected by gravity, rotates in direction of velocity
     }
 
     private void Awake()
@@ -62,7 +67,7 @@ public class Bullet : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (bulletType == BulletType.Physics)
+        if (bulletTypes.Contains(BulletType.Physics))
         {
             //rotate bullet in direction of velocity;
             transform.right = rb.linearVelocity;
@@ -91,14 +96,28 @@ public class Bullet : NetworkBehaviour
         InitializeBulletStats();
     }
 
+    public void LocalCast(Vector2 direction, Quaternion rotation, Vector2 position, float damage, float health, float size, List<BulletType> types)
+    {
+        this.direction = direction;
+        transform.SetPositionAndRotation(position, rotation * Quaternion.Euler(0, 0, -90));
+        gameObject.SetActive(true);
+
+        this.bulletDamage = damage;
+        this.bulletHealth = health;
+        this.bulletSize = size;
+        this.bulletTypes = types;
+
+        InitializeBulletStats();
+    }
+
     private void InitializeBulletStats()
     {
-        if (bulletType == BulletType.Normal)
+        if (bulletTypes.Contains(BulletType.Normal))
         {
             SetStraightVelocity();
             rb.gravityScale = 0;
         }
-        else if (bulletType == BulletType.Physics)
+        if (bulletTypes.Contains(BulletType.Physics))
         {
             SetPhysicsVelocity();
             rb.gravityScale = physicsBulletGravity;
@@ -107,12 +126,12 @@ public class Bullet : NetworkBehaviour
 
     private void SetStraightVelocity()
     {
-        rb.linearVelocity = new Vector2(direction.x, direction.y).normalized * normalBulletSpeed;
+        rb.linearVelocity = new Vector2(direction.x, direction.y).normalized * normalBulletSpeed * bulletSpeed;
     }
 
     private void SetPhysicsVelocity()
     {
-        rb.linearVelocity = new Vector2(direction.x, direction.y).normalized * physicsBulletSpeed;
+        rb.linearVelocity = new Vector2(direction.x, direction.y).normalized * physicsBulletSpeed * bulletSpeed;
     }
 
 
@@ -130,7 +149,7 @@ public class Bullet : NetworkBehaviour
             Health health = collision.GetComponent<Health>();
             if (health != null)
             {
-                health.TakeDamage(bulletDamage);
+                health.TakeDamage((int)bulletDamage);
             }
             //Screen shake
             ReturnToPoolServer();

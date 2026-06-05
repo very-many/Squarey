@@ -36,15 +36,25 @@ public class PlayerMovementController : NetworkBehaviour
     [Space]
     [Header("Input")]
     public Vector2 movement;
-
+    
     private bool requestedTeleport = false;
 
+    public bool offlineTest = false;
+
+    void Awake()
+    {
+        PlayerObject = gameObject;
+        PlayerObject.SetActive(true);
+        DontDestroyOnLoad(PlayerObject);
+        offlineTest = true;
+    }
 
     void Start()
     {
         coll = GetComponent<PlayerCollisionController>();
         rb = GetComponent<Rigidbody2D>();
-        PlayerObject.SetActive(false);
+        //PlayerObject.SetActive(false);
+
     }
 
     void Update()
@@ -54,7 +64,7 @@ public class PlayerMovementController : NetworkBehaviour
 
         PlayerObject.SetActive(true);
 
-        if (isOwned && !requestedTeleport)
+        if ((isOwned) && !requestedTeleport)
         {
             if (!NetworkClient.isConnected || !NetworkClient.ready)
                 return;
@@ -66,7 +76,7 @@ public class PlayerMovementController : NetworkBehaviour
             CmdClientChosenTeleport(pos);
         }
 
-        if (isOwned)
+        if (isOwned || offlineTest)
         {
             Tick();
         }

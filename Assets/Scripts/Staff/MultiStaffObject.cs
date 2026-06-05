@@ -1,16 +1,14 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(PlayerInput))]
 public class MultiStaffObject : MonoBehaviour {
 
     public GameObject player;
-    public Quaternion castAngle;
-    public Vector2 castPosition;
-    public Vector2 targetPosition;
-    public bool isCasting = false;
+    public bool castBlocked = false;
+    public DirectStaff directionalInfo;
+    public Spellcasting spellcasting;
 
     public float MagicPower = 100;
     public float Recovery = 1f;
@@ -23,14 +21,6 @@ public class MultiStaffObject : MonoBehaviour {
 
     public List<Spell> Spellstorage;
 
-    public MultiStaffObject()
-    {
-        Staff_1 = new SingleStaff(this, null);
-        Staff_2 = new SingleStaff(this, null);
-        Staff_3 = new SingleStaff(this, null);
-        Spellstorage = new List<Spell>();
-    }
-
     //TODO needs a connection to the player and to use the players Update Function
     public void Update()
     {
@@ -39,29 +29,44 @@ public class MultiStaffObject : MonoBehaviour {
         Staff_3.FrameTicUpdate();
     }
 
+    public void Awake()
+    {
+        player = gameObject;
+        directionalInfo = GetComponentInChildren<DirectStaff>();
+        directionalInfo.SetPlayer(player);
+
+        spellcasting = GetComponent<Spellcasting>();
+
+        Staff_1 = new SingleStaff(this, new List<Spell> { new Firebolt() });
+        Staff_2 = new SingleStaff(this, null);
+        Staff_3 = new SingleStaff(this, null);
+        Spellstorage = new List<Spell>();
+    }
+
+
     public void OnCast_1(InputAction.CallbackContext context)
     {
-        if (isCasting) { return; }
-        isCasting = true;
-        Staff_1.CastSpells(this, context, Input.mousePosition, castAngle);
+        if (castBlocked) { return; }
+        castBlocked = true;
+        Staff_1.CastSpells(this, context, directionalInfo.castDirection, directionalInfo.castPosition, directionalInfo.castAngle);
     }
 
     public void OnCast_2(InputAction.CallbackContext context)
     {
-        if (isCasting) { return; }
-        isCasting = true;
-        Staff_2.CastSpells(this, context, Input.mousePosition, castAngle);
+        if (castBlocked) { return; }
+        castBlocked = true;
+        Staff_2.CastSpells(this, context, directionalInfo.castDirection, directionalInfo.castPosition, directionalInfo.castAngle);
     }
 
     public void OnCast_3(InputAction.CallbackContext context)
     {
-        if (isCasting) { return; }
-        isCasting = true;
-        Staff_3.CastSpells(this, context, Input.mousePosition, castAngle);
+        if (castBlocked) { return; }
+        castBlocked = true;
+        Staff_3.CastSpells(this, context, directionalInfo.castDirection, directionalInfo.castPosition, directionalInfo.castAngle);
     }
 
     public void FinishCast()
     {
-        isCasting = false;
+        castBlocked = false;
     }
 }

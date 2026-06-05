@@ -8,5 +8,5 @@ public interface Spell
     string spellImagePath { get; }
     int probabilityWeight { get; }
 
-    void CastSpell(MultiStaffObject staff, Vector3 targetPosition, Quaternion targetRotation);
+    void CastSpell(MultiStaffObject staff, Vector2 castDirection, Vector2 castPosition, Quaternion targetRotation);
 }

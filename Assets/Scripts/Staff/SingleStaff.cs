@@ -24,10 +24,11 @@ public class SingleStaff
         }
     }
 
-    public void CastSpells(MultiStaffObject staffMulti, InputAction.CallbackContext context, Vector3 targetPosition, Quaternion targetRotation)
+    public void CastSpells(MultiStaffObject staffMulti, InputAction.CallbackContext context, Vector2 castDirection, Vector2 castPosition, Quaternion targetRotation)
     {
         if (spellCoolDownTimer > 0)
         {
+            staffMulti.FinishCast();
             return;
         }
 
@@ -37,7 +38,7 @@ public class SingleStaff
         {
             CastTime(spell.spellCastTime);
 
-            spell.CastSpell(staffMulti, targetPosition, targetRotation);
+            spell.CastSpell(staffMulti, castDirection, castPosition, targetRotation);
             cooldownTime = cooldownTime + (spell.spellRecoveryTime/ParentStaffMulti.Recovery);
 
             while (isCasting) { var v = Task.Yield(); } // Wait until the cast time is over before proceeding to the next spell

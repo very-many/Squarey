@@ -115,7 +115,7 @@ public class Shooting : NetworkBehaviour
     }
 
     [Command]
-    private void CmdFire(Vector2 dir, Quaternion rot, Vector3 spawnPos)
+    public void CmdFire(Vector2 dir, Quaternion rot, Vector2 spawnPos)
     {
         //if (NetworkTime.time < _nextFireTime) return;
         //_nextFireTime = NetworkTime.time + timeBetweenFiring;

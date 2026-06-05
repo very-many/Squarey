@@ -104,8 +104,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e67bbd2c6603b747bea9484d8a590bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DirectStaff
-  camera: {fileID: 0}
   player: {fileID: 0}
   onlinePlayer: 0
   intensity: 2
   speed: 0.5
+  quaternionAngle: {x: 0, y: 0, z: 0, w: 0}
+  playerPosition: {x: 0, y: 0}
