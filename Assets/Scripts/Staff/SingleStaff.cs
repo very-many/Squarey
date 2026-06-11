@@ -40,8 +40,6 @@ public class SingleStaff
         }
 
         staffMulti.StartCoroutine(CastSequence(staffMulti, context));
-
-        staffMulti.FinishCast();
     }
 
     public static void Delay(int time)
@@ -77,6 +75,8 @@ public class SingleStaff
         }
 
         spellCoolDownTimer = cooldownTime;
+
+        staffMulti.FinishCast();
     }
 
 

@@ -9,6 +9,7 @@ public class MultiStaffObject : MonoBehaviour {
     public bool castBlocked = false;
     public DirectStaff directionalInfo;
     public Spellcasting spellcasting;
+    public PlayerUI playerUI;
 
     public float MagicPower = 100;
     public float Recovery = 100f;
@@ -35,6 +36,8 @@ public class MultiStaffObject : MonoBehaviour {
 
         spellcasting = GetComponent<Spellcasting>();
 
+        playerUI = GetComponent<PlayerUI>();
+
         Staff_1 = new SingleStaff(this, new List<Spell> { new Firebolt() });
         Staff_2 = new SingleStaff(this, null);
         Staff_3 = new SingleStaff(this, null);
@@ -45,15 +48,14 @@ public class MultiStaffObject : MonoBehaviour {
         Staff_1.UpdateSpells(staff1Spells);
         Staff_2.UpdateSpells(staff2Spells);
         Staff_3.UpdateSpells(staff3Spells);
+
+        playerUI.InsertSpells();
     }
 
 
     public void OnCast_1(InputAction.CallbackContext context)
     {
-        if (!context.started)
-        {
-            return;
-        }
+        if (!context.started) { return; }    
         if (castBlocked) { return; }
         castBlocked = true;
         Staff_1.CastSpells(this, context);
@@ -61,10 +63,7 @@ public class MultiStaffObject : MonoBehaviour {
 
     public void OnCast_2(InputAction.CallbackContext context)
     {
-        if (!context.started)
-        {
-            return;
-        }
+        if (!context.started) { return; }
         if (castBlocked) { return; }
         castBlocked = true;
         Staff_2.CastSpells(this, context);
@@ -72,10 +71,7 @@ public class MultiStaffObject : MonoBehaviour {
 
     public void OnCast_3(InputAction.CallbackContext context)
     {
-        if (!context.started)
-        {
-            return;
-        }
+        if (!context.started) { return; }
         if (castBlocked) { return; }
         castBlocked = true;
         Staff_3.CastSpells(this, context);

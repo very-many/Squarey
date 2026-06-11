@@ -5,7 +5,7 @@ public class Firebolt : Spell
 {
     public float fireBoltRecoveryTime = 2;
 
-    public float fireBoltCastTime = 0.5f;
+    public float fireBoltCastTime = 0.2f;
 
     float Spell.spellRecoveryTime => fireBoltRecoveryTime;  
     float Spell.spellCastTime => fireBoltCastTime;

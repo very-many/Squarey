@@ -274,6 +274,7 @@ public class StaffDragAndDrop : MonoBehaviour
 
     private void AddSpellToSlot(VisualElement slot, Spell spell)
     {
+        slot.Clear();
         VisualElement draggableSpell = new VisualElement();
         draggableSpell.AddToClassList("draggable-spell");
 
