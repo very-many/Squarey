@@ -20,6 +20,6 @@ public class Firebolt : Spell
 
         DirectStaff directionalInfo = multiStaff.directionalInfo;
 
-        multiStaff.spellcasting.castBullet(directionalInfo.castDirection, directionalInfo.castPosition, directionalInfo.castAngle, damage, health, size, new List<Bullet.BulletType> { Bullet.BulletType.Normal });
+        multiStaff.spellcasting.CastBullet(directionalInfo.castDirection, directionalInfo.castPosition, directionalInfo.castAngle, damage, health, size, new List<Bullet.BulletType> { Bullet.BulletType.Normal });
     }
 }

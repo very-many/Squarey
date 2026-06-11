@@ -580,6 +580,9 @@ GameObject:
   - component: {fileID: 1440856973706387701}
   - component: {fileID: 3688680632892157790}
   - component: {fileID: 9051659079761304081}
+  - component: {fileID: 3227256166308750262}
+  - component: {fileID: 4963407450501170020}
+  - component: {fileID: 733014467782720038}
   m_Layer: 3
   m_Name: PlayerObject Test
   m_TagString: Untagged
@@ -596,7 +599,7 @@ Transform:
   m_GameObject: {fileID: 7407786158499650943}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.18622, y: 0.49831, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -813,7 +816,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   rb: {fileID: 0}
-  PlayerObject: {fileID: 0}
+  PlayerVisuals: {fileID: 0}
   speed: 7
   jumpForce: 12
   slideSpeed: 1
@@ -823,7 +826,6 @@ MonoBehaviour:
   wallSlide: 0
   side: 1
   movement: {x: 0, y: 0}
-  offlineTest: 0
 --- !u!114 &6517591035741378657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -933,6 +935,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 73161980-15d9-4065-b677-a6737a6d0480
     m_ActionName: 'Player/Cast_3[/Keyboard/shift]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3227256166308750262}
+        m_TargetAssemblyTypeName: PlayerMenuCaller, Assembly-CSharp
+        m_MethodName: OnChooseUpgrade
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 5fd2ddde-55cb-431a-9aa8-8235624bad7d
+    m_ActionName: 'Player/Menu[/Keyboard/tab]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -1009,10 +1027,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MultiStaffObject
   player: {fileID: 0}
-  isCasting: 0
+  castBlocked: 0
   directionalInfo: {fileID: 8232137694359425651}
+  spellcasting: {fileID: 0}
+  playerUI: {fileID: 0}
   MagicPower: 100
-  Recovery: 1
+  Recovery: 100
   ProjectileSize: 1
   ProjectileSpeed: 1
 --- !u!114 &3688680632892157790
@@ -1044,6 +1064,59 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   bullet: {fileID: 5995972970576921285, guid: f9fbd1683bccf5845bacd0465a610ad5, type: 3}
+--- !u!114 &3227256166308750262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7407786158499650943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904d489f0bf725842bbe37af3b516e54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMenuCaller
+  UpgradeUI: {fileID: 0}
+  StaffManager: {fileID: 0}
+  coordinator: {fileID: 0}
+--- !u!114 &4963407450501170020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7407786158499650943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: ff6e6279ec31589448b79e91adb075e9, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 632d6bb43c2b2264f840a1e6d61e9435, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &733014467782720038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7407786158499650943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c954629c4cf7e46a3d28b909b54d0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerUI
+  styleSheet: {fileID: 7433441132597879392, guid: 30fd93adff01b2247955c9fca8fb74ff, type: 3}
+  staffMulti: {fileID: 0}
+  health: {fileID: 0}
 --- !u!1 &8997272477913709170
 GameObject:
   m_ObjectHideFlags: 0
@@ -1055,6 +1128,7 @@ GameObject:
   - component: {fileID: 7222107042533712733}
   - component: {fileID: 83447734005210820}
   - component: {fileID: 8232137694359425651}
+  - component: {fileID: 302942549715124879}
   m_Layer: 0
   m_Name: Staff
   m_TagString: Untagged
@@ -1148,12 +1222,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e67bbd2c6603b747bea9484d8a590bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DirectStaff
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   player: {fileID: 0}
   staff: {fileID: 0}
   maxDistance: 0.7
   minDistance: 0.1
   speed: 0.5
   staffWeight: 5
-  quaternionAngle: {x: 0, y: 0, z: 0, w: 0}
+  castAngle: {x: 0, y: 0, z: 0, w: 0}
   playerPosition: {x: 0, y: 0}
   castPosition: {x: 0, y: 0}
+  castDirection: {x: 0, y: 0}
+  castTarget: {x: 0, y: 0}
+--- !u!114 &302942549715124879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8997272477913709170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a553cb17010b2403e8523b558bffbc14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mirror.Components::Mirror.NetworkTransformUnreliable
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 7222107042533712733}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  bufferResetMultiplier: 3
+  useFixedUpdate: 0
+  positionSensitivity: 0.01
+  rotationSensitivity: 0.01
+  scaleSensitivity: 0.01

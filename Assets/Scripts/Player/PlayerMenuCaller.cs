@@ -12,6 +12,8 @@ public class PlayerMenuCaller : MonoBehaviour
 
     private void Awake()
     {
+        this.UpgradeUI = GameObject.FindGameObjectWithTag("UpgradePicker").GetComponent<UpgradeUI>();
+        this.StaffManager = GameObject.FindGameObjectWithTag("StaffInventory").GetComponent<StaffDragAndDrop>();
         coordinator = GetComponent<PlayerMainCoordinator>();
 
         UpgradeUI.playerMainCoordinator = coordinator;
@@ -24,7 +26,7 @@ public class PlayerMenuCaller : MonoBehaviour
     public void OnChooseUpgrade(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
-
+        
         UpgradeUI.OpenUI(this);
     }
 

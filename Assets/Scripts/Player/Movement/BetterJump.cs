@@ -18,22 +18,16 @@ public class BetterJumping : NetworkBehaviour
     public float FallMultiplier = 2.5f;
     public float LowJumpMultiplier = 2f;
 
-    private bool offlineTest;
-
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    private void Awake()
-    {
-        offlineTest = GetComponent<PlayerMovementController>().offlineTest;
-    }
-
     void Update()
     {
-        if (!isOwned && !offlineTest)
+        if (!isOwned)
             return;
+
         if (rb.linearVelocity.y < 0)
         {
             rb.linearVelocity += (FallMultiplier - 1) * Physics2D.gravity.y * Time.deltaTime * Vector2.up;

@@ -10,11 +10,6 @@ public class PlayerCosmeticController : NetworkBehaviour
     [Header("Child Player Object")]
     public GameObject PlayerObject;
 
-    private void Awake()
-    {
-        PlayerObject = gameObject;
-    }
-
     private void Start()
     {
         PlayerSprite = PlayerObject.GetComponentInChildren<SpriteRenderer>();
@@ -28,7 +23,7 @@ public class PlayerCosmeticController : NetworkBehaviour
 
     private void Update()
     {
-        if(SceneManager.GetActiveScene().name == "Game")
+        if (SceneManager.GetActiveScene().name == "Game")
         {
             if (PlayerObject.activeSelf == false)
             {

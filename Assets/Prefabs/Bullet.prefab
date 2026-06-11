@@ -204,7 +204,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 200
   timeToLive: 3
-  bulletType: 1
+  bulletTypes: 01000000
+  bulletDamage: 10
+  bulletHealth: 1
+  bulletSize: 1
+  bulletSpeed: 1
   normalBulletSpeed: 15
   physicsBulletSpeed: 15
   physicsBulletGravity: 3

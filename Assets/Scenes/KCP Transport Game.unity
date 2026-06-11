@@ -351,7 +351,7 @@ MonoBehaviour:
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 7407786158499650943, guid: a64cb8bba4cb30945b303edddbe57e4c, type: 3}
+  playerPrefab: {fileID: 7407786158499650943, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs:
@@ -814,64 +814,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!1 &899989640 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7407786158499650943, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-  m_PrefabInstance: {fileID: 1803159511}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &899989657
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 899989640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 904d489f0bf725842bbe37af3b516e54, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerMenuCaller
-  UpgradeUI: {fileID: 1497943784}
-  StaffManager: {fileID: 1493296393}
-  coordinator: {fileID: 0}
---- !u!114 &899989674
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 899989640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71c954629c4cf7e46a3d28b909b54d0f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerUI
-  styleSheet: {fileID: 7433441132597879392, guid: 30fd93adff01b2247955c9fca8fb74ff, type: 3}
-  staffMulti: {fileID: 0}
-  health: {fileID: 0}
---- !u!114 &899989675
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 899989640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
-  m_PanelSettings: {fileID: 11400000, guid: ff6e6279ec31589448b79e91adb075e9, type: 2}
-  m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: 632d6bb43c2b2264f840a1e6d61e9435, type: 3}
-  m_SortingOrder: 0
-  m_Position: 0
-  m_WorldSpaceSizeMode: 1
-  m_WorldSpaceWidth: 1920
-  m_WorldSpaceHeight: 1080
-  m_PivotReferenceSize: 0
-  m_Pivot: 0
-  m_WorldSpaceCollider: {fileID: 0}
 --- !u!4 &919718861 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2827141003171850657, guid: 068647513e640964aa2901eaebcf47d6, type: 3}
@@ -1205,6 +1147,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: StaffInventory
       objectReference: {fileID: 0}
+    - target: {fileID: 7397489195783588641, guid: 068647513e640964aa2901eaebcf47d6, type: 3}
+      propertyPath: m_TagString
+      value: StaffInventory
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1289,28 +1235,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1493296393 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4278515723134436173, guid: 068647513e640964aa2901eaebcf47d6, type: 3}
-  m_PrefabInstance: {fileID: 1156144957}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36b53b767ddf4314d9fffe9817af6480, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StaffDragAndDrop
---- !u!114 &1497943784 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4279219387712141836, guid: 9df4f62ce595ec142b6deba072b14857, type: 3}
-  m_PrefabInstance: {fileID: 1952821986}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3b75713fc7be3a459cf0d7b2756c92b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UpgradeUI
 --- !u!1 &1608025567
 GameObject:
   m_ObjectHideFlags: 0
@@ -1627,128 +1551,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!1001 &1803159511
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1440856973706387701, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: Recovery
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 1447455882017199148, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: sceneId
-      value: 1677786823
-      objectReference: {fileID: 0}
-    - target: {fileID: 2424676214273929077, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 1.18622
-      objectReference: {fileID: 0}
-    - target: {fileID: 2424676214273929077, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.49831
-      objectReference: {fileID: 0}
-    - target: {fileID: 2424676214273929077, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2424676214273929077, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2424676214273929077, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2424676214273929077, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2424676214273929077, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2424676214273929077, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2424676214273929077, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2424676214273929077, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6517591035741378657, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_ActionEvents.Array.size
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 6517591035741378657, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_ActionId
-      value: 5fd2ddde-55cb-431a-9aa8-8235624bad7d
-      objectReference: {fileID: 0}
-    - target: {fileID: 6517591035741378657, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_ActionName
-      value: 'Player/Menu[/Keyboard/tab]'
-      objectReference: {fileID: 0}
-    - target: {fileID: 6517591035741378657, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6517591035741378657, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6517591035741378657, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 899989657}
-    - target: {fileID: 6517591035741378657, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6517591035741378657, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnChooseUpgrade
-      objectReference: {fileID: 0}
-    - target: {fileID: 6517591035741378657, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: PlayerMenuCaller, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 6517591035741378657, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 6701089767748302990, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6701089767748302990, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7407786158499650943, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      propertyPath: m_Name
-      value: PlayerObject Test
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7407786158499650943, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 899989657}
-    - targetCorrespondingSourceObject: {fileID: 7407786158499650943, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 899989675}
-    - targetCorrespondingSourceObject: {fileID: 7407786158499650943, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 899989674}
-  m_SourcePrefab: {fileID: 100100000, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
 --- !u!1 &1839676121
 GameObject:
   m_ObjectHideFlags: 0
@@ -1939,6 +1741,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UpgradePicker
       objectReference: {fileID: 0}
+    - target: {fileID: 286342509869298087, guid: 9df4f62ce595ec142b6deba072b14857, type: 3}
+      propertyPath: m_TagString
+      value: UpgradePicker
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1952,4 +1758,3 @@ SceneRoots:
   - {fileID: 1608025568}
   - {fileID: 1491611298}
   - {fileID: 455294946}
-  - {fileID: 1803159511}

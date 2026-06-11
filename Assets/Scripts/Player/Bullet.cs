@@ -15,7 +15,7 @@ public class Bullet : NetworkBehaviour
     private LayerMask whatDestroysBullet;
     [SerializeField]
     private int timeToLive = 5;
-    public List<BulletType> bulletTypes;
+    public List<BulletType> bulletTypes = new List<BulletType>(){BulletType.Physics};
     [SerializeField]
     private float bulletDamage = 10;
     [SerializeField]
@@ -96,18 +96,21 @@ public class Bullet : NetworkBehaviour
         InitializeBulletStats();
     }
 
-    public void LocalCast(Vector2 direction, Quaternion rotation, Vector2 position, float damage, float health, float size, List<BulletType> types)
+    public void Cast(Vector2 direction, Quaternion rotation, Vector2 position, float damage, float health, float size, List<BulletType> types)
     {
-        this.direction = direction;
-        transform.SetPositionAndRotation(position, rotation * Quaternion.Euler(0, 0, -90));
-        gameObject.SetActive(true);
+        LaunchServer(direction, rotation, position);
+        RpcLaunch(direction, rotation, position);
 
-        this.bulletDamage = damage;
-        this.bulletHealth = health;
-        this.bulletSize = size;
-        this.bulletTypes = types;
+        //this.direction = direction;
+        //transform.SetPositionAndRotation(position, rotation * Quaternion.Euler(0, 0, -90));
+        //gameObject.SetActive(true);
 
-        InitializeBulletStats();
+        //this.bulletDamage = damage;
+        //this.bulletHealth = health;
+        //this.bulletSize = size;
+        //this.bulletTypes = types;
+
+        //InitializeBulletStats();
     }
 
     private void InitializeBulletStats()

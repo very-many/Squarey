@@ -10,43 +10,31 @@ using static UnityEngine.Rendering.DebugUI.Table;
 public class Spellcasting : NetworkBehaviour
 {
     public GameObject bullet;
-    public void castBullet(Vector2 castDirection, Vector2 castPosition, Quaternion targetRotation, float damage, float health, float size, List<Bullet.BulletType> types)
+    [Command]
+    public void CastBullet(Vector2 castDirection, Vector2 castPosition, Quaternion targetRotation, float damage, float health, float size, List<Bullet.BulletType> types)
     {
-        if (Mirror.NetworkServer.active)
+        GameObject go = null;
+        if (ObjectPool.instance != null)
         {
-            if (isOwned)
+            go = ObjectPool.instance.GetServerObject();
+            if (go != null)
             {
-                CmdSpawnBullet(castDirection, castPosition, targetRotation);
+                go.transform.SetPositionAndRotation(castPosition, targetRotation * Quaternion.Euler(0, 0, -90));
+                go.SetActive(true);
+                NetworkServer.Spawn(go);
             }
         }
-        else
+
+        if (go == null)
         {
-            LocalBulletSpawn(castDirection, castPosition, targetRotation, damage, health, size, types);
+            go = Instantiate(bullet, castPosition, targetRotation * Quaternion.Euler(0, 0, -90));
+            NetworkServer.Spawn(go);
         }
 
-    }
-
-    [Command]
-    private void CmdSpawnBullet(Vector2 castDirection, Vector2 castPosition, Quaternion targetRotation)
-    {
-        GameObject bulletInstance = Instantiate(bullet, castPosition, targetRotation);
-
-        NetworkServer.Spawn(bulletInstance);
-        var bulletScript = bulletInstance.GetComponent<Bullet>();
+        var bulletScript = go.GetComponent<Bullet>();
         if (bulletScript != null)
         {
-            bulletScript.LaunchServer(castDirection, targetRotation, castPosition);
-            bulletScript.RpcLaunch(castDirection, targetRotation, castPosition);
-        }
-    }
-
-    private void LocalBulletSpawn(Vector2 targetPosition, Vector2 castPosition, Quaternion castDirection, float damage, float health, float size, List<Bullet.BulletType> types)
-    {
-        GameObject bulletInstance = Instantiate(bullet, castPosition, castDirection);
-        var bulletScript = bulletInstance.GetComponent<Bullet>();
-        if (bulletScript != null)
-        {
-            bulletScript.LocalCast(targetPosition, castDirection, castPosition, damage, health, size, types);
+            bulletScript.Cast(castDirection, targetRotation, castPosition, damage, health, size, types);
         }
     }
 }

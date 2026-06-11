@@ -1,9 +1,10 @@
+using Mirror;
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
-public class DirectStaff : MonoBehaviour
+public class DirectStaff : NetworkBehaviour
 {
     public GameObject player;
     public GameObject staff;
@@ -29,6 +30,8 @@ public class DirectStaff : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!isLocalPlayer) return;
+
         Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         playerPosition = player.transform.position;
         staffPosition = staff.transform.position;

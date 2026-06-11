@@ -44,7 +44,7 @@ public class Shooting : NetworkBehaviour
         //    ShouldShoot();
     }
 
-    public void onFire(InputAction.CallbackContext context)
+    public void OnFire(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
@@ -115,7 +115,7 @@ public class Shooting : NetworkBehaviour
     }
 
     [Command]
-    public void CmdFire(Vector2 dir, Quaternion rot, Vector2 spawnPos)
+    private void CmdFire(Vector2 dir, Quaternion rot, Vector3 spawnPos)
     {
         //if (NetworkTime.time < _nextFireTime) return;
         //_nextFireTime = NetworkTime.time + timeBetweenFiring;
@@ -146,4 +146,3 @@ public class Shooting : NetworkBehaviour
         }
     }
 }
-
