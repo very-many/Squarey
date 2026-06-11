@@ -42,10 +42,9 @@ public class UpgradeUI : MonoBehaviour
 
     private void GetRandomizedUpgrades()
     {
-        UpgradeLibrary upgradeLibrary = new UpgradeLibrary();
         for (int i=0; i < 5; i++)
         {
-            _upgradeChoices.Add(upgradeLibrary.RandomUpgrade());
+            _upgradeChoices.Add(UpgradeLibrary.instance.RandomUpgrade());
         }
         
     }

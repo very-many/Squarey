@@ -8,9 +8,9 @@ public class SpellUpgrade : Upgrade
 
     public int probabilityWeight => 100;
 
-    private Spell _upgradeSpell = new SpellLibrary().RandomSpell();
-
     private int _recoveryBonus = Random.Range(1, 4);
+
+    private Spell _upgradeSpell = SpellLibrary.instance.RandomSpell();
 
     public void ApplyUpgrade(PlayerMainCoordinator stats)
     {

@@ -1,8 +1,9 @@
+using Mirror;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerMenuCaller : MonoBehaviour
+public class PlayerMenuCaller : NetworkBehaviour
 {
     public UpgradeUI UpgradeUI;
 
@@ -10,8 +11,10 @@ public class PlayerMenuCaller : MonoBehaviour
 
     public PlayerMainCoordinator coordinator;
 
-    private void Awake()
+    private void Start()
     {
+        if (!isOwned) return;
+
         this.UpgradeUI = GameObject.FindGameObjectWithTag("UpgradePicker").GetComponent<UpgradeUI>();
         this.StaffManager = GameObject.FindGameObjectWithTag("StaffInventory").GetComponent<StaffDragAndDrop>();
         coordinator = GetComponent<PlayerMainCoordinator>();
@@ -25,7 +28,7 @@ public class PlayerMenuCaller : MonoBehaviour
 
     public void OnChooseUpgrade(InputAction.CallbackContext context)
     {
-        if (!context.performed) return;
+        if (!context.performed || !isOwned) return;
         
         UpgradeUI.OpenUI(this);
     }

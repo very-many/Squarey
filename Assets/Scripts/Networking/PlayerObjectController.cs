@@ -85,7 +85,7 @@ public class PlayerObjectController : NetworkBehaviour
 
     public override void OnStopClient()
     {
-        Manager.GamePlayers.Remove(this);
+        Manager.GamePlayers.Remove(this); //TODO; this line seems to be causing an error sometimes
         LobbyController.Instance.UpdatePlayerList();
     }
 

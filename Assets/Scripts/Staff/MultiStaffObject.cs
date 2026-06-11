@@ -1,9 +1,10 @@
+using Mirror;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput))]
-public class MultiStaffObject : MonoBehaviour {
+public class MultiStaffObject : NetworkBehaviour {
 
     public GameObject player;
     public bool castBlocked = false;
@@ -23,24 +24,28 @@ public class MultiStaffObject : MonoBehaviour {
     //TODO needs a connection to the player and to use the players Update Function
     public void Update()
     {
+        if (!isOwned) return;
         Staff_1.FrameTicUpdate();
         Staff_2.FrameTicUpdate();
         Staff_3.FrameTicUpdate();
     }
 
-    public void Awake()
+    public void Start()
     {
         player = gameObject;
         directionalInfo = GetComponentInChildren<DirectStaff>();
         directionalInfo.SetPlayer(player);
 
-        spellcasting = GetComponent<Spellcasting>();
+        if (!isOwned) return;
 
-        playerUI = GetComponent<PlayerUI>();
+        spellcasting = GetComponent<Spellcasting>();
 
         Staff_1 = new SingleStaff(this, new List<Spell> { new Firebolt() });
         Staff_2 = new SingleStaff(this, null);
         Staff_3 = new SingleStaff(this, null);
+
+        playerUI = GetComponent<PlayerUI>();
+        playerUI.staffMulti = this;
     }
 
     public void UpdateSpells(List<Spell> staff1Spells, List<Spell> staff2Spells, List<Spell> staff3Spells)
@@ -55,24 +60,21 @@ public class MultiStaffObject : MonoBehaviour {
 
     public void OnCast_1(InputAction.CallbackContext context)
     {
-        if (!context.started) { return; }    
-        if (castBlocked) { return; }
+        if (!context.started || !isOwned || castBlocked) { return; }    
         castBlocked = true;
         Staff_1.CastSpells(this, context);
     }
 
     public void OnCast_2(InputAction.CallbackContext context)
     {
-        if (!context.started) { return; }
-        if (castBlocked) { return; }
+        if (!context.started || !isOwned || castBlocked) { return; }
         castBlocked = true;
         Staff_2.CastSpells(this, context);
     }
 
     public void OnCast_3(InputAction.CallbackContext context)
     {
-        if (!context.started) { return; }
-        if (castBlocked) { return; }
+        if (!context.started || !isOwned || castBlocked) { return; }
         castBlocked = true;
         Staff_3.CastSpells(this, context);
     }

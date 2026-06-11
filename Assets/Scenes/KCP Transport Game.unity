@@ -957,6 +957,35 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1 &1011826658 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 286342509869298087, guid: 9df4f62ce595ec142b6deba072b14857, type: 3}
+  m_PrefabInstance: {fileID: 1952821986}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1011826661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011826658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 376e1008374b976409cbdd2835602c9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpellLibrary
+--- !u!114 &1011826662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011826658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c208fc40f622dd44f82d18c8bac20d8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UpgradeLibrary
 --- !u!1 &1096183879
 GameObject:
   m_ObjectHideFlags: 0
@@ -1748,7 +1777,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 286342509869298087, guid: 9df4f62ce595ec142b6deba072b14857, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1011826662}
+    - targetCorrespondingSourceObject: {fileID: 286342509869298087, guid: 9df4f62ce595ec142b6deba072b14857, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1011826661}
   m_SourcePrefab: {fileID: 100100000, guid: 9df4f62ce595ec142b6deba072b14857, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

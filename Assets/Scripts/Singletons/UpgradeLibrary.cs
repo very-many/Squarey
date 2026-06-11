@@ -5,7 +5,12 @@ public class UpgradeLibrary : MonoBehaviour
 {
     public static UpgradeLibrary instance;
 
-    private List<Upgrade> _allUpgradesList = new List<Upgrade> { new SpellUpgrade() };
+    private List<Upgrade> _allUpgradesList;
+
+    private void Start()
+    {
+        _allUpgradesList = new List<Upgrade> { new SpellUpgrade() };
+    }
 
     public Upgrade RandomUpgrade()
     {
@@ -44,11 +49,13 @@ public class UpgradeLibrary : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
     }
+
+
 }

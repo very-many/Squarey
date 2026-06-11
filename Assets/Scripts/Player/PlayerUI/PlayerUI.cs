@@ -10,7 +10,6 @@ public class PlayerUI : MonoBehaviour
 {
     public StyleSheet styleSheet;
     public MultiStaffObject staffMulti;
-    public Health health;
 
     private VisualElement _root;
 
@@ -18,9 +17,7 @@ public class PlayerUI : MonoBehaviour
 
     public void Start()
     {
-        staffMulti = GetComponent<MultiStaffObject>();
-        health = GetComponent<Health>();
-
+        if (staffMulti == null || !staffMulti.isOwned) return;
         InitializeUI();
     }
 
@@ -154,6 +151,8 @@ public class PlayerUI : MonoBehaviour
 
     private void Update()
     {
+        if (staffMulti == null) return;
+
         if (staffMulti.Staff_1.spellCoolDownTimer > 0)
         {
             dynamicIcons[0].AddToClassList("on-Cooldown");

@@ -10,8 +10,14 @@ using static UnityEngine.Rendering.DebugUI.Table;
 public class Spellcasting : NetworkBehaviour
 {
     public GameObject bullet;
-    [Command]
+
     public void CastBullet(Vector2 castDirection, Vector2 castPosition, Quaternion targetRotation, float damage, float health, float size, List<Bullet.BulletType> types)
+    {
+        CmdCastBullet(castDirection, castPosition, targetRotation, damage, health, size, types);
+    }
+
+    [Command]
+    public void CmdCastBullet(Vector2 castDirection, Vector2 castPosition, Quaternion targetRotation, float damage, float health, float size, List<Bullet.BulletType> types)
     {
         GameObject go = null;
         if (ObjectPool.instance != null)

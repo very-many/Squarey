@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5045665248193986741}
   - component: {fileID: 2528681708220480812}
   - component: {fileID: 5765087211294224795}
+  - component: {fileID: 5410818545080043786}
   m_Layer: 0
   m_Name: Staff
   m_TagString: Untagged
@@ -104,9 +105,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e67bbd2c6603b747bea9484d8a590bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DirectStaff
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   player: {fileID: 0}
-  onlinePlayer: 0
-  intensity: 2
+  staff: {fileID: 0}
+  maxDistance: 0.7
+  minDistance: 0.1
   speed: 0.5
-  quaternionAngle: {x: 0, y: 0, z: 0, w: 0}
+  staffWeight: 5
+  castAngle: {x: 0, y: 0, z: 0, w: 0}
   playerPosition: {x: 0, y: 0}
+  castPosition: {x: 0, y: 0}
+  castDirection: {x: 0, y: 0}
+  castTarget: {x: 0, y: 0}
+--- !u!114 &5410818545080043786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6837416952839969178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mirror::Mirror.NetworkIdentity
+  sceneId: 0
+  _assetId: 3681620592
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
