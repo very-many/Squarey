@@ -4,7 +4,7 @@ public class SpellUpgrade : Upgrade
 {
     public string upgradeImagePath => _upgradeSpell.spellImagePath;
 
-    public string upgradeDescription => "Adds the " + _upgradeSpell.GetType() + " Spell to your Spellpool and gives " + _recoveryBonus + " Recovery stat so cooldowns aren't as long.";
+    public string upgradeDescription => "Adds the " + _upgradeSpell.GetType() + " Spell to your Spellpool and gives " + _recoveryBonus + " Recovery so cooldowns aren't as long.";
 
     public int probabilityWeight => 100;
 

@@ -70,7 +70,6 @@ public class SingleStaff
 
             yield return staffMulti.StartCoroutine(WaitForCast());
 
-            if (cooldownTime > 10) { break; }
             if (!context.action.IsPressed()){ break; }
         }
 

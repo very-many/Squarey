@@ -58,11 +58,11 @@ public class DirectStaff : NetworkBehaviour
         staffMovementToNextFrame = staffPositionNextFrame - staffPosition;
 
         staffPositionNextFrame = ClampMinMagnitude(staffMovementToNextFrame + staffPosition - playerPosition, minDistance) + playerPosition;
-
+        
         transform.position = staffPositionNextFrame;
 
         //Rotation CastAngle
-        float aimAngle = Mathf.Atan2(offsetToStaff.y, offsetToStaff.x) * Mathf.Rad2Deg;
+        float aimAngle = Mathf.Atan2(offsetToPlayer.y, offsetToPlayer.x) * Mathf.Rad2Deg;
         castAngle = Quaternion.Euler(0, 0, aimAngle);
 
         //CastDirection

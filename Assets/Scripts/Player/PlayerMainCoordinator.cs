@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -21,6 +22,8 @@ public class PlayerMainCoordinator : MonoBehaviour
     private float _baseRecovery;
     private float _baseProjectileSize;
     private float _baseProjectileSpeed;
+    private float _baseBulletDamageMultiplier;
+    private float _baseBulletHealthMultiplier;
 
     public void Awake()
     {
@@ -37,6 +40,8 @@ public class PlayerMainCoordinator : MonoBehaviour
         _baseRecovery = GetStaffRecovery();
         _baseProjectileSize = GetStaffProjectileSize();
         _baseProjectileSpeed = GetStaffProjectileSpeed();
+        _baseBulletDamageMultiplier = GetBulletDamageMult();
+        _baseBulletHealthMultiplier = GetBulletHealthMult();
     }
 
     public void ApplyUpgrades()
@@ -68,12 +73,21 @@ public class PlayerMainCoordinator : MonoBehaviour
 
     public void SetMovementSpeed(float movementSpeed) { playerMovementController.speed = movementSpeed; }
     public float GetMovementSpeed() { return playerMovementController.speed; }
+    public float GetBaseMovementSpeed() { return _baseMovementSpeed; }
 
     public void SetJumpForce(float jumpForce) { playerMovementController.jumpForce = jumpForce; }
     public float GetJumpForce() { return playerMovementController.jumpForce; }
+    public float GetBaseJumpForce(float jumpForce) { return _baseJumpForce; }
 
     public void SetStaffPower(float power) { staffMulti.MagicPower = power; }
     public float GetStaffPower() { return staffMulti.MagicPower; }
+
+    public void SetBulletDamageMult(float bulletDamageMult) { staffMulti.bulletDamageMult = bulletDamageMult; }
+    public float GetBulletDamageMult() { return staffMulti.bulletDamageMult; }
+
+    public void SetBulletHealthMult(float bulletHealthMult) { staffMulti.bulletHealthMult = bulletHealthMult; }
+    public float GetBulletHealthMult() { return staffMulti.bulletHealthMult; }
+
 
     public void SetStaffRecovery(float recovery) { staffMulti.Recovery = recovery; }
     public float GetStaffRecovery() { return staffMulti.Recovery; }

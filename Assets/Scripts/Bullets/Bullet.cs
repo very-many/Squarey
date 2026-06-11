@@ -1,6 +1,7 @@
 using Mirror;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -14,16 +15,20 @@ public class Bullet : NetworkBehaviour
     [SerializeField]
     private LayerMask whatDestroysBullet;
     [SerializeField]
-    private int timeToLive = 5;
-    public List<BulletType> bulletTypes = new List<BulletType>(){BulletType.Physics};
+    private LayerMask otherBulletsCollision;
     [SerializeField]
-    private float bulletDamage = 10;
+    private float timeToLive = 5;
     [SerializeField]
-    private float bulletHealth = 1;
-    [SerializeField]
-    private float bulletSize = 1;
-    [SerializeField]
-    private float bulletSpeed = 1;
+    private float timeToEscape = 0.2f;
+
+    //these stats are in BulletStats
+    private List<BulletType> bulletTypes = new List<BulletType>();
+    private float bulletDamage;
+    private float bulletHealth;
+    private float bulletSize;
+    private float bulletSpeed;
+
+    private GameObject _owner;
 
     [Header("Normal Bullets")]
     [SerializeField]
@@ -36,6 +41,7 @@ public class Bullet : NetworkBehaviour
     private float physicsBulletGravity;
 
     private float _disableTime;
+    private float _escapeTime;
 
     public enum BulletType
     {
@@ -52,6 +58,7 @@ public class Bullet : NetworkBehaviour
     {
         if (rb == null) rb = GetComponent<Rigidbody2D>();
         _disableTime = Time.time + timeToLive;
+        _escapeTime = Time.time + timeToEscape;
 
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
@@ -63,6 +70,8 @@ public class Bullet : NetworkBehaviour
 
         if (Time.time > _disableTime)
             ReturnToPoolServer();
+
+        this.transform.localScale = Vector3.one * bulletSize;
     }
 
     private void FixedUpdate()
@@ -81,7 +90,7 @@ public class Bullet : NetworkBehaviour
         this.direction = direction;
         transform.SetPositionAndRotation(position, rotation * Quaternion.Euler(0, 0, -90));
         gameObject.SetActive(true);
-        InitializeBulletStats();
+        InitializeBulletType();
     }
 
     [ClientRpc]
@@ -93,27 +102,42 @@ public class Bullet : NetworkBehaviour
         this.direction = direction;
         transform.SetPositionAndRotation(position, rotation * Quaternion.Euler(0, 0, -90));
         gameObject.SetActive(true);
-        InitializeBulletStats();
+        InitializeBulletType();
     }
 
-    public void Cast(Vector2 direction, Quaternion rotation, Vector2 position, float damage, float health, float size, List<BulletType> types)
+    public void Cast(Vector2 direction, Quaternion rotation, Vector2 position, BulletStats stats)
     {
+        ApplyStatsClient(stats);
+        ApplyStatsServer(stats);
+
         LaunchServer(direction, rotation, position);
         RpcLaunch(direction, rotation, position);
-
-        //this.direction = direction;
-        //transform.SetPositionAndRotation(position, rotation * Quaternion.Euler(0, 0, -90));
-        //gameObject.SetActive(true);
-
-        //this.bulletDamage = damage;
-        //this.bulletHealth = health;
-        //this.bulletSize = size;
-        //this.bulletTypes = types;
-
-        //InitializeBulletStats();
     }
 
-    private void InitializeBulletStats()
+    [Server]
+    private void ApplyStatsServer(BulletStats stats)
+    {
+        ApplyStats(stats);
+    }
+
+    [ClientRpc]
+    private void ApplyStatsClient(BulletStats stats)
+    {
+        ApplyStats(stats);
+    }
+
+    private void ApplyStats(BulletStats stats)
+    {
+        this.bulletTypes = stats.bulletTypes;
+        this.bulletDamage = stats.bulletDamage;
+        this.bulletHealth = stats.bulletHealth;
+        this.bulletSize = stats.bulletSize;
+        this.bulletSpeed = stats.bulletSpeed;
+        //this.bulletColor = stats.bulletColor;
+        this._owner = stats.owner;
+    }
+
+    private void InitializeBulletType()
     {
         if (bulletTypes.Contains(BulletType.Normal))
         {
@@ -148,7 +172,9 @@ public class Bullet : NetworkBehaviour
         {
             //spawn Paritcles
             //Soundeffect
-            //damage enemy
+
+            if (collision.gameObject == _owner && _escapeTime > Time.time) { return; } //attempt to fix problem where the bullet hits the player immediately whem shooting
+
             Health health = collision.GetComponent<Health>();
             if (health != null)
             {
@@ -157,6 +183,29 @@ public class Bullet : NetworkBehaviour
             //Screen shake
             ReturnToPoolServer();
             Debug.Log("hit");
+        }
+
+        if ((otherBulletsCollision.value & (1 << collision.gameObject.layer)) > 0)
+        {
+
+            //spawn Paritcles
+            //Soundeffect
+
+            Bullet bullet = collision.GetComponent<Bullet>();
+
+            if (bullet != null)
+            {
+                bullet.bulletHealth -= bulletDamage;
+                this.bulletHealth -= bullet.bulletDamage;
+                if (bullet.bulletHealth <= 0)
+                {
+                    bullet.ReturnToPoolServer();
+                }
+                if (this.bulletHealth <= 0)
+                {
+                    ReturnToPoolServer();
+                }
+            }
         }
     }
 

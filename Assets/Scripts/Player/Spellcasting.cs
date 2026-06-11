@@ -11,13 +11,13 @@ public class Spellcasting : NetworkBehaviour
 {
     public GameObject bullet;
 
-    public void CastBullet(Vector2 castDirection, Vector2 castPosition, Quaternion targetRotation, float damage, float health, float size, List<Bullet.BulletType> types)
+    public void CastBullet(Vector2 castDirection, Vector2 castPosition, Quaternion targetRotation, BulletStats bulletStats)
     {
-        CmdCastBullet(castDirection, castPosition, targetRotation, damage, health, size, types);
+        CmdCastBullet(castDirection, castPosition, targetRotation, bulletStats);
     }
 
     [Command]
-    public void CmdCastBullet(Vector2 castDirection, Vector2 castPosition, Quaternion targetRotation, float damage, float health, float size, List<Bullet.BulletType> types)
+    public void CmdCastBullet(Vector2 castDirection, Vector2 castPosition, Quaternion targetRotation, BulletStats bulletStats)
     {
         GameObject go = null;
         if (ObjectPool.instance != null)
@@ -40,7 +40,7 @@ public class Spellcasting : NetworkBehaviour
         var bulletScript = go.GetComponent<Bullet>();
         if (bulletScript != null)
         {
-            bulletScript.Cast(castDirection, targetRotation, castPosition, damage, health, size, types);
+            bulletScript.Cast(castDirection, targetRotation, castPosition, bulletStats);
         }
     }
 }

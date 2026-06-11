@@ -15,7 +15,7 @@ public class SpellLibrary : MonoBehaviour
         return (Spell)System.Activator.CreateInstance(selectedSpell.GetType());
     }
 
-    private int GetTotalSpellProbabilityWeight()
+    public int GetTotalSpellProbabilityWeight()
     {
         int totalWeight = 0;
         for (int i = 0; i < _allSpellList.Count; i++)

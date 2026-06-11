@@ -20,10 +20,10 @@ public class PlayerMovementController : NetworkBehaviour
 
     [Space]
     [Header("Stats")]
-    public float speed = 10;
-    public float jumpForce = 50;
-    public float slideSpeed = 5;
-    public float wallJumpLerp = 10;
+    public float speed = 7;
+    public float jumpForce = 12;
+    public float slideSpeed = 1;
+    public float wallJumpLerp = 5;
 
     [Space]
     [Header("Booleans")]

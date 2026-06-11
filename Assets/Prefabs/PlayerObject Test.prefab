@@ -1011,7 +1011,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  maxHealth: 100
+  maxHealth: 1000
   currentHealth: 0
   healthBar: {fileID: 9160002307464732421}
 --- !u!114 &1440856973706387701
@@ -1026,6 +1026,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb4d2cf2609a5b74e99e264c06e68f37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MultiStaffObject
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   player: {fileID: 0}
   castBlocked: 0
   directionalInfo: {fileID: 8232137694359425651}
@@ -1076,6 +1079,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 904d489f0bf725842bbe37af3b516e54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMenuCaller
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   UpgradeUI: {fileID: 0}
   StaffManager: {fileID: 0}
   coordinator: {fileID: 0}
@@ -1116,7 +1122,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerUI
   styleSheet: {fileID: 7433441132597879392, guid: 30fd93adff01b2247955c9fca8fb74ff, type: 3}
   staffMulti: {fileID: 0}
-  health: {fileID: 0}
 --- !u!1 &8997272477913709170
 GameObject:
   m_ObjectHideFlags: 0

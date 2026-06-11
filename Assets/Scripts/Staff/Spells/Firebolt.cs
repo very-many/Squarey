@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static Bullet;
 
 public class Firebolt : Spell
 {
@@ -14,12 +15,16 @@ public class Firebolt : Spell
 
     public void CastSpell(MultiStaffObject multiStaff, SingleStaff singleStaff)
     {
-        float damage = 1f * multiStaff.MagicPower;
-        float health = 0.1f * multiStaff.MagicPower;
-        float size = 0.5f * multiStaff.ProjectileSize;
+        List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Normal };
+        float bulletDamage = 1f * multiStaff.bulletDamageMult * multiStaff.MagicPower;
+        float bulletHealth = 0.1f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
+        float bulletSize = 0.12f * multiStaff.ProjectileSize;
+        float bulletSpeed = multiStaff.ProjectileSpeed;
 
         DirectStaff directionalInfo = multiStaff.directionalInfo;
 
-        multiStaff.spellcasting.CastBullet(directionalInfo.castDirection, directionalInfo.castPosition, directionalInfo.castAngle, damage, health, size, new List<Bullet.BulletType> { Bullet.BulletType.Normal });
+        BulletStats bulletStats = new BulletStats(bulletTypes, bulletDamage, bulletHealth, bulletSize, bulletSpeed, Color.orange, multiStaff.player);
+
+        multiStaff.spellcasting.CastBullet(directionalInfo.castDirection, directionalInfo.castPosition, directionalInfo.castAngle, bulletStats);
     }
 }

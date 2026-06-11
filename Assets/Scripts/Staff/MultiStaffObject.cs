@@ -14,6 +14,8 @@ public class MultiStaffObject : NetworkBehaviour {
 
     public float MagicPower = 100;
     public float Recovery = 100f;
+    public float bulletDamageMult = 1f;
+    public float bulletHealthMult = 1f;
     public float ProjectileSize = 1f;
     public float ProjectileSpeed = 1f;
 
