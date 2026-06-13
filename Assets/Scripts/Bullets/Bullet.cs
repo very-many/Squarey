@@ -79,7 +79,7 @@ public class Bullet : NetworkBehaviour
         if (!isServer) return;
 
         if (Time.time > _disableTime)
-            ReturnToPoolServer();
+            DestroyBullet();
 
         this.transform.localScale = Vector3.one * bulletSize;
     }
@@ -92,7 +92,40 @@ public class Bullet : NetworkBehaviour
             transform.right = rb.linearVelocity;
             transform.rotation = transform.rotation * Quaternion.Euler(0, 0, -90);
         }
+
+        
+        //Collision
+        Vector2 velocity = rb.linearVelocity;
+        float travelDistance = velocity.magnitude * Time.fixedDeltaTime;
+        Vector2 direction = velocity.normalized;
+
+        if (travelDistance <= 0) return;
+
+        RaycastHit2D hit = Physics2D.CircleCast(transform.position, 0.1f, direction, travelDistance, whatDestroysBullet);
+
+        if (hit.collider != null)
+        {
+            if (bulletTypes.Contains(BulletType.Bounce) && bounces > 0)
+            {
+                bounces--;
+                transform.position = hit.centroid;
+
+                Vector2 newDirection = Vector2.Reflect(direction, hit.normal);
+                transform.right = newDirection;
+                float angle = Mathf.Atan2(newDirection.y, newDirection.x) * Mathf.Rad2Deg;
+                transform.rotation = Quaternion.Euler(0, 0, angle -90);
+                rb.linearVelocity = newDirection * velocity.magnitude;
+            }
+            else
+            {
+                transform.position = hit.centroid;
+                DestroyBullet();
+                Debug.Log("hit Wall");
+            }
+        }
     }
+
+
 
     [Server]
     public void LaunchServer(Vector2 direction, Quaternion rotation, Vector2 position)
@@ -173,7 +206,7 @@ public class Bullet : NetworkBehaviour
     }
 
 
-
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (!isServer) return;
@@ -193,11 +226,11 @@ public class Bullet : NetworkBehaviour
                     this.bulletHealth -= bullet.bulletDamage;
                     if (bullet.bulletHealth <= 0)
                     {
-                        bullet.ReturnToPoolServer();
+                        bullet.DestroyBullet();
                     }
                     if (this.bulletHealth <= 0)
                     {
-                        ReturnToPoolServer();
+                        DestroyBullet();
                     }
                 }
             }
@@ -216,40 +249,14 @@ public class Bullet : NetworkBehaviour
                 health.TakeDamage((int)bulletDamage);
             }
             //Screen shake
-            ReturnToPoolServer();
+            DestroyBullet();
             Debug.Log("hit Player");
         }
+    }
 
-        //collision is within layermask
-        if ((whatDestroysBullet.value & (1 << collision.gameObject.layer)) > 0)
-        {
-            //spawn Paritcles
-            //Soundeffect
-
-            if (bulletTypes.Contains(BulletType.Bounce) && bounces > 0)
-            {
-                bounces--;
-                Vector2 inDirection = rb.linearVelocity.normalized;
-                Vector2 raycastOrigin = (Vector2)transform.position - (inDirection * 0.5f);
-                RaycastHit2D hit = Physics2D.Raycast(raycastOrigin, inDirection, 1.5f, whatDestroysBullet);
-                if (hit.collider != null)
-                {
-                    Vector2 inNormal = hit.normal;
-                    Vector2 newDirection = Vector2.Reflect(inDirection, inNormal);
-
-                    float angle = Mathf.Atan2(newDirection.y, newDirection.x) * Mathf.Rad2Deg;
-                    Quaternion rotation = Quaternion.Euler(0, 0, angle);
-
-                    transform.SetPositionAndRotation(transform.position, rotation * Quaternion.Euler(0, 0, -90));
-                    rb.linearVelocity = newDirection * rb.linearVelocity.magnitude;
-                    return;
-                }
-            }
-
-            //Screen shake
-            ReturnToPoolServer();
-            Debug.Log("hit Wall");
-        }
+    private void DestroyBullet()
+    {
+        ReturnToPoolServer();
     }
 
     [Server]
