@@ -53,7 +53,8 @@ public class Spellcasting : NetworkBehaviour
 
     public void Jump()
     {
-        CmdJump();
+        if (playerMovement == null) { return; }
+        playerMovement.SpellJump(Vector2.up);
     }
 
     [Command]
