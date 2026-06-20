@@ -30,20 +30,27 @@ public class Health : NetworkBehaviour
 
     public void TakeDamage(int damage)
     {
-        if (!isServer) 
+        if (!isServer)
             return;
 
         if (currentHealth <= 0)
-            return; 
+            return;
 
         currentHealth -= damage;
 
         TakeHitOnClient();
         if (currentHealth <= 0)
         {
-            Debug.Log(gameObject.GetComponent<PlayerObjectController>());
-            GameOrchestrator.Instance.readyPlayers.Add(gameObject.GetComponent<PlayerObjectController>());
             DieOnClient();
+            var playerController = GetComponent<PlayerObjectController>();
+            var orchestrator = GameOrchestrator.Instance;
+
+            if (orchestrator != null && playerController != null && !orchestrator.readyPlayers.Contains(playerController))
+            {
+                Debug.Log(playerController);
+                orchestrator.readyPlayers.Add(playerController);
+            }
+
         }
     }
 

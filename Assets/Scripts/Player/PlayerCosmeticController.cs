@@ -23,12 +23,12 @@ public class PlayerCosmeticController : NetworkBehaviour
 
     private void Update()
     {
-        if (SceneManager.GetActiveScene().name == "Game")
-        {
-            if (PlayerObject.activeSelf == false)
-            {
-                PlayerCosmeticsSetup();
-            }
-        }
+        //if (SceneManager.GetActiveScene().name == "Game")
+        //{
+        //    if (PlayerObject.activeSelf == false)
+        //    {
+        //        PlayerCosmeticsSetup();
+        //    }
+        //}
     }
 }

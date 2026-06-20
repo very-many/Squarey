@@ -1,9 +1,13 @@
 using Mirror;
 using NUnit.Framework;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+
 
 public class GameOrchestrator : NetworkBehaviour
 {
@@ -18,17 +22,22 @@ public class GameOrchestrator : NetworkBehaviour
 
 
     [Header("State")]
-    [SerializeField]
-    private GameState gameState = GameState.Initial;
+    public GameState CurrentGameState { get; private set; } = GameState.Initial;
+    public PlayerObjectController LastWinner { get; private set; }
+
 
     [Header("Scenes")]
-    [SerializeField] private List<Object> GameScenes;
-    [SerializeField] private Object UpgradeScene;
+    [SerializeField] private List<UnityEngine.Object> GameScenes;
+    [SerializeField] private UnityEngine.Object UpgradeScene;
+
+    [Header("Settings")]
+    [SerializeField] private float switchDelay = 3f;
 
 
-    [SyncVar(hook = nameof(OnReadyPlayersChanged))] public List<PlayerObjectController> readyPlayers;
+    public readonly SyncList<PlayerObjectController> readyPlayers = new();
 
     private CustomNetworkManager manager;
+    private bool isSwitchingScene;
 
     private CustomNetworkManager Manager
     {
@@ -57,10 +66,33 @@ public class GameOrchestrator : NetworkBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            readyPlayers.Callback += OnReadyPlayersChanged;
         }
         else
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (CurrentGameState == GameState.Upgrade && UpgradeScene != null && scene.name == UpgradeScene.name)
+        {
+            SpawnPlayersUpgrade();
+        }
+        else if (CurrentGameState == GameState.Game && GameScenes != null && GameScenes.Any(gameScene => gameScene != null && gameScene.name == scene.name))
+        {
+            SpawnPlayersGame();
         }
     }
 
@@ -73,22 +105,29 @@ public class GameOrchestrator : NetworkBehaviour
     {
         if (!isServer)
             return;
-        switch (gameState)
+
+        switch (CurrentGameState)
         {
             case GameState.Initial:
                 EnterGameState();
                 break;
             case GameState.Game:
-                if (IsGameOver())
+                if (IsGameOver() && !isSwitchingScene)
                 {
+                    LastWinner = Players.Except(readyPlayers).FirstOrDefault();
+                    Debug.Log("Game over! Last winner: " + (LastWinner != null ? LastWinner.name : "None") + ". Switching to upgrade state...");
                     EnterUpgradeState();
                 }
                 break;
             case GameState.Upgrade:
-                if (IsEveryoneReady())
+                Debug.Log("Is everyone ready? " + IsEveryoneReady() + ", isSwitchingScene: " + isSwitchingScene);
+                if (IsEveryoneReady() && !isSwitchingScene)
                 {
                     EnterGameState();
                 }
+                break;
+            default:
+                Debug.LogError("You fucked up your gameStates! Shame on you: " + CurrentGameState);
                 break;
         }
     }
@@ -97,12 +136,8 @@ public class GameOrchestrator : NetworkBehaviour
     {
         bool atLeastOneDead = readyPlayers.Count > 0;
         bool lessThanOneAlive = Players.Count - readyPlayers.Count <= 1;
+        Debug.Log("Checking if game is over: atLeastOneDead (" + atLeastOneDead + ") and lessThanOneAlive (" + lessThanOneAlive + "). -> " + (atLeastOneDead && lessThanOneAlive));
         return atLeastOneDead && lessThanOneAlive; //filter out players that left the game
-    }
-
-    bool IsGameOverForPlayer(PlayerObjectController player)
-    {
-        return readyPlayers.Count < Players.Count && !readyPlayers.Contains(player);
     }
 
     bool IsEveryoneReady()
@@ -110,37 +145,87 @@ public class GameOrchestrator : NetworkBehaviour
         return readyPlayers.Count == Players.Count;
     }
 
-    void OnReadyPlayersChanged(List<PlayerObjectController> oldPlayers, List<PlayerObjectController> newPlayers)
+    void OnReadyPlayersChanged(SyncList<PlayerObjectController>.Operation operation, int index, PlayerObjectController oldPlayer, PlayerObjectController newPlayer)
     {
+        Debug.Log("Ready Players changed via " + operation + ": " + readyPlayers.Count + " ready player(s)! There are " + (Players.Count - readyPlayers.Count) + " left.");
         ShouldSwitchGameState();
+
     }
 
     void EnterUpgradeState()
     {
-        readyPlayers.Clear();
-        Manager.ServerChangeScene(UpgradeScene.name);
-        //player.UI.OpenUpgradeScreen();
-        gameState = GameState.Upgrade;
-        WirePlayerUi();
+        if (isSwitchingScene)
+            return;
+
+        if (Manager == null || UpgradeScene == null)
+        {
+            Debug.LogError("Cannot enter upgrade state: missing network manager or upgrade scene.");
+            return;
+        }
+
+        StartCoroutine(SwitchSceneAfterDelay(GameState.Upgrade, UpgradeScene.name, SpawnPlayersUpgrade));
     }
 
     void EnterGameState()
     {
-        readyPlayers.Clear();
-        string randomScene = GameScenes[Random.Range(0, GameScenes.Count)].name;
-        Debug.Log("Entering Game State and switch Scene to " + randomScene);
-        Manager.ServerChangeScene(randomScene);
-        gameState = GameState.Game;
-        WirePlayerUi();
+        if (isSwitchingScene)
+            return;
+
+        if (Manager == null || GameScenes == null || GameScenes.Count == 0)
+        {
+            Debug.LogError("Cannot enter game state: missing network manager or game scenes.");
+            return;
+        }
+
+        string randomScene = GameScenes[UnityEngine.Random.Range(0, GameScenes.Count)].name;
+        StartCoroutine(SwitchSceneAfterDelay(GameState.Game, randomScene, SpawnPlayersGame));
     }
 
-    void WirePlayerUi()
+    private IEnumerator SwitchSceneAfterDelay(GameState nextState, string sceneName, Action preparePlayers)
     {
-        GameObject LocalPlayerObject = GameObject.Find("LocalGamePlayer");
-        if (LocalPlayerObject == null) return;
-        PlayerMenuCaller PlayerMenuCaller = LocalPlayerObject.GetComponent<PlayerMenuCaller>();
-        if (PlayerMenuCaller == null) return;
+        isSwitchingScene = true;
 
-        PlayerMenuCaller.WireExternalUi();
+        yield return new WaitForSeconds(switchDelay);
+
+        CurrentGameState = nextState;
+        readyPlayers.Clear();
+        preparePlayers?.Invoke();
+
+        if (Manager != null)
+        {
+            Manager.ServerChangeScene(sceneName);
+        }
+
+        isSwitchingScene = false;
+    }
+
+    public void SpawnPlayersGame()
+    {
+        foreach (var player in Players)
+        {
+            player.gameObject.SetActive(true);
+            player.GetComponent<PlayerCosmeticController>().PlayerCosmeticsSetup();
+            player.transform.GetChild(0).gameObject.SetActive(true);
+            player.GetComponent<PlayerInput>().enabled = true;
+            player.GetComponent<PlayerMenuCaller>().playerUI.StartUI();
+            player.GetComponent<PlayerMovementController>().RequestTeleport = true;
+        }
+    }
+
+    public void SpawnPlayersUpgrade()
+    {
+        Debug.Log("Spawning players for upgrade state. Players count: " + Players.Count);
+        foreach (var player in Players)
+        {
+            player.gameObject.SetActive(true);
+
+            var visualRoot = player.transform.childCount > 0 ? player.transform.GetChild(0).gameObject : null;
+            if (visualRoot != null)
+            {
+                visualRoot.SetActive(false);
+            }
+
+            player.GetComponent<PlayerInput>().enabled = false;
+        }
     }
 }

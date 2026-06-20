@@ -40,7 +40,7 @@ public class PlayerMovementController : NetworkBehaviour
     [Header("Input")]
     public Vector2 movement;
 
-    private bool requestedTeleport = false;
+    public bool RequestTeleport { get; set; } = true;
 
 
     void Start()
@@ -56,15 +56,15 @@ public class PlayerMovementController : NetworkBehaviour
         if (!SceneManager.GetActiveScene().name.Contains("Game"))
             return;
 
-        PlayerVisuals.SetActive(true);
+        //PlayerVisuals.SetActive(true);
 
-        if (isOwned && !requestedTeleport)
+        if (isOwned && RequestTeleport)
         {
             if (!NetworkClient.isConnected || !NetworkClient.ready)
                 return;
 
             Debug.Log("Requesting teleport");
-            requestedTeleport = true;
+            RequestTeleport = false;
 
             Vector2 pos = new Vector2(Random.Range(-7, 7), 10);
             CmdClientChosenTeleport(pos);
@@ -77,7 +77,7 @@ public class PlayerMovementController : NetworkBehaviour
     }
 
     [Command]
-    private void CmdClientChosenTeleport(Vector2 pos)
+    public void CmdClientChosenTeleport(Vector2 pos)
     {
         transform.position = pos;
         rb.linearVelocity = Vector2.zero;
