@@ -22,8 +22,14 @@ public class GameOrchestrator : NetworkBehaviour
 
 
     [Header("State")]
-    public GameState CurrentGameState { get; private set; } = GameState.Initial;
-    public PlayerObjectController LastWinner { get; private set; }
+    [SyncVar]
+    private GameState currentGameState = GameState.Initial;
+
+    [SyncVar]
+    private PlayerObjectController lastWinner;
+
+    public GameState CurrentGameState => currentGameState;
+    public PlayerObjectController LastWinner => lastWinner;
 
 
     [Header("Scenes")]
@@ -86,14 +92,9 @@ public class GameOrchestrator : NetworkBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (CurrentGameState == GameState.Upgrade && UpgradeScene != null && scene.name == UpgradeScene.name)
-        {
-            SpawnPlayersUpgrade();
-        }
-        else if (CurrentGameState == GameState.Game && GameScenes != null && GameScenes.Any(gameScene => gameScene != null && gameScene.name == scene.name))
-        {
-            SpawnPlayersGame();
-        }
+        // Scene loading is now handled by the server's RPC calls.
+        // The RPC methods (RpcSpawnPlayersGame/RpcSpawnPlayersUpgrade) will be called
+        // by the server after changing the scene, so we don't need to spawn here.
     }
 
     public void NextGameState()
@@ -114,7 +115,7 @@ public class GameOrchestrator : NetworkBehaviour
             case GameState.Game:
                 if (IsGameOver() && !isSwitchingScene)
                 {
-                    LastWinner = Players.Except(readyPlayers).FirstOrDefault();
+                    lastWinner = Players.Except(readyPlayers).FirstOrDefault();
                     Debug.Log("Game over! Last winner: " + (LastWinner != null ? LastWinner.name : "None") + ". Switching to upgrade state...");
                     EnterUpgradeState();
                 }
@@ -148,6 +149,10 @@ public class GameOrchestrator : NetworkBehaviour
     void OnReadyPlayersChanged(SyncList<PlayerObjectController>.Operation operation, int index, PlayerObjectController oldPlayer, PlayerObjectController newPlayer)
     {
         Debug.Log("Ready Players changed via " + operation + ": " + readyPlayers.Count + " ready player(s)! There are " + (Players.Count - readyPlayers.Count) + " left.");
+
+        if (!isServer)
+            return;
+
         ShouldSwitchGameState();
 
     }
@@ -163,7 +168,7 @@ public class GameOrchestrator : NetworkBehaviour
             return;
         }
 
-        StartCoroutine(SwitchSceneAfterDelay(GameState.Upgrade, UpgradeScene.name, SpawnPlayersUpgrade));
+        StartCoroutine(SwitchSceneAfterDelay(GameState.Upgrade, UpgradeScene.name, () => RpcSpawnPlayersUpgrade()));
     }
 
     void EnterGameState()
@@ -178,7 +183,7 @@ public class GameOrchestrator : NetworkBehaviour
         }
 
         string randomScene = GameScenes[UnityEngine.Random.Range(0, GameScenes.Count)].name;
-        StartCoroutine(SwitchSceneAfterDelay(GameState.Game, randomScene, SpawnPlayersGame));
+        StartCoroutine(SwitchSceneAfterDelay(GameState.Game, randomScene, () => RpcSpawnPlayersGame()));
     }
 
     private IEnumerator SwitchSceneAfterDelay(GameState nextState, string sceneName, Action preparePlayers)
@@ -187,8 +192,12 @@ public class GameOrchestrator : NetworkBehaviour
 
         yield return new WaitForSeconds(switchDelay);
 
-        CurrentGameState = nextState;
+        currentGameState = nextState;
         readyPlayers.Clear();
+
+        // Reset all players' upgrade ready status when leaving upgrade state
+        ResetUpgradeReadyStatus();
+
         preparePlayers?.Invoke();
 
         if (Manager != null)
@@ -199,6 +208,37 @@ public class GameOrchestrator : NetworkBehaviour
         isSwitchingScene = false;
     }
 
+    private void ResetUpgradeReadyStatus()
+    {
+        foreach (var player in Players)
+        {
+            if (player != null)
+            {
+                player.UpgradeReady = false;
+            }
+        }
+    }
+
+    [ClientRpc]
+    private void RpcSpawnPlayersGame()
+    {
+        foreach (var player in Players)
+        {
+            player.gameObject.SetActive(true);
+            player.GetComponent<PlayerCosmeticController>().PlayerCosmeticsSetup();
+            player.transform.GetChild(0).gameObject.SetActive(true);
+            player.GetComponent<PlayerInput>().enabled = true;
+
+            // Only the local player's controller should start UI and request teleport
+            var playerNetworkIdentity = player.GetComponent<NetworkIdentity>();
+            if (playerNetworkIdentity != null && playerNetworkIdentity.isLocalPlayer)
+            {
+                player.GetComponent<PlayerMenuCaller>().playerUI.StartUI();
+                player.GetComponent<PlayerMovementController>().RequestTeleport = true;
+            }
+        }
+    }
+
     public void SpawnPlayersGame()
     {
         foreach (var player in Players)
@@ -207,8 +247,29 @@ public class GameOrchestrator : NetworkBehaviour
             player.GetComponent<PlayerCosmeticController>().PlayerCosmeticsSetup();
             player.transform.GetChild(0).gameObject.SetActive(true);
             player.GetComponent<PlayerInput>().enabled = true;
-            player.GetComponent<PlayerMenuCaller>().playerUI.StartUI();
-            player.GetComponent<PlayerMovementController>().RequestTeleport = true;
+            if (isOwned)
+            {
+                player.GetComponent<PlayerMenuCaller>().playerUI.StartUI();
+                player.GetComponent<PlayerMovementController>().RequestTeleport = true;
+            }
+        }
+    }
+
+    [ClientRpc]
+    private void RpcSpawnPlayersUpgrade()
+    {
+        Debug.Log("Spawning players for upgrade state. Players count: " + Players.Count);
+        foreach (var player in Players)
+        {
+            player.gameObject.SetActive(true);
+
+            var visualRoot = player.transform.childCount > 0 ? player.transform.GetChild(0).gameObject : null;
+            if (visualRoot != null)
+            {
+                visualRoot.SetActive(false);
+            }
+
+            player.GetComponent<PlayerInput>().enabled = false;
         }
     }
 
@@ -226,6 +287,37 @@ public class GameOrchestrator : NetworkBehaviour
             }
 
             player.GetComponent<PlayerInput>().enabled = false;
+        }
+    }
+
+    [Command]
+    public void SetPlayerReady(PlayerObjectController player)
+    {
+        if (!isServer)
+            return;
+        if (!readyPlayers.Contains(player))
+        {
+            readyPlayers.Add(player);
+        }
+    }
+
+    public void AddPlayerReady(PlayerObjectController player)
+    {
+        if (!isServer || player == null)
+            return;
+        if (!readyPlayers.Contains(player))
+        {
+            readyPlayers.Add(player);
+        }
+    }
+
+    public void RemovePlayerReady(PlayerObjectController player)
+    {
+        if (!isServer || player == null)
+            return;
+        if (readyPlayers.Contains(player))
+        {
+            readyPlayers.Remove(player);
         }
     }
 }

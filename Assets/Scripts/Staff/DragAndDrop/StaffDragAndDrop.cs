@@ -104,7 +104,11 @@ public class StaffDragAndDrop : MonoBehaviour
         //set local player ready in GameOrchestrator
         if (GameOrchestrator.Instance.CurrentGameState == GameOrchestrator.GameState.Upgrade)
         {
-            GameOrchestrator.Instance.readyPlayers.Add(playerMainCoordinator.GetComponent<PlayerObjectController>());
+            PlayerObjectController player = playerMainCoordinator.GetComponent<PlayerObjectController>();
+            if (player != null)
+            {
+                player.SetUpgradeReady();
+            }
         }
     }
 

@@ -102,7 +102,8 @@ public class PlayerMenuCaller : NetworkBehaviour
         PlayerObjectController player = GetComponent<PlayerObjectController>();
         if (GameOrchestrator.Instance.LastWinner == player)
         {
-            GameOrchestrator.Instance.readyPlayers.Add(player);
+            // Auto-ready the winner without showing upgrade UI
+            player.SetUpgradeReady();
         }
         else
         {

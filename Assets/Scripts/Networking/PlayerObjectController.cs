@@ -13,6 +13,9 @@ public class PlayerObjectController : NetworkBehaviour
     [SyncVar(hook = nameof(PlayerNameUpdate))] public string PlayerName;
     [SyncVar(hook = nameof(PlayerReadyUpdate))] public bool Ready;
 
+    //Upgrade Phase
+    [SyncVar(hook = nameof(OnUpgradeReadyChanged))] public bool UpgradeReady;
+
     //Cosmetics
     [SyncVar(hook = nameof(SendPlayerCosmetic))] public int PlayerCosmetic;
     private CustomNetworkManager manager;
@@ -49,6 +52,42 @@ public class PlayerObjectController : NetworkBehaviour
     private void CmdSetPlayerReady()
     {
         this.PlayerReadyUpdate(this.Ready, !this.Ready);
+    }
+
+    private void OnUpgradeReadyChanged(bool OldValue, bool NewValue)
+    {
+        if (isServer)
+        {
+            // Notify GameOrchestrator about upgrade ready status change
+            if (GameOrchestrator.Instance != null)
+            {
+                if (NewValue)
+                {
+                    GameOrchestrator.Instance.AddPlayerReady(this);
+                }
+                else
+                {
+                    GameOrchestrator.Instance.RemovePlayerReady(this);
+                }
+            }
+        }
+    }
+
+    [Command]
+    public void CmdSetUpgradeReady()
+    {
+        if (isServer)
+        {
+            UpgradeReady = true;
+        }
+    }
+
+    public void SetUpgradeReady()
+    {
+        if (isOwned)
+        {
+            CmdSetUpgradeReady();
+        }
     }
 
     public void ChangeReady()
