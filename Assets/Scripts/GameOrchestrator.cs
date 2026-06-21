@@ -33,8 +33,20 @@ public class GameOrchestrator : NetworkBehaviour
     [SyncVar]
     private PlayerObjectController lastWinner;
 
+    [SyncVar(hook = nameof(OnCountdownChanged))]
+    private int currentCountdown = 0;
+
     public GameState CurrentGameState => currentGameState;
     public PlayerObjectController LastWinner => lastWinner;
+    public int CurrentCountdown => currentCountdown;
+
+    private void OnCountdownChanged(int oldValue, int newValue)
+    {
+        if (timer != null)
+        {
+            timer.text = newValue > 0 ? newValue.ToString() : "";
+        }
+    }
 
 
     [Header("Scenes")]
@@ -211,29 +223,23 @@ public class GameOrchestrator : NetworkBehaviour
 
         while (elapsedTime < sceneSwitchDelay)
         {
-            if (nextState == GameState.Game && timer != null)
+            if (nextState == GameState.Game)
             {
-                timer.text = Mathf.CeilToInt(sceneSwitchDelay - elapsedTime).ToString();
+                int countdownValue = Mathf.CeilToInt(sceneSwitchDelay - elapsedTime);
+                currentCountdown = countdownValue;
             }
 
             if (!transitionStarted && elapsedTime >= transitionStartTime)
             {
                 transitionStarted = true;
-                if (transitionAnimation != null)
-                {
-                    transitionAnimation.SetTrigger(EndHash);
-                }
+                RpcPlayTransitionEnd();
             }
 
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        if (nextState == GameState.Game && timer != null)
-        {
-            timer.text = "0";
-        }
-
+        currentCountdown = 0;
         currentGameState = nextState;
         readyPlayers.Clear();
 
@@ -247,9 +253,8 @@ public class GameOrchestrator : NetworkBehaviour
             Manager.ServerChangeScene(sceneName);
         }
 
+        RpcPlayTransitionStart();
         startTransitionAfterSceneLoad = true;
-
-        timer.text = "";
 
         isSwitchingScene = false;
     }
@@ -262,6 +267,24 @@ public class GameOrchestrator : NetworkBehaviour
             {
                 player.UpgradeReady = false;
             }
+        }
+    }
+
+    [ClientRpc]
+    private void RpcPlayTransitionEnd()
+    {
+        if (transitionAnimation != null)
+        {
+            transitionAnimation.SetTrigger(EndHash);
+        }
+    }
+
+    [ClientRpc]
+    private void RpcPlayTransitionStart()
+    {
+        if (transitionAnimation != null)
+        {
+            transitionAnimation.SetTrigger(StartHash);
         }
     }
 
@@ -285,22 +308,6 @@ public class GameOrchestrator : NetworkBehaviour
         }
     }
 
-    public void SpawnPlayersGame()
-    {
-        foreach (var player in Players)
-        {
-            player.gameObject.SetActive(true);
-            player.GetComponent<PlayerCosmeticController>().PlayerCosmeticsSetup();
-            player.transform.GetChild(0).gameObject.SetActive(true);
-            player.GetComponent<PlayerInput>().enabled = true;
-            if (isOwned)
-            {
-                player.GetComponent<PlayerMenuCaller>().playerUI.StartUI();
-                player.GetComponent<PlayerMovementController>().RequestTeleport = true;
-            }
-        }
-    }
-
     [ClientRpc]
     private void RpcSpawnPlayersUpgrade()
     {
@@ -316,34 +323,6 @@ public class GameOrchestrator : NetworkBehaviour
             }
 
             player.GetComponent<PlayerInput>().enabled = false;
-        }
-    }
-
-    public void SpawnPlayersUpgrade()
-    {
-        Debug.Log("Spawning players for upgrade state. Players count: " + Players.Count);
-        foreach (var player in Players)
-        {
-            player.gameObject.SetActive(true);
-
-            var visualRoot = player.transform.childCount > 0 ? player.transform.GetChild(0).gameObject : null;
-            if (visualRoot != null)
-            {
-                visualRoot.SetActive(false);
-            }
-
-            player.GetComponent<PlayerInput>().enabled = false;
-        }
-    }
-
-    [Command]
-    public void SetPlayerReady(PlayerObjectController player)
-    {
-        if (!isServer)
-            return;
-        if (!readyPlayers.Contains(player))
-        {
-            readyPlayers.Add(player);
         }
     }
 

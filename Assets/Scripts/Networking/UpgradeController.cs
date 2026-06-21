@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Mirror;
 
 public class UpgradeController : MonoBehaviour
 {
@@ -27,8 +28,29 @@ public class UpgradeController : MonoBehaviour
             yield return null;
         }
 
-        var playerCallers = FindObjectsOfType<PlayerMenuCaller>();
-        foreach (var caller in playerCallers)
+        elapsed = 0f;
+        while (elapsed < timeoutSeconds)
+        {
+            if (NetworkClient.ready)
+            {
+                var playerCallers = FindObjectsOfType<PlayerMenuCaller>();
+                bool foundOwned = false;
+                foreach (var caller in playerCallers)
+                {
+                    if (caller.isOwned)
+                    {
+                        foundOwned = true;
+                        break;
+                    }
+                }
+                if (foundOwned) break;
+            }
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        var allCallers = FindObjectsOfType<PlayerMenuCaller>();
+        foreach (var caller in allCallers)
         {
             if (!caller.isOwned) continue;
             caller.WireAndOpenUpgrade();
