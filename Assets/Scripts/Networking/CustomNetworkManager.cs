@@ -47,16 +47,6 @@ public class CustomNetworkManager : NetworkManager
         }
     }
 
-    public override void OnClientSceneChanged()
-    {
-        base.OnClientSceneChanged();
-
-        if (GameOrchestrator.Instance != null)
-        {
-            GameOrchestrator.Instance.PlayClientTransitionStart();
-        }
-    }
-
     public void StartGame(string SceneName)
     {
         GameOrchestrator.Instance.NextGameState();

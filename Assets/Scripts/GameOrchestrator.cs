@@ -109,15 +109,6 @@ public class GameOrchestrator : NetworkBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    public void PlayClientTransitionStart()
-    {
-        if (transitionAnimation != null)
-        {
-            Debug.Log("Scene settled. Playing transition.");
-            transitionAnimation.SetTrigger(StartHash);
-        }
-    }
-
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (!startTransitionAfterSceneLoad)
@@ -152,12 +143,10 @@ public class GameOrchestrator : NetworkBehaviour
                 if (IsGameOver() && !isSwitchingScene)
                 {
                     lastWinner = Players.Except(readyPlayers).FirstOrDefault();
-                    Debug.Log("Game over! Last winner: " + (LastWinner != null ? LastWinner.name : "None") + ". Switching to upgrade state...");
                     EnterUpgradeState();
                 }
                 break;
             case GameState.Upgrade:
-                Debug.Log("Is everyone ready? " + IsEveryoneReady() + ", isSwitchingScene: " + isSwitchingScene);
                 if (IsEveryoneReady() && !isSwitchingScene)
                 {
                     EnterGameState();
@@ -173,19 +162,17 @@ public class GameOrchestrator : NetworkBehaviour
     {
         bool atLeastOneDead = readyPlayers.Count > 0;
         bool lessThanOneAlive = Players.Count - readyPlayers.Count <= 1;
-        Debug.Log("Checking if game is over: atLeastOneDead (" + atLeastOneDead + ") and lessThanOneAlive (" + lessThanOneAlive + "). -> " + (atLeastOneDead && lessThanOneAlive));
         return atLeastOneDead && lessThanOneAlive; //filter out players that left the game
     }
 
     bool IsEveryoneReady()
     {
-        return readyPlayers.Count == Players.Count;
+        return readyPlayers.Count >= Players.Count;
     }
 
     void OnReadyPlayersChanged(SyncList<PlayerObjectController>.Operation operation, int index, PlayerObjectController oldPlayer, PlayerObjectController newPlayer)
     {
         Debug.Log(readyPlayers.Count + " ready player(s)! There are " + (Players.Count - readyPlayers.Count) + " left.");
-
         if (!isServer)
             return;
 
@@ -257,6 +244,7 @@ public class GameOrchestrator : NetworkBehaviour
 
         if (Manager != null)
         {
+            RpcPlayTransitionStart();
             Manager.ServerChangeScene(sceneName);
         }
 
@@ -284,6 +272,11 @@ public class GameOrchestrator : NetworkBehaviour
             transitionAnimation.SetTrigger(EndHash);
         }
     }
+    [ClientRpc]
+    private void RpcPlayTransitionStart()
+    {
+        startTransitionAfterSceneLoad = true;
+    }
 
     [ClientRpc]
     private void RpcSpawnPlayersGame()
@@ -308,7 +301,6 @@ public class GameOrchestrator : NetworkBehaviour
     [ClientRpc]
     private void RpcSpawnPlayersUpgrade()
     {
-        Debug.Log("Spawning players for upgrade state. Players count: " + Players.Count);
         foreach (var player in Players)
         {
             player.gameObject.SetActive(true);
