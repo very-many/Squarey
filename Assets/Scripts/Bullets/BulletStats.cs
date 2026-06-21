@@ -16,19 +16,27 @@ public class BulletStats
 
     public GameObject owner;
 
+    //Not set by constructor
+    public SpriteLibrary.SpriteType sprite = SpriteLibrary.SpriteType.Capsule;
+
     public float timeToLive = 5;
-    public float timeToEscape = 0.2f;
+    public float timeToEscape = 0.1f;
 
     public float trailLength = 1;
 
     public int bounces = 3;
+    public float bounciness = 1;
+
+    public float growthMod = 1;
 
     public List<BulletStats> splitBullets = new List<BulletStats>();
     public float splitAngleOffset = 0;
 
-    public float explosionRadius = 0;
-    public float explosionDamage = 0;
+    public float explosionRadius = 1;
+    public float explosionDamage = 10;
     public float explosionDamageMultMaxRange = 1;
+
+    public float knockbackForce = 10;
 
     //public float bulletScaleX = 1;
     //public float bulletScaleY = 1;
@@ -36,10 +44,6 @@ public class BulletStats
     //public float timeToLive = 3;
 
     //public float timeToEscape = 0,2;
-
-    //public imagesrc = ???;
-
-    //public hitbox = ???;
 
     public BulletStats() { }
 
@@ -64,6 +68,9 @@ public class BulletStats
         bulletStats.timeToEscape = timeToEscape;
 
         bulletStats.bounces = bounces;
+        bulletStats.bounciness = bounciness;
+
+        bulletStats.growthMod = growthMod;
 
         bulletStats.splitBullets = splitBullets;
         bulletStats.splitAngleOffset = splitAngleOffset;
@@ -71,6 +78,8 @@ public class BulletStats
         bulletStats.explosionRadius = explosionRadius;
         bulletStats.explosionDamage = explosionDamage;
         bulletStats.explosionDamageMultMaxRange = explosionDamageMultMaxRange;
+
+        bulletStats.knockbackForce = knockbackForce;
 
         return bulletStats;
     }

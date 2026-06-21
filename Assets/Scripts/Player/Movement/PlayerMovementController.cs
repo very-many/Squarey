@@ -30,7 +30,7 @@ public class PlayerMovementController : NetworkBehaviour
     public bool canMove;
     public bool wallJumped;
     public bool wallSlide;
-    public bool jumped;
+    public bool spellJumped;
 
     public int side = 1;
 
@@ -39,6 +39,7 @@ public class PlayerMovementController : NetworkBehaviour
     [Space]
     [Header("Input")]
     public Vector2 movement;
+    public Vector2 knockback = new Vector2(0, 0);
 
     public bool RequestTeleport { get; set; } = true;
 
@@ -76,6 +77,11 @@ public class PlayerMovementController : NetworkBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        knockback = knockback * 0.8f;
+    }
+
     [Command]
     public void CmdClientChosenTeleport(Vector2 pos)
     {
@@ -95,7 +101,12 @@ public class PlayerMovementController : NetworkBehaviour
     }
 
     private void Tick()
-    {
+    { 
+        if (knockback.magnitude < 1)
+        {
+            knockback = new Vector2(0,0);
+        }
+
         float x = movement.x;
         Vector2 dir = new Vector2(x, movement.y);
 
@@ -104,7 +115,7 @@ public class PlayerMovementController : NetworkBehaviour
         if (coll.onGround)
         {
             wallJumped = false;
-            jumped = false;
+            spellJumped = false;
         }
 
         if (coll.onWall && !coll.onGround && x != 0)
@@ -134,7 +145,8 @@ public class PlayerMovementController : NetworkBehaviour
     }
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (!context.performed)
+
+        if (!context.performed || !isOwned)
             return;
 
         if (coll.onGround)
@@ -178,17 +190,17 @@ public class PlayerMovementController : NetworkBehaviour
 
         if (!wallJumped)
         {
-            rb.linearVelocity = new Vector2(dir.x * speed, rb.linearVelocity.y);
+            rb.linearVelocity = new Vector2(dir.x * speed + knockback.x, rb.linearVelocity.y);
         }
         else
         {
-            rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, (new Vector2(dir.x * speed, rb.linearVelocity.y)), wallJumpLerp * Time.deltaTime);
+            rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, (new Vector2(dir.x * speed + knockback.x, rb.linearVelocity.y)), wallJumpLerp * Time.deltaTime);
         }
     }
 
     private void Jump(Vector2 dir)
     {
-        jumped = true;
+        spellJumped = true;
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
         rb.linearVelocity += dir * jumpForce;
     }
@@ -202,9 +214,16 @@ public class PlayerMovementController : NetworkBehaviour
 
     public void SpellJump(Vector2 dir)
     {
-        jumped = false;
+        spellJumped = false;
         floatyTimeInSec = 1;
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
         rb.linearVelocity += dir * 12;
+    }
+
+    public void Knockback(Vector2 dir)
+    {
+        rb.AddForce(dir);
+        knockback = dir;
+        Debug.Log("Knockback: " + dir);
     }
 }

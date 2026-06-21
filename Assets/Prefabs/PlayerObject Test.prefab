@@ -901,10 +901,11 @@ MonoBehaviour:
   canMove: 1
   wallJumped: 0
   wallSlide: 0
-  jumped: 0
+  spellJumped: 0
   side: 1
   floatyTimeInSec: 0
   movement: {x: 0, y: 0}
+  knockback: {x: 0, y: 0}
 --- !u!114 &6517591035741378657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1052,8 +1053,8 @@ MonoBehaviour:
   syncInterval: 0
   JumpAction: {fileID: 3087997780289999494, guid: cf621cf4127fe3b4c9c12a161e6e9321, type: 3}
   FallMultiplier: 3
-  LowJumpMultiplier: 8
-  VeryLowJumpMultiplier: 1.7
+  JumpMultiplier: 2
+  JumpSpellMultiplier: 1.7
 --- !u!114 &8140610524751975026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1314,8 +1315,8 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  player: {fileID: 0}
-  staff: {fileID: 0}
+  player: {fileID: 7407786158499650943}
+  staff: {fileID: 8997272477913709170}
   maxDistance: 0.7
   minDistance: 0.1
   speed: 0.5

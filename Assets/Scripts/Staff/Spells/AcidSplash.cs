@@ -16,10 +16,10 @@ public class AcidSplash : Spell
 
     public void CastSpell(MultiStaffObject multiStaff, SingleStaff singleStaff)
     {
-        List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Physics, BulletType.Trail, BulletType.Split, BulletType.Bounce };
+        List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Physics, BulletType.Trail, BulletType.Split, BulletType.BounceOnWall };
         float bulletDamage = 0.5f * multiStaff.bulletDamageMult * multiStaff.MagicPower;
         float bulletHealth = 0.5f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
-        float bulletSize = 0.4f * multiStaff.ProjectileSize;
+        float bulletSize = 0.2f * multiStaff.ProjectileSize;
         float bulletSpeed = 0.8f * multiStaff.ProjectileSpeed;
 
         DirectStaff directionalInfo = multiStaff.directionalInfo;
@@ -28,13 +28,13 @@ public class AcidSplash : Spell
         bulletStats.timeToLive = 2.5f;
         bulletStats.trailLength = 0.04f;
         bulletStats.bounces = 1;
-       
+        bulletStats.sprite = SpriteLibrary.SpriteType.Circle;
 
 
-        List<BulletType> miniBulletTypes = new List<BulletType> { Bullet.BulletType.Physics, BulletType.Bounce};
+        List<BulletType> miniBulletTypes = new List<BulletType> { Bullet.BulletType.Physics, BulletType.BounceOnWall};
         float miniBulletDamage = 0.25f * multiStaff.bulletDamageMult * multiStaff.MagicPower;
         float miniBulletHealth = 0.1f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
-        float miniBulletSize = 0.1f * multiStaff.ProjectileSize;
+        float miniBulletSize = 0.05f * multiStaff.ProjectileSize;
         float miniBulletSpeed = 0.7f * multiStaff.ProjectileSpeed;
 
         BulletStats miniBulletStats = new BulletStats(miniBulletTypes, miniBulletDamage, miniBulletHealth, miniBulletSize, miniBulletSpeed, Color.greenYellow, multiStaff.player);

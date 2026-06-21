@@ -29,9 +29,17 @@ public class MultiStaffObject : NetworkBehaviour {
     public void Update()
     {
         if (!isOwned) return;
+
         Staff_1.FrameTicUpdate();
         Staff_2.FrameTicUpdate();
         Staff_3.FrameTicUpdate();
+    }
+
+    public void Awake()
+    {
+        Staff_1 = new SingleStaff(this, new List<Spell> { new Firebolt() });
+        Staff_2 = new SingleStaff(this, null);
+        Staff_3 = new SingleStaff(this, new List<Spell> { new Jump() });
     }
 
     public void Start()
@@ -43,10 +51,6 @@ public class MultiStaffObject : NetworkBehaviour {
         if (!isOwned) return;
 
         spellcasting = GetComponent<Spellcasting>();
-
-        Staff_1 = new SingleStaff(this, new List<Spell> { new Firebolt() });
-        Staff_2 = new SingleStaff(this, null);
-        Staff_3 = new SingleStaff(this, new List<Spell> { new Jump()});
     }
 
     public void UpdateSpells(List<Spell> staff1Spells, List<Spell> staff2Spells, List<Spell> staff3Spells)
@@ -82,7 +86,7 @@ public class MultiStaffObject : NetworkBehaviour {
         {
             yield return null;
         }
-        if (castBlocked) { yield break; }
+            if (castBlocked) { yield break; }
         castBlocked = true;
         singleStaff.CastSpells(this, context);
         yield return null;

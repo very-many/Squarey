@@ -16,10 +16,10 @@ public class LightningBolt : Spell
 
     public void CastSpell(MultiStaffObject multiStaff, SingleStaff singleStaff)
     {
-        List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Normal, BulletType.Bounce, BulletType.Trail};
+        List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Normal, BulletType.BounceOnWall, BulletType.Trail};
         float bulletDamage = 0.7f * multiStaff.bulletDamageMult * multiStaff.MagicPower;
         float bulletHealth = 1f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
-        float bulletSize = 0.10f * multiStaff.ProjectileSize;
+        float bulletSize = 0.04f * multiStaff.ProjectileSize;
         float bulletSpeed = 2f * multiStaff.ProjectileSpeed;
 
         DirectStaff directionalInfo = multiStaff.directionalInfo;
