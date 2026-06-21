@@ -109,6 +109,15 @@ public class GameOrchestrator : NetworkBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    public void PlayClientTransitionStart()
+    {
+        if (transitionAnimation != null)
+        {
+            Debug.Log("Scene settled. Playing transition.");
+            transitionAnimation.SetTrigger(StartHash);
+        }
+    }
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (!startTransitionAfterSceneLoad)
@@ -175,13 +184,12 @@ public class GameOrchestrator : NetworkBehaviour
 
     void OnReadyPlayersChanged(SyncList<PlayerObjectController>.Operation operation, int index, PlayerObjectController oldPlayer, PlayerObjectController newPlayer)
     {
-        Debug.Log("Ready Players changed via " + operation + ": " + readyPlayers.Count + " ready player(s)! There are " + (Players.Count - readyPlayers.Count) + " left.");
+        Debug.Log(readyPlayers.Count + " ready player(s)! There are " + (Players.Count - readyPlayers.Count) + " left.");
 
         if (!isServer)
             return;
 
         ShouldSwitchGameState();
-
     }
 
     void EnterUpgradeState()
@@ -243,7 +251,6 @@ public class GameOrchestrator : NetworkBehaviour
         currentGameState = nextState;
         readyPlayers.Clear();
 
-        // Reset all players' upgrade ready status when leaving upgrade state
         ResetUpgradeReadyStatus();
 
         preparePlayers?.Invoke();
@@ -253,7 +260,6 @@ public class GameOrchestrator : NetworkBehaviour
             Manager.ServerChangeScene(sceneName);
         }
 
-        RpcPlayTransitionStart();
         startTransitionAfterSceneLoad = true;
 
         isSwitchingScene = false;
@@ -276,15 +282,6 @@ public class GameOrchestrator : NetworkBehaviour
         if (transitionAnimation != null)
         {
             transitionAnimation.SetTrigger(EndHash);
-        }
-    }
-
-    [ClientRpc]
-    private void RpcPlayTransitionStart()
-    {
-        if (transitionAnimation != null)
-        {
-            transitionAnimation.SetTrigger(StartHash);
         }
     }
 
