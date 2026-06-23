@@ -355,17 +355,25 @@ public class Bullet : NetworkBehaviour
         playerMovement.Knockback(knockbackDirection);
     }
 
-    [ClientRpc]
+    
     private void DestroyBullet()
     {
         if (!isServer) return;
-        if (stats.bulletTypes.Contains(BulletType.Split)){
+        RpcDestroyBullet();
+    }
+
+    [ClientRpc]
+    private void RpcDestroyBullet()
+    {
+        if (!isServer) return;
+        if (stats.bulletTypes.Contains(BulletType.Split))
+        {
             RpcSplitBullet();
             ServerSplitBullet();
         }
         if (stats.bulletTypes.Contains(BulletType.Explosion))
         {
-            spellcasting.Explosion(this.transform.position, this.stats.explosionRadius ,this.stats.explosionDamage, this.stats.explosionDamageMultMaxRange);
+            spellcasting.Explosion(this.transform.position, this.stats.explosionRadius, this.stats.explosionDamage, this.stats.explosionDamageMultMaxRange);
         }
         if (stats.bulletTypes.Contains(BulletType.Trail))
         {
