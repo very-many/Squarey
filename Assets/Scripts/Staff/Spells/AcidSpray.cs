@@ -18,7 +18,7 @@ public class AcidSpray : Spell
     {
         List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Physics };
         float bulletDamage = 0.65f * multiStaff.bulletDamageMult * multiStaff.MagicPower;
-        float bulletHealth = 0.3f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
+        float bulletHealth = 0.7f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
         float bulletSize = 0.06f * multiStaff.ProjectileSize;
         float bulletSpeed = 0.8f * multiStaff.ProjectileSpeed;
 

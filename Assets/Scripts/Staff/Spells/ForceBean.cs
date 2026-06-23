@@ -18,7 +18,7 @@ public class ForceBean : Spell
     {
         List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Physics, BulletType.Trail, BulletType.BounceOnWall, BulletType.DamageScaleWithSpeed};
         float bulletDamage = 0.8f * multiStaff.bulletDamageMult * multiStaff.MagicPower * multiStaff.ProjectileSpeed;
-        float bulletHealth = 0.7f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
+        float bulletHealth = 1.4f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
         float bulletSize = 0.15f * multiStaff.ProjectileSize;
         float bulletSpeed = 1.4f * multiStaff.ProjectileSpeed;
 

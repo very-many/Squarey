@@ -18,7 +18,7 @@ public class AcidSplash : Spell
     {
         List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Physics, BulletType.Trail, BulletType.Split, BulletType.BounceOnWall };
         float bulletDamage = 0.5f * multiStaff.bulletDamageMult * multiStaff.MagicPower;
-        float bulletHealth = 0.5f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
+        float bulletHealth = 0.7f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
         float bulletSize = 0.2f * multiStaff.ProjectileSize;
         float bulletSpeed = 0.8f * multiStaff.ProjectileSpeed;
 

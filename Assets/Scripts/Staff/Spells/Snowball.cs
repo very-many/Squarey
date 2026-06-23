@@ -19,7 +19,7 @@ public class Snowball : Spell
     {
         List<BulletType> bulletTypes = new List<BulletType> { BulletType.Physics, BulletType.Trail, BulletType.BounceOnWall, BulletType.IncreaseSizeOnBounce, BulletType.DamageScaleWithSize, BulletType.KnockBackFromBullet };
         float bulletDamage = 0.7f * multiStaff.bulletDamageMult * multiStaff.ProjectileSize * multiStaff.MagicPower;
-        float bulletHealth = 0.5f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
+        float bulletHealth = 1f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
         float bulletSize = 0.15f * multiStaff.ProjectileSize;
         float bulletSpeed = 1.2f * multiStaff.ProjectileSpeed;
 

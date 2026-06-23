@@ -100,6 +100,8 @@ public class Bullet : NetworkBehaviour
             * (stats.bulletTypes.Contains(BulletType.DamageScaleWithSize) ? currentSizeMod : 1f)
             * (stats.bulletTypes.Contains(BulletType.DamageScaleWithSpeed) ? currentSpeedMod : 1f);
 
+        
+
 
         if (Time.time > _bounceEscapeTime)
         {
@@ -165,7 +167,7 @@ public class Bullet : NetworkBehaviour
                 if (stats.bulletTypes.Contains(BulletType.IncreaseSizeOnBounce))
                 {
                     currentSizeMod += velocity.magnitude * stats.growthMod;
-                    currentHealth *= (1 + (velocity.magnitude * stats.growthMod));
+                    currentHealth +=  stats.bulletHealth * (velocity.magnitude * stats.growthMod);
                     _bounceEscapeTime = Time.time + 0.05f;
                 }
             }
@@ -358,6 +360,7 @@ public class Bullet : NetworkBehaviour
     
     private void DestroyBullet()
     {
+        if (!isServer) {  return; }
         ServerDestroyBullet();
         RpcDestroyBullet();
     }

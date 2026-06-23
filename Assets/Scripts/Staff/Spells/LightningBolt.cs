@@ -18,7 +18,7 @@ public class LightningBolt : Spell
     {
         List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Normal, BulletType.BounceOnWall, BulletType.Trail};
         float bulletDamage = 0.7f * multiStaff.bulletDamageMult * multiStaff.MagicPower;
-        float bulletHealth = 1f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
+        float bulletHealth = 2f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
         float bulletSize = 0.04f * multiStaff.ProjectileSize;
         float bulletSpeed = 2f * multiStaff.ProjectileSpeed;
 

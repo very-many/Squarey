@@ -22,7 +22,7 @@ public class Firebolt : Spell
 
         List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Normal, BulletType.Trail };
         float bulletDamage = 1f * multiStaff.bulletDamageMult * multiStaff.MagicPower;
-        float bulletHealth = 0.5f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
+        float bulletHealth = 1f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
         float bulletSize = 0.05f * multiStaff.ProjectileSize;
         float bulletSpeed = multiStaff.ProjectileSpeed;
 

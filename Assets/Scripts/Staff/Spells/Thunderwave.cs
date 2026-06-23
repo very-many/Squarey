@@ -18,7 +18,7 @@ public class Thunderwave : Spell
     {
         List<BulletType> bulletTypes = new List<BulletType> { BulletType.Normal, BulletType.Trail, BulletType.KnockBackFromPlayer };
         float bulletDamage = 0.4f * multiStaff.bulletDamageMult * multiStaff.ProjectileSize * multiStaff.MagicPower;
-        float bulletHealth = 1f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
+        float bulletHealth = 2.5f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
         float bulletSize = 0.05f * multiStaff.ProjectileSize;
         float bulletSpeed = 3f * multiStaff.ProjectileSpeed;
 
