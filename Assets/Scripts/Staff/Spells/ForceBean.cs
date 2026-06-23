@@ -17,8 +17,8 @@ public class ForceBean : Spell
     public void CastSpell(MultiStaffObject multiStaff, SingleStaff singleStaff)
     {
         List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Physics, BulletType.Trail, BulletType.BounceOnWall, BulletType.DamageScaleWithSpeed};
-        float bulletDamage = 0.9f * multiStaff.bulletDamageMult * multiStaff.MagicPower * multiStaff.ProjectileSpeed;
-        float bulletHealth = 0.5f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
+        float bulletDamage = 0.8f * multiStaff.bulletDamageMult * multiStaff.MagicPower * multiStaff.ProjectileSpeed;
+        float bulletHealth = 0.7f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
         float bulletSize = 0.15f * multiStaff.ProjectileSize;
         float bulletSpeed = 1.4f * multiStaff.ProjectileSpeed;
 

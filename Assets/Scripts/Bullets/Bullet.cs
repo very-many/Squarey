@@ -51,7 +51,8 @@ public class Bullet : NetworkBehaviour
     private float currentSpeedMod;
     private float currentDamageMod;
 
-    private float currentDamage; //to be implemented
+    private float currentDamage;
+    private float currentHealth;
 
     public enum BulletType
     {
@@ -123,7 +124,7 @@ public class Bullet : NetworkBehaviour
        
 
         hit = Physics2D.CircleCast(transform.position, this.transform.localScale.magnitude * 0.4f, direction, travelDistance, otherBulletsCollision);
-        if (hit.collider != null)
+        if (hit.collider != null && hit.collider.attachedRigidbody != rb)
         {
             Collider2D collision = hit.collider;
 
@@ -164,6 +165,7 @@ public class Bullet : NetworkBehaviour
                 if (stats.bulletTypes.Contains(BulletType.IncreaseSizeOnBounce))
                 {
                     currentSizeMod += velocity.magnitude * stats.growthMod;
+                    currentHealth += velocity.magnitude * stats.growthMod;
                     _bounceEscapeTime = Time.time + 0.05f;
                 }
             }
@@ -179,17 +181,22 @@ public class Bullet : NetworkBehaviour
     {
         if (!isServer) return;
         Bullet bullet = collision.GetComponent<Bullet>();
-        if (!(stats.owner = bullet.stats.owner))
+        Debug.Log(bullet);
+        if (stats.owner != bullet.stats.owner)
         {
             if (bullet != null)
             {
-                bullet.stats.bulletHealth -= currentDamage;
-                this.stats.bulletHealth -= bullet.currentDamage;
-                if (bullet.stats.bulletHealth <= 0)
+                bullet.currentHealth -= currentDamage;
+                this.currentHealth -= bullet.currentDamage;
+
+                Debug.Log("Other Bullet: " + bullet.stats.bulletHealth);
+                Debug.Log("This Bullet: " + stats.bulletHealth);
+
+                if (bullet.currentHealth <= 0)
                 {
                     bullet.DestroyBullet();
                 }
-                if (this.stats.bulletHealth <= 0)
+                if (this.currentHealth <= 0)
                 {
                     DestroyBullet();
                 }
@@ -266,6 +273,8 @@ public class Bullet : NetworkBehaviour
         currentSizeMod = 1f;
         currentSpeedMod = 1f;
         currentDamageMod = 1f;
+
+        currentHealth = stats.bulletHealth;
 
         spellcasting = stats.owner.GetComponent<Spellcasting>();
     }
@@ -346,6 +355,7 @@ public class Bullet : NetworkBehaviour
         playerMovement.Knockback(knockbackDirection);
     }
 
+    [ClientRpc]
     private void DestroyBullet()
     {
         if (!isServer) return;

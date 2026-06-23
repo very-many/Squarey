@@ -21,6 +21,18 @@ public class Health : NetworkBehaviour
 
     public void SetMaxHealth(int newMaxHealth)
     {
+        SetMaxHealthBase(newMaxHealth);
+        CmdSetMaxHealth(newMaxHealth);
+    }
+
+    [Command]
+    private void CmdSetMaxHealth(int newMaxHealth)
+    {
+        SetMaxHealthBase(newMaxHealth);
+    }
+
+    private void SetMaxHealthBase(int newMaxHealth)
+    {
         float relativeAmount = (float)currentHealth / maxHealth;
         maxHealth = newMaxHealth;
         currentHealth = (int)(relativeAmount * newMaxHealth);
@@ -32,9 +44,6 @@ public class Health : NetworkBehaviour
     public void TakeDamage(int damage)
     {
         if (!isServer)
-            return;
-
-        if (currentHealth <= 0)
             return;
 
         currentHealth -= damage;

@@ -17,8 +17,8 @@ public class Thunderwave : Spell
     public void CastSpell(MultiStaffObject multiStaff, SingleStaff singleStaff)
     {
         List<BulletType> bulletTypes = new List<BulletType> { BulletType.Normal, BulletType.Trail, BulletType.KnockBackFromPlayer };
-        float bulletDamage = 0.2f * multiStaff.bulletDamageMult * multiStaff.ProjectileSize * multiStaff.MagicPower;
-        float bulletHealth = 0.5f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
+        float bulletDamage = 0.4f * multiStaff.bulletDamageMult * multiStaff.ProjectileSize * multiStaff.MagicPower;
+        float bulletHealth = 1f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
         float bulletSize = 0.05f * multiStaff.ProjectileSize;
         float bulletSpeed = 3f * multiStaff.ProjectileSpeed;
 
@@ -28,7 +28,7 @@ public class Thunderwave : Spell
 
         bulletStats.trailLength = 1.5f;
         bulletStats.sprite = SpriteLibrary.SpriteType.Capsule;
-        bulletStats.timeToLive = 0.05f;
+        bulletStats.timeToLive = 0.07f;
         bulletStats.knockbackForce = 30f;
 
         CastAtAngle(-24, multiStaff, singleStaff, bulletStats);
