@@ -124,7 +124,7 @@ public class Bullet : NetworkBehaviour
        
 
         hit = Physics2D.CircleCast(transform.position, this.transform.localScale.magnitude * 0.4f, direction, travelDistance, otherBulletsCollision);
-        if (hit.collider != null && hit.collider.attachedRigidbody != rb)
+        if (hit.collider != null && hit.collider.attachedRigidbody != rb && isServer)
         {
             Collider2D collision = hit.collider;
 
@@ -137,7 +137,7 @@ public class Bullet : NetworkBehaviour
 
 
         hit = Physics2D.CircleCast(transform.position, this.transform.localScale.magnitude * 0.4f, direction, travelDistance, bulletPlayerCollision);
-        if (hit.collider != null)
+        if (hit.collider != null && isServer)
         {
             Collider2D collision = hit.collider;
 
@@ -318,7 +318,7 @@ public class Bullet : NetworkBehaviour
     }
 
 
-    
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (!isServer) return;
@@ -358,12 +358,23 @@ public class Bullet : NetworkBehaviour
     
     private void DestroyBullet()
     {
-        if (!isServer) return;
+        ServerDestroyBullet();
         RpcDestroyBullet();
     }
 
     [ClientRpc]
     private void RpcDestroyBullet()
+    {
+        DestroyBulletBase();
+    }
+
+    [Server]
+    private void ServerDestroyBullet()
+    {
+        DestroyBulletBase();
+    }
+
+    private void DestroyBulletBase()
     {
         if (!isServer) return;
         if (stats.bulletTypes.Contains(BulletType.Split))
