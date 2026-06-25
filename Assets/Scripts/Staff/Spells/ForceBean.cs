@@ -27,7 +27,7 @@ public class ForceBean : Spell
         BulletStats bulletStats = new BulletStats(bulletTypes, bulletDamage, bulletHealth, bulletSize, bulletSpeed, Color.darkRed, multiStaff.player);
 
         bulletStats.trailLength = 0.3f;
-        bulletStats.bounciness = 1.3f;
+        bulletStats.bounciness = 1.2f;
         bulletStats.bounces = 10;
         bulletStats.timeToLive = 10f;
 

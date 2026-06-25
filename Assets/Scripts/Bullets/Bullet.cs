@@ -91,6 +91,7 @@ public class Bullet : NetworkBehaviour
     private void FixedUpdate()
     {
         if (rb == null) { return ; }
+
         if (Time.time > _disableTime)
             DestroyBullet();
 
@@ -168,7 +169,7 @@ public class Bullet : NetworkBehaviour
                 if (stats.bulletTypes.Contains(BulletType.IncreaseSizeOnBounce))
                 {
                     currentSizeMod += velocity.magnitude * stats.growthMod;
-                    //currentHealth +=  stats.bulletHealth * (velocity.magnitude * stats.growthMod);
+                    //dcurrentHealth +=  stats.bulletHealth * (velocity.magnitude * stats.growthMod);
                     _bounceEscapeTime = Time.time + 0.05f;
                 }
             }
@@ -383,8 +384,8 @@ public class Bullet : NetworkBehaviour
         if (!isServer) return;
         if (stats.bulletTypes.Contains(BulletType.Split))
         {
-            RpcSplitBullet();
-            //ServerSplitBullet();
+            //RpcSplitBullet();
+            ServerSplitBullet();
         }
         if (stats.bulletTypes.Contains(BulletType.Explosion))
         {
@@ -417,7 +418,7 @@ public class Bullet : NetworkBehaviour
 
             Quaternion castAngle = Quaternion.Euler(0, 0, Mathf.Atan2(castDirection.y, castDirection.x) * Mathf.Rad2Deg);
 
-            spellcasting.CastBullet(castDirection, this.transform.position, castAngle, bullet);
+            spellcasting.ServerCastBullet(castDirection, this.transform.position, castAngle, bullet);
         }
     }
 

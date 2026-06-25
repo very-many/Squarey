@@ -26,6 +26,17 @@ public class Spellcasting : NetworkBehaviour
     [Command]
     public void CmdCastBullet(Vector2 castDirection, Vector2 castPosition, Quaternion targetRotation, BulletStats bulletStats)
     {
+        BaseCastBullet(castDirection, castPosition, targetRotation, bulletStats);
+    }
+
+    [Server]
+    public void ServerCastBullet(Vector2 castDirection, Vector2 castPosition, Quaternion targetRotation, BulletStats bulletStats)
+    {
+        BaseCastBullet(castDirection, castPosition, targetRotation, bulletStats);
+    }
+
+    public void BaseCastBullet(Vector2 castDirection, Vector2 castPosition, Quaternion targetRotation, BulletStats bulletStats)
+    {
         GameObject go = null;
         if (ObjectPool.instance != null)
         {

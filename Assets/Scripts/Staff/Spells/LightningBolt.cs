@@ -8,7 +8,7 @@ public class LightningBolt : Spell
 
     public float spellRecoveryTime => 2.5f;
 
-    public float spellCastTime => 0.1f;
+    public float spellCastTime => 0.15f;
 
     public string spellImagePath => "Spells/LightningBolt";
 
