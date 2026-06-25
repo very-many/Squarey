@@ -55,6 +55,7 @@ public class PlayerMovementController : NetworkBehaviour
     private readonly int isWallHoldHash = Animator.StringToHash("isWallHold");
     private readonly int isFacingLeftHash = Animator.StringToHash("isFacingLeft");
     private bool prevFacingLeft = false;
+    private bool wasGrounded = false;
 
     public Vector2 knockback = new Vector2(0, 0);
     public bool RequestTeleport { get; set; } = true;
