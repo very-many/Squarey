@@ -10,7 +10,7 @@ public class ArmourOfHealth :Upgrade
 
     public int probabilityWeight => 20;
 
-    private int _healthIncrease = 95 + Random.Range(1, 55);
+    private int _healthIncrease = 35 + Random.Range(1, 20);
 
     public void ApplyUpgrade(PlayerMainCoordinator stats)
     {

@@ -90,6 +90,7 @@ public class Bullet : NetworkBehaviour
 
     private void FixedUpdate()
     {
+        if (rb == null) { return ; }
         if (Time.time > _disableTime)
             DestroyBullet();
 
@@ -167,7 +168,7 @@ public class Bullet : NetworkBehaviour
                 if (stats.bulletTypes.Contains(BulletType.IncreaseSizeOnBounce))
                 {
                     currentSizeMod += velocity.magnitude * stats.growthMod;
-                    currentHealth +=  stats.bulletHealth * (velocity.magnitude * stats.growthMod);
+                    //currentHealth +=  stats.bulletHealth * (velocity.magnitude * stats.growthMod);
                     _bounceEscapeTime = Time.time + 0.05f;
                 }
             }
@@ -361,8 +362,8 @@ public class Bullet : NetworkBehaviour
     private void DestroyBullet()
     {
         if (!isServer) {  return; }
-        ServerDestroyBullet();
         RpcDestroyBullet();
+        ServerDestroyBullet();
     }
 
     [ClientRpc]
@@ -383,7 +384,7 @@ public class Bullet : NetworkBehaviour
         if (stats.bulletTypes.Contains(BulletType.Split))
         {
             RpcSplitBullet();
-            ServerSplitBullet();
+            //ServerSplitBullet();
         }
         if (stats.bulletTypes.Contains(BulletType.Explosion))
         {

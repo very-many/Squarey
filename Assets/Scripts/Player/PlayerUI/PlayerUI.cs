@@ -146,7 +146,7 @@ public class PlayerUI : MonoBehaviour
         {
             if (slotIndex < 0)
             {
-                Debug.LogWarning($"Not enough slots in row to fit all {spellList.Count} spells!");
+                Debug.Log($"Not enough slots in row to fit all {spellList.Count} spells!");
                 break;
             }
 

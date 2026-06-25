@@ -65,6 +65,8 @@ public class PlayerMainCoordinator : MonoBehaviour
         SetStaffRecovery(_baseRecovery);
         SetStaffProjectileSize(_baseProjectileSize);
         SetStaffProjectileSpeed(_baseProjectileSpeed);
+        SetBulletDamageMult(_baseBulletDamageMultiplier);
+        SetBulletHealthMult(_baseBulletHealthMultiplier);
     }
 
     public void SetMaxHealth(int maxHealth) { healthObject.SetMaxHealth(maxHealth); }
@@ -96,7 +98,7 @@ public class PlayerMainCoordinator : MonoBehaviour
     public float GetStaffProjectileSize() { return staffMulti.ProjectileSize; }
 
     public void SetStaffProjectileSpeed(float speed) { staffMulti.ProjectileSpeed = speed; }
-    public float GetStaffProjectileSpeed() { return staffMulti.ProjectileSpeed; }
+    public float GetStaffProjectileSpeed() { return staffMulti.ProjectileSpeed; }d
 
     public MultiStaffObject GetMultiStaffObject() { return staffMulti; }
     public Health GetHealthObject() { return healthObject; }
