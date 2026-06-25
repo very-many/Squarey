@@ -98,7 +98,7 @@ public class PlayerMainCoordinator : MonoBehaviour
     public float GetStaffProjectileSize() { return staffMulti.ProjectileSize; }
 
     public void SetStaffProjectileSpeed(float speed) { staffMulti.ProjectileSpeed = speed; }
-    public float GetStaffProjectileSpeed() { return staffMulti.ProjectileSpeed; }d
+    public float GetStaffProjectileSpeed() { return staffMulti.ProjectileSpeed; }
 
     public MultiStaffObject GetMultiStaffObject() { return staffMulti; }
     public Health GetHealthObject() { return healthObject; }
