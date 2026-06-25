@@ -41,6 +41,13 @@ public class Health : NetworkBehaviour
         healthBar.SetHealth(currentHealth);
     }
 
+    public void ResetHealth()
+    {
+        if (!isServer)
+            return;
+        currentHealth = maxHealth;
+    }
+
     public void TakeDamage(int damage)
     {
         if (!isServer)

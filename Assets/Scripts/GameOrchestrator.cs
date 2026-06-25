@@ -311,6 +311,11 @@ public class GameOrchestrator : NetworkBehaviour
             }
 
             player.GetComponent<PlayerInput>().enabled = false;
+
+            //ready players for game state -- in upgrade state
+            player.GetComponent<MultiStaffObject>().castBlocked = false;
+            player.GetComponent<Health>().ResetHealth();
+            player.GetComponent<PlayerMovementController>().canMove = true;
         }
     }
 
