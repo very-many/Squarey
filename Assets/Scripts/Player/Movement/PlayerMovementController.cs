@@ -1,9 +1,11 @@
 using Mirror;
+using Mirror.Examples.BilliardsPredicted;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(PlayerCollisionController))]
@@ -24,6 +26,9 @@ public class PlayerMovementController : NetworkBehaviour
     public float jumpForce = 12;
     public float slideSpeed = 1;
     public float wallJumpLerp = 5;
+    public float cyoteTime = 0.05f;
+
+    private float lastCyoteTime;
 
     [Space]
     [Header("Booleans")]
@@ -55,7 +60,7 @@ public class PlayerMovementController : NetworkBehaviour
     private readonly int isWallHoldHash = Animator.StringToHash("isWallHold");
     private readonly int isFacingLeftHash = Animator.StringToHash("isFacingLeft");
     private bool prevFacingLeft = false;
-    private bool wasGrounded = false;
+    private bool isGrounded = false;
 
     public Vector2 knockback = new Vector2(0, 0);
     public bool RequestTeleport { get; set; } = true;
@@ -138,21 +143,29 @@ public class PlayerMovementController : NetworkBehaviour
             wallJumped = false;
             spellJumped = false;
 
-            // Detect landing
-            if (!wasGrounded)
-            {
-                wasGrounded = true;
-            }
-        }
-
-        if (coll.onWall && !coll.onGround && x != 0)
-        {
-            wallSlide = true;
-            WallSlide();
+            isGrounded = true;
+            lastCyoteTime = Time.time;
         }
         else
         {
-            wallSlide = false;
+            if (Time.time > lastCyoteTime + cyoteTime)
+            {
+                isGrounded = false;
+            }
+        }
+                 
+        if (coll.onWall && !coll.onGround && x != 0 && x != 0)
+        {
+            wallSlide = true;
+            WallSlide();
+            lastCyoteTime = Time.time;
+        }
+        else
+        {
+            if (Time.time > lastCyoteTime + cyoteTime)
+            {
+                wallSlide = false;
+            }
         }
 
         if (x > 0)
@@ -200,9 +213,9 @@ public class PlayerMovementController : NetworkBehaviour
         if (!context.performed || !isOwned)
             return;
 
-        if (coll.onGround)
+        if (coll.onGround || isGrounded)
             Jump(Vector2.up);
-        else if (coll.onWall)
+        else if (coll.onWall || wallSlide)
             WallJump();
     }
 

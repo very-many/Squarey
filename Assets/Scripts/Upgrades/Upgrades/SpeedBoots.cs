@@ -11,9 +11,9 @@ public class SpeedBoots : Upgrade
 
     public int probabilityWeight => 10;
 
-    private float _speedIncrease = ((float)(14 + Random.Range(1, 9))) /10;
+    private float _speedIncrease = ((float)(10 + Random.Range(1, 5))) /10;
 
-    private float _jumpIncrease = ((float)(5 + Random.Range(1, 4))) / 30;
+    private float _jumpIncrease = ((float)(10 + Random.Range(1, 6))) / 30;
 
     public void ApplyUpgrade(PlayerMainCoordinator stats)
     {

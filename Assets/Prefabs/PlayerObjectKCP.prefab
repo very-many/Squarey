@@ -419,7 +419,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2880849131567615605}
-  - component: {fileID: 8546185508910951106}
   - component: {fileID: 1723578814152105765}
   m_Layer: 0
   m_Name: RotatePoint
@@ -445,31 +444,6 @@ Transform:
   - {fileID: 3042842379290083568}
   m_Father: {fileID: 590256131710956856}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8546185508910951106
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5934024943026539830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b571bc5cbb060e4aa188b9145e83233, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Shooting
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
-  pointerPosition: {fileID: 4289195454604976006, guid: cf621cf4127fe3b4c9c12a161e6e9321, type: 3}
-  characterRenderer: {fileID: 1083533544580002407}
-  weaponRenderer: {fileID: 2282377489031990512}
-  isFiring: 0
-  bullet: {fileID: 5995972970576921285, guid: f9fbd1683bccf5845bacd0465a610ad5, type: 3}
-  bulletTransform: {fileID: 3042842379290083568}
-  canFire: 1
-  timeBetweenFiring: 0.3
-  gunRotation: {x: 0, y: 0, z: 0, w: 0}
-  direction: {x: 0, y: 0}
 --- !u!114 &1723578814152105765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -902,16 +876,22 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   rb: {fileID: 0}
-  PlayerObject: {fileID: 1668110721943493719}
+  PlayerVisuals: {fileID: 0}
   speed: 7
   jumpForce: 12
   slideSpeed: 1
   wallJumpLerp: 5
+  cyoteTime: 0.05
   canMove: 1
   wallJumped: 0
   wallSlide: 0
+  spellJumped: 0
   side: 1
+  floatyTimeInSec: 0
   movement: {x: 0, y: 0}
+  playerInput: {fileID: 0}
+  animator: {fileID: 0}
+  knockback: {x: 0, y: 0}
 --- !u!114 &6517591035741378657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -975,7 +955,7 @@ MonoBehaviour:
     m_ActionName: 'Player/Aim[/Mouse/position]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8546185508910951106}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Shooting, Assembly-CSharp
         m_MethodName: OnFire
         m_Mode: 0
@@ -1023,7 +1003,8 @@ MonoBehaviour:
   syncInterval: 0
   JumpAction: {fileID: 3087997780289999494, guid: cf621cf4127fe3b4c9c12a161e6e9321, type: 3}
   FallMultiplier: 3
-  LowJumpMultiplier: 8
+  JumpMultiplier: 2
+  JumpSpellMultiplier: 1.7
 --- !u!114 &8140610524751975026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1039,7 +1020,8 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  PlayerSprite: {fileID: 0}
+  BodyRenderer: {fileID: 0}
+  CapeRenderer: {fileID: 0}
   PlayerCosmetics:
   - {r: 0.8627451, g: 0.19215687, b: 0.19607843, a: 1}
   - {r: 0, g: 0.7490196, b: 1, a: 1}

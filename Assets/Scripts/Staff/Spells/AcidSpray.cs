@@ -9,7 +9,7 @@ public class AcidSpray : Spell
 
     public float spellRecoveryTime => 3f;
 
-    public float spellCastTime => 0.3f;
+    public float spellCastTime => 0.25f;
 
     public string spellImagePath => "Spells/AcidSpray";
 
