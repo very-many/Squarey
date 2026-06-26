@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using static Bullet;
+using SmallHedge.SoundManager;
 
 public class LightningBolt : Spell
 {
@@ -16,6 +17,9 @@ public class LightningBolt : Spell
 
     public void CastSpell(MultiStaffObject multiStaff, SingleStaff singleStaff)
     {
+        // Play sound effect
+        SoundManager.PlaySound(SoundType.Spell_LightningBolt);
+
         List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Normal, BulletType.BounceOnWall, BulletType.Trail};
         float bulletDamage = 0.7f * multiStaff.bulletDamageMult * multiStaff.MagicPower;
         float bulletHealth = 2f * multiStaff.bulletHealthMult * multiStaff.MagicPower;

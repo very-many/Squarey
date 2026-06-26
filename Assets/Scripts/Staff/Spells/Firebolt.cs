@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using static Bullet;
+using SmallHedge.SoundManager;
 
 public class Firebolt : Spell
 {
@@ -19,6 +20,9 @@ public class Firebolt : Spell
             Debug.LogError("Firebolt: Missing required components (multiStaff " + multiStaff + ", directionalInfo " + multiStaff.directionalInfo + ", or spellcasting " + multiStaff.spellcasting + ")");
             return;
         }
+
+        // Play sound effect
+        SoundManager.PlaySound(SoundType.Spell_Firebolt);
 
         List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Normal, BulletType.Trail };
         float bulletDamage = 1f * multiStaff.bulletDamageMult * multiStaff.MagicPower;

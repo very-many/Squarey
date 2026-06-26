@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
 using static Bullet;
+using SmallHedge.SoundManager;
 
 public class Snowball : Spell
 {
@@ -17,6 +18,9 @@ public class Snowball : Spell
 
     public void CastSpell(MultiStaffObject multiStaff, SingleStaff singleStaff)
     {
+        // Play sound effect
+        SoundManager.PlaySound(SoundType.Spell_Snowball);
+
         List<BulletType> bulletTypes = new List<BulletType> { BulletType.Physics, BulletType.Trail, BulletType.BounceOnWall, BulletType.IncreaseSizeOnBounce, BulletType.DamageScaleWithSize, BulletType.KnockBackFromBullet };
         float bulletDamage = 0.7f * multiStaff.bulletDamageMult * multiStaff.ProjectileSize * multiStaff.MagicPower;
         float bulletHealth = 1f * multiStaff.bulletHealthMult * multiStaff.MagicPower;

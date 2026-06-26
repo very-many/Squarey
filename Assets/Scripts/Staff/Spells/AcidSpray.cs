@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using static Bullet;
+using SmallHedge.SoundManager;
 
 public class AcidSpray : Spell
 {
@@ -16,6 +17,9 @@ public class AcidSpray : Spell
 
     public void CastSpell(MultiStaffObject multiStaff, SingleStaff singleStaff)
     {
+        // Play sound effect
+        SoundManager.PlaySound(SoundType.Spell_AcidSpray);
+
         List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Physics };
         float bulletDamage = 0.65f * multiStaff.bulletDamageMult * multiStaff.MagicPower;
         float bulletHealth = 0.7f * multiStaff.bulletHealthMult * multiStaff.MagicPower;

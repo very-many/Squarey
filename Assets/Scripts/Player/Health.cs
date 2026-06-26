@@ -2,6 +2,7 @@ using Mirror;
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using SmallHedge.SoundManager;
 
 public class Health : NetworkBehaviour
 {
@@ -76,6 +77,7 @@ public class Health : NetworkBehaviour
     {
         //spawn hit effect bzw. particles
         //spawn hit sound
+        SoundManager.PlaySound(SoundType.Hit);
     }
 
     [ClientRpc]

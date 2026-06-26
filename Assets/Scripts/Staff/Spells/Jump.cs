@@ -1,4 +1,5 @@
 using UnityEngine;
+using SmallHedge.SoundManager;
 
 public class Jump : Spell
 {
@@ -14,6 +15,10 @@ public class Jump : Spell
 
     public void CastSpell(MultiStaffObject multiStaff, SingleStaff singleStaff)
     {
+        // Play sound effect
+        SoundManager.PlaySound(SoundType.Spell_Jump);
+
         multiStaff.spellcasting.Jump();
+
     }
 }

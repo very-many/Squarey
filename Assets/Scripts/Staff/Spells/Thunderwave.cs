@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using static Bullet;
+using SmallHedge.SoundManager;
 
 public class Thunderwave : Spell
 {
@@ -16,6 +17,9 @@ public class Thunderwave : Spell
 
     public void CastSpell(MultiStaffObject multiStaff, SingleStaff singleStaff)
     {
+        // Play sound effect
+        SoundManager.PlaySound(SoundType.Spell_Thunderwave);
+
         List<BulletType> bulletTypes = new List<BulletType> { BulletType.Normal, BulletType.Trail, BulletType.KnockBackFromPlayer };
         float bulletDamage = 0.4f * multiStaff.bulletDamageMult * multiStaff.ProjectileSize * multiStaff.MagicPower;
         float bulletHealth = 2.5f * multiStaff.bulletHealthMult * multiStaff.MagicPower;

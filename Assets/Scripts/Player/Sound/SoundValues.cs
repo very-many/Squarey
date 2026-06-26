@@ -4,11 +4,16 @@ namespace SmallHedge.SoundManager
     {
         Footstep,
         Jump,
-        PowerJump,
         Land,
-        Slide,
-        Attack,
         Death,
-        Hurt
+        Hit,
+        Spell_Jump,
+        Spell_AcidSplash,
+        Spell_AcidSpray,
+        Spell_Firebolt,
+        Spell_ForceBeam,
+        Spell_LightningBolt,
+        Spell_Snowball,
+        Spell_Thunderwave
     }
 }
