@@ -27,6 +27,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Game4.unity
     guid: 3ede11ee2ab59a74aa11bc8c6809ff6a
   - enabled: 1
+    path: Assets/Scenes/Game5.unity
+    guid: 1a5faaa41af55a74883a690ecbb06d0c
+  - enabled: 1
     path: Assets/Scenes/Upgrade.unity
     guid: 857eb3d157a6cfb49990970f1c0a5d69
   m_configObjects:
