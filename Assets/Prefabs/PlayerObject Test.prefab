@@ -1021,6 +1021,7 @@ MonoBehaviour:
   side: 1
   floatyTimeInSec: 0
   movement: {x: 0, y: 0}
+  playerInput: {fileID: 6517591035741378657}
   animator: {fileID: 3735691441776991881}
   knockback: {x: 0, y: 0}
 --- !u!114 &6517591035741378657

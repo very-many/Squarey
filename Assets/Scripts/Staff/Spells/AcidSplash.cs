@@ -6,7 +6,7 @@ public class AcidSplash : Spell
 {
     public string spellTitle => "Acid Splash";
 
-    public float spellRecoveryTime => 4f;
+    public float spellRecoveryTime => 3.5f;
 
     public float spellCastTime => 0.3f;
 

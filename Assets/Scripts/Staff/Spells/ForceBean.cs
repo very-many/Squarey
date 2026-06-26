@@ -8,7 +8,7 @@ public class ForceBean : Spell
 
     public float spellRecoveryTime => 3f;
 
-    public float spellCastTime => 0.2f;
+    public float spellCastTime => 0.25f;
 
     public string spellImagePath => "Spells/ForceBean";
 

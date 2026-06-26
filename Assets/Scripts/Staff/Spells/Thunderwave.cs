@@ -8,7 +8,7 @@ public class Thunderwave : Spell
 
     public float spellRecoveryTime => 2;
 
-    public float spellCastTime => 0.3f;
+    public float spellCastTime => 0.25f;
 
     public string spellImagePath => "Spells/Thunderwave";
 

@@ -1,2 +1,13 @@
 fileFormatVersion: 2
 guid: 71c954629c4cf7e46a3d28b909b54d0f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - staffMulti: {instanceID: 0}
+  - styleSheet: {fileID: 7433441132597879392, guid: 30fd93adff01b2247955c9fca8fb74ff, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

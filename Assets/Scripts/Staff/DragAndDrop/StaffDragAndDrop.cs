@@ -1,7 +1,4 @@
-using Mono.Cecil;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -9,7 +6,8 @@ using UnityEngine.UIElements;
 
 public class StaffDragAndDrop : MonoBehaviour
 {
-    public StyleSheet styleSheet;
+    [SerializeField]
+    private StyleSheet styleSheet;
     public MultiStaffObject staffMulti;
     public PlayerMainCoordinator playerMainCoordinator;
 
@@ -42,7 +40,6 @@ public class StaffDragAndDrop : MonoBehaviour
     {
         _root = GetComponent<UIDocument>().rootVisualElement;
 
-        var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/Staff/DragAndDrop/StaffDragAndDrop.uss");
         if (styleSheet != null) _root.styleSheets.Add(styleSheet);
 
         VisualElement mainContainer = new VisualElement() { name = "slots-container" };

@@ -1,11 +1,6 @@
-using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static UnityEngine.Rendering.DebugUI.Table;
 
 public class UpgradeUI : MonoBehaviour
 {
