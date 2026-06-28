@@ -16,7 +16,7 @@
     margin: 10px;
     border-width: 2px;
     border-color: white;
-    background-image: resource("Assets/Resources/Sprite_MissingNo.png")
+    background-image: resource("Sprite_MissingNo")
 }
 
 .upgrade-card {
