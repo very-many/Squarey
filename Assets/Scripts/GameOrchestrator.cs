@@ -41,8 +41,8 @@ public class GameOrchestrator : NetworkBehaviour
     public int CurrentCountdown => currentCountdown;
 
     [Header("Scenes")]
-    [SerializeField] private List<UnityEngine.Object> GameScenes;
-    [SerializeField] private UnityEngine.Object UpgradeScene;
+    [SerializeField] private List<string> GameScenes;
+    [SerializeField] private string UpgradeScene;
 
     [Header("Settings")]
     [SerializeField] private float sceneSwitchDelay = 3f;
@@ -189,7 +189,7 @@ public class GameOrchestrator : NetworkBehaviour
             return;
         }
 
-        StartCoroutine(SwitchSceneAfterDelay(GameState.Upgrade, UpgradeScene.name, () => RpcSpawnPlayersUpgrade()));
+        StartCoroutine(SwitchSceneAfterDelay(GameState.Upgrade, UpgradeScene, () => RpcSpawnPlayersUpgrade()));
     }
 
     void EnterGameState()
@@ -203,7 +203,7 @@ public class GameOrchestrator : NetworkBehaviour
             return;
         }
 
-        string randomScene = GameScenes[UnityEngine.Random.Range(0, GameScenes.Count)].name;
+        string randomScene = GameScenes[UnityEngine.Random.Range(0, GameScenes.Count)];
         StartCoroutine(SwitchSceneAfterDelay(GameState.Game, randomScene, () => RpcSpawnPlayersGame()));
     }
 

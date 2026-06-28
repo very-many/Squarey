@@ -1,11 +1,8 @@
 using Mirror;
-using Mirror.Examples.BilliardsPredicted;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(PlayerCollisionController))]

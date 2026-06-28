@@ -13,7 +13,7 @@
     align-items: center;
     margin-right: 10px;
     border-radius: 5px;
-    background-image: resource("Assets/ImageAssetImports(Josa)/Wizard Staff.png")
+    background-image: resource("Wizard Staff")
 }
 .staff-icon.on-Cooldown {
     background-color: #222;
@@ -57,5 +57,5 @@
     border-color: white;
     background-color: #444;
     position: relative;
-    background-image: resource("Assets/Resources/Sprite_MissingNo.png") !important
+    background-image: resource("Sprite_MissingNo") !important
 }
