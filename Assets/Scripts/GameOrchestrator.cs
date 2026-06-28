@@ -45,7 +45,7 @@ public class GameOrchestrator : NetworkBehaviour
     [SerializeField] private string UpgradeScene;
 
     [Header("Settings")]
-    [SerializeField] private float sceneSwitchDelay = 3f;
+    [SerializeField] private const int countdownStart = 3;
     [SerializeField] private float transitionDelay = 0.5f;
 
 
@@ -54,6 +54,7 @@ public class GameOrchestrator : NetworkBehaviour
     private CustomNetworkManager manager;
     private bool isSwitchingScene;
     private bool startTransitionAfterSceneLoad;
+    private bool startPostSceneCountdownAfterLoad;
 
     private CustomNetworkManager Manager
     {
@@ -104,6 +105,13 @@ public class GameOrchestrator : NetworkBehaviour
     {
         if (!startTransitionAfterSceneLoad)
         {
+            if (startPostSceneCountdownAfterLoad && isServer)
+            {
+                startPostSceneCountdownAfterLoad = false;
+                StartCoroutine(PostSceneCountdown());
+            }
+
+            SyncCountdownLabel();
             return;
         }
 
@@ -113,13 +121,26 @@ public class GameOrchestrator : NetworkBehaviour
         {
             transitionAnimation.SetTrigger(StartHash);
         }
+
+        SyncCountdownLabel();
+
+        if (startPostSceneCountdownAfterLoad && isServer)
+        {
+            startPostSceneCountdownAfterLoad = false;
+            StartCoroutine(PostSceneCountdown());
+        }
     }
 
     private void OnCountdownChanged(int oldValue, int newValue)
     {
+        SyncCountdownLabel();
+    }
+
+    private void SyncCountdownLabel()
+    {
         if (timer != null)
         {
-            timer.text = newValue > 0 ? newValue.ToString() : "";
+            timer.text = currentCountdown > 0 ? currentCountdown.ToString() : "";
         }
     }
 
@@ -211,29 +232,10 @@ public class GameOrchestrator : NetworkBehaviour
     {
         isSwitchingScene = true;
 
-        float elapsedTime = 0f;
-        bool transitionStarted = false;
-        float transitionStartTime = Mathf.Max(0f, sceneSwitchDelay - transitionDelay);
-
-        while (elapsedTime < sceneSwitchDelay)
-        {
-            if (nextState == GameState.Game)
-            {
-                int countdownValue = Mathf.CeilToInt(sceneSwitchDelay - elapsedTime);
-                currentCountdown = countdownValue;
-            }
-
-            if (!transitionStarted && elapsedTime >= transitionStartTime)
-            {
-                transitionStarted = true;
-                RpcPlayTransitionEnd();
-            }
-
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
         currentCountdown = 0;
+        RpcPlayTransitionEnd();
+        yield return new WaitForSeconds(transitionDelay);
+
         currentGameState = nextState;
         readyPlayers.Clear();
 
@@ -244,12 +246,24 @@ public class GameOrchestrator : NetworkBehaviour
         if (Manager != null)
         {
             RpcPlayTransitionStart();
+            startTransitionAfterSceneLoad = true;
+            startPostSceneCountdownAfterLoad = nextState == GameState.Game;
             Manager.ServerChangeScene(sceneName);
         }
 
-        startTransitionAfterSceneLoad = true;
-
         isSwitchingScene = false;
+    }
+
+    private IEnumerator PostSceneCountdown()
+    {
+        for (int countdown = countdownStart; countdown > 0; countdown--)
+        {
+            currentCountdown = countdown;
+            yield return new WaitForSeconds(1f);
+        }
+
+        currentCountdown = 0;
+        RpcEnablePlayerCasting();
     }
 
     private void ResetUpgradeReadyStatus()
@@ -286,6 +300,7 @@ public class GameOrchestrator : NetworkBehaviour
             player.GetComponent<PlayerCosmeticController>().PlayerCosmeticsSetup();
             player.transform.GetChild(0).gameObject.SetActive(true);
             player.GetComponent<PlayerInput>().enabled = true;
+            player.GetComponent<MultiStaffObject>().castLocked = true;
 
             // Only the local player's controller should start UI and request teleport
             var playerNetworkIdentity = player.GetComponent<NetworkIdentity>();
@@ -319,6 +334,18 @@ public class GameOrchestrator : NetworkBehaviour
         }
     }
 
+    [ClientRpc]
+    private void RpcEnablePlayerCasting()
+    {
+        foreach (var player in Players)
+        {
+            if (player != null)
+            {
+                player.GetComponent<MultiStaffObject>().castLocked = false;
+            }
+        }
+    }
+
     public void AddPlayerReady(PlayerObjectController player)
     {
         if (!isServer || player == null)
@@ -337,5 +364,11 @@ public class GameOrchestrator : NetworkBehaviour
         {
             readyPlayers.Remove(player);
         }
+    }
+
+    internal void LeaveGame()
+    {
+        //TODO
+        throw new NotImplementedException();
     }
 }

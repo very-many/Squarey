@@ -112,6 +112,7 @@ public class UpgradeUI : MonoBehaviour
 
     private void ChooseUpgrade(Button upgradeChoiceCard)
     {
+        if (upgradeChoiceCard == null) { return; }
         Upgrade selectedUpgrade = upgradeChoiceCard.userData as Upgrade;
 
         playerMainCoordinator.Upgrades.Add(selectedUpgrade);

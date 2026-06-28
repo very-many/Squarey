@@ -546,7 +546,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 6132397117031619742, guid: 5f4ec8f379d7a3d48a86bb052d0e6a28, type: 3}
+  m_Sprite: {fileID: 1212207724575282330, guid: fb1ed2226a07cdf41996826915fab27c, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -1200,35 +1200,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-<<<<<<< HEAD
-    - target: {fileID: 2757935405219083423, guid: d341f4f7ce4c4204998252b45bef758e, type: 3}
-      propertyPath: GameScenes.Array.size
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 2757935405219083423, guid: d341f4f7ce4c4204998252b45bef758e, type: 3}
-      propertyPath: 'GameScenes.Array.data[1]'
-      value: 
-      objectReference: {fileID: 102900000, guid: 1570c8724a9b23345aabb4d1e0f80f48, type: 3}
-    - target: {fileID: 2757935405219083423, guid: d341f4f7ce4c4204998252b45bef758e, type: 3}
-      propertyPath: 'GameScenes.Array.data[2]'
-      value: 
-      objectReference: {fileID: 102900000, guid: c7086caac27c39e4c9807370a20d00c4, type: 3}
-    - target: {fileID: 2757935405219083423, guid: d341f4f7ce4c4204998252b45bef758e, type: 3}
-      propertyPath: 'GameScenes.Array.data[3]'
-      value: 
-      objectReference: {fileID: 102900000, guid: 61dc357cf19252c45a0eaaa88fd9df3f, type: 3}
-    - target: {fileID: 2757935405219083423, guid: d341f4f7ce4c4204998252b45bef758e, type: 3}
-      propertyPath: 'GameScenes.Array.data[4]'
-      value: 
-      objectReference: {fileID: 102900000, guid: 3ede11ee2ab59a74aa11bc8c6809ff6a, type: 3}
-    - target: {fileID: 2757935405219083423, guid: d341f4f7ce4c4204998252b45bef758e, type: 3}
-      propertyPath: 'GameScenes.Array.data[5]'
-      value: 
-      objectReference: {fileID: 102900000, guid: 1a5faaa41af55a74883a690ecbb06d0c, type: 3}
-    - target: {fileID: 4335131577718741092, guid: d341f4f7ce4c4204998252b45bef758e, type: 3}
-=======
     - target: {fileID: 4079046715975075790, guid: 4df56cd8f81fed14c88a58a36266564a, type: 3}
->>>>>>> 29dc5ada722ee415cf5c39fe14a2a74c22dea2b7
       propertyPath: m_Name
       value: Network Manager
       objectReference: {fileID: 0}

@@ -643,6 +643,8 @@ MonoBehaviour:
   - Game
   - Game1
   - Game2
+  - Game3
+  - Game4
+  - Game5
   UpgradeScene: Upgrade
-  sceneSwitchDelay: 3
   transitionDelay: 0.5
