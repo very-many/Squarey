@@ -290,8 +290,8 @@ Transform:
   m_GameObject: {fileID: 1232208885585044902}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.007, y: -0.02, z: 0}
-  m_LocalScale: {x: 0.83769995, y: 0.97374, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.83, y: 0.97, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 590256131710956856}
@@ -941,7 +941,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.5, y: 1}
+  m_Size: {x: 0.4182427, y: 0.9693757}
   m_Direction: 0
 --- !u!50 &8634550544166593634
 Rigidbody2D:
@@ -990,10 +990,12 @@ MonoBehaviour:
   onRightWall: 0
   onLeftWall: 0
   wallSide: 0
-  collisionRadius: 0.125
+  bottomSize: {x: 0.16, y: 0.16}
+  rightSize: {x: 0.25, y: 1}
+  leftSize: {x: 0.25, y: 1}
   bottomOffset: {x: 0, y: -0.5}
-  rightOffset: {x: 0.15, y: 0}
-  leftOffset: {x: -0.15, y: 0}
+  rightOffset: {x: 0.1, y: 0}
+  leftOffset: {x: -0.1, y: 0}
 --- !u!114 &4732947555476862298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1150,6 +1152,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 5fd2ddde-55cb-431a-9aa8-8235624bad7d
     m_ActionName: 'Player/Menu[/Keyboard/tab]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 52b1db76-5162-46e7-9193-72d68603ad6a
+    m_ActionName: 'Player/PauseMenu[/Keyboard/escape]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -1232,6 +1238,7 @@ MonoBehaviour:
   syncInterval: 0
   player: {fileID: 0}
   castBlocked: 0
+  castLocked: 0
   directionalInfo: {fileID: 8232137694359425651}
   spellcasting: {fileID: 0}
   playerUI: {fileID: 0}

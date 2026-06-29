@@ -151,7 +151,7 @@ public class PlayerMovementController : NetworkBehaviour
             }
         }
                  
-        if (coll.onWall && !coll.onGround && x != 0 && x != 0)
+        if (coll.onWall && !coll.onGround && x != 0 && rb.linearVelocity.y <= 0f)
         {
             wallSlide = true;
             WallSlide();
