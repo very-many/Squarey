@@ -1,17 +1,12 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    //[SerializeField] private string mainMenuSceneName = "MainMenu";
     private GameObject backgroundContainer;
     private List<GameObject> menuContainers = new List<GameObject>();
-    private int currentMenuIndex = 0;
+    private readonly Stack<GameObject> menuStack = new Stack<GameObject>();
 
     public static PauseMenu Instance { get; private set; }
 
@@ -34,59 +29,127 @@ public class PauseMenu : MonoBehaviour
     private void Start()
     {
         backgroundContainer = transform.GetChild(0).gameObject;
-        Debug.Log("Background Container: " + backgroundContainer.name, backgroundContainer);
         for (int i = 0; i < backgroundContainer.transform.childCount; i++)
         {
-            Debug.Log("Child " + i + ":" + backgroundContainer.transform.GetChild(i).gameObject.name);
             menuContainers.Add(backgroundContainer.transform.GetChild(i).gameObject);
-            Debug.Log("Menu Container: " + menuContainers[i].name, menuContainers[i]);
         }
 
+        InitializeMenuState();
+
+    }
+
+    private void InitializeMenuState()
+    {
+        backgroundContainer.SetActive(false);
+        menuStack.Clear();
+
+        for (int i = 0; i < menuContainers.Count; i++)
+        {
+            menuContainers[i].SetActive(false);
+        }
     }
 
     public void OnOpenMenu(InputAction.CallbackContext context)
     {
-        if (currentMenuIndex == 0) //Nothing is open
+        if (!context.performed)
+        {
+            return;
+        }
+
+        if (menuStack.Count == 0)
         {
             EnablePauseMenu();
+            return;
         }
-        else if (currentMenuIndex == 1) //Pause Menu is open
+
+        if (menuStack.Count == 1)
         {
             DisablePauseMenu();
+            return;
         }
-        else if(currentMenuIndex > 1) //Submenu is open
-        {
-            DisableSublevelMenu(currentMenuIndex);
-        }
+
+        CloseCurrentMenu();
     }
 
     private void EnablePauseMenu()
     {
         backgroundContainer.SetActive(true);
-        menuContainers[currentMenuIndex].SetActive(true);
+        PushMenu(menuContainers[0]);
         if (GameOrchestrator.Instance != null) GameOrchestrator.Instance.DisableLocalPlayerInput();
-        currentMenuIndex = 1;
     }
+
     private void DisablePauseMenu()
     {
-        for (int i = 0; i < menuContainers.Count; i++)
+        while (menuStack.Count > 0)
         {
-            menuContainers[i].SetActive(false);
+            menuStack.Pop().SetActive(false);
         }
+
         backgroundContainer.SetActive(false);
         if (GameOrchestrator.Instance != null) GameOrchestrator.Instance.EnableLocalPlayerInput();
-        currentMenuIndex = 0;
     }
+
     private void EnableSublevelMenu(int menuIndex)
     {
-        menuContainers[0].SetActive(false);
-        menuContainers[menuIndex].SetActive(true);
+        if (menuIndex < 0 || menuIndex >= menuContainers.Count)
+        {
+            return;
+        }
+
+        if (menuStack.Count == 0)
+        {
+            EnablePauseMenu();
+        }
+
+        if (menuStack.Count > 0)
+        {
+            menuStack.Peek().SetActive(false);
+        }
+
+        PushMenu(menuContainers[menuIndex]);
     }
+
     private void DisableSublevelMenu(int menuIndex)
     {
+        if (menuIndex < 0 || menuIndex >= menuContainers.Count || menuStack.Count == 0)
+        {
+            return;
+        }
+
         menuContainers[menuIndex].SetActive(false);
-        menuContainers[0].SetActive(true);
-        currentMenuIndex = 0;
+
+        if (menuStack.Count > 0)
+        {
+            menuStack.Pop();
+        }
+
+        if (menuStack.Count > 0)
+        {
+            menuStack.Peek().SetActive(true);
+        }
+        else
+        {
+            backgroundContainer.SetActive(false);
+            if (GameOrchestrator.Instance != null) GameOrchestrator.Instance.EnableLocalPlayerInput();
+        }
+    }
+
+    private void PushMenu(GameObject menu)
+    {
+        menu.SetActive(true);
+        menuStack.Push(menu);
+    }
+
+    private void CloseCurrentMenu()
+    {
+        if (menuStack.Count <= 1)
+        {
+            return;
+        }
+
+        GameObject currentMenu = menuStack.Pop();
+        currentMenu.SetActive(false);
+        menuStack.Peek().SetActive(true);
     }
 
     public void OnResumeGame()
@@ -99,16 +162,14 @@ public class PauseMenu : MonoBehaviour
         if (GameOrchestrator.Instance != null) GameOrchestrator.Instance.LeaveGame();
         else
         {
-            //Exit game
-            Application.Quit();
-            //exit 
+            if(Application.isEditor) UnityEditor.EditorApplication.ExitPlaymode();
+            else Application.Quit();
         }
     }
 
     public void OnOptions()
     {
         EnableSublevelMenu(1);
-        throw new NotImplementedException();
     }
 
 }
