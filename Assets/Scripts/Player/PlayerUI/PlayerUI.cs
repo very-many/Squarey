@@ -59,15 +59,6 @@ public class PlayerUI : MonoBehaviour
         VisualElement mainContainer = new VisualElement() { name = "main-container" };
         mainContainer.AddToClassList("main-container");
 
-
-        mainContainer.style.position = Position.Absolute;
-
-        mainContainer.style.flexDirection = FlexDirection.Row;
-
-        mainContainer.style.left = Length.Percent(50);
-        mainContainer.style.bottom = 20;
-        mainContainer.style.translate = new Translate(Length.Percent(-50), 0);
-
         _root.Add(mainContainer);
 
         // Create 3 rows
