@@ -36,8 +36,6 @@ public class PlayerMovementController : NetworkBehaviour
 
     public int side = 1;
 
-    public float floatyTimeInSec = 0;
-
     [Space]
     [Header("Input")]
     public Vector2 movement;
@@ -137,9 +135,13 @@ public class PlayerMovementController : NetworkBehaviour
 
         if (coll.onGround)
         {
-            wallJumped = false;
-            spellJumped = false;
+            if (Time.time > lastCyoteTime + 0.2)
+            {
+                spellJumped = false;
+            }
 
+            wallJumped = false;
+            
             isGrounded = true;
             lastCyoteTime = Time.time;
         }
@@ -261,7 +263,7 @@ public class PlayerMovementController : NetworkBehaviour
 
     private void Jump(Vector2 dir)
     {
-        spellJumped = true;
+        spellJumped = false;
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
         rb.linearVelocity += dir * jumpForce;
     }
@@ -275,8 +277,7 @@ public class PlayerMovementController : NetworkBehaviour
 
     public void SpellJump(Vector2 dir)
     {
-        spellJumped = false;
-        floatyTimeInSec = 1;
+        spellJumped = true;
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
         rb.linearVelocity += dir * 12;
     }

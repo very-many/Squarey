@@ -1023,7 +1023,6 @@ MonoBehaviour:
   wallSlide: 0
   spellJumped: 0
   side: 1
-  floatyTimeInSec: 0
   movement: {x: 0, y: 0}
   animator: {fileID: 3735691441776991881}
   knockback: {x: 0, y: 0}
@@ -1179,7 +1178,7 @@ MonoBehaviour:
   JumpAction: {fileID: 3087997780289999494, guid: cf621cf4127fe3b4c9c12a161e6e9321, type: 3}
   FallMultiplier: 3
   JumpMultiplier: 2
-  JumpSpellMultiplier: 1.7
+  JumpSpellMultiplier: 1.4
 --- !u!114 &8140610524751975026
 MonoBehaviour:
   m_ObjectHideFlags: 0
