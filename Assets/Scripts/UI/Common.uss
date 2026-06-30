@@ -1,0 +1,15 @@
+.readyPlayers-container {
+    background-color: rgba(255, 0, 55, 0.5);
+    height: 50px;
+    width: 100%;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.readyPlayers-label {
+    color: white;
+    font-size: 20px;
+    -unity-font-style: bold;
+    unity-text-align: middle-center;
+}

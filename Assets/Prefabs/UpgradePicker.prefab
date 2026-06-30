@@ -69,4 +69,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeUI
   styleSheet: {fileID: 7433441132597879392, guid: 199aa97b83f331641ab2b589491ba221, type: 3}
+  commonStyleSheet: {fileID: 7433441132597879392, guid: 05cc30269ec61804fa0106f406a72d37, type: 3}
   playerMainCoordinator: {fileID: 0}
