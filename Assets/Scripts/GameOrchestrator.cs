@@ -72,6 +72,8 @@ public class GameOrchestrator : NetworkBehaviour
             return Manager.GamePlayers;
         }
     }
+    public int PlayerCount => Players.Count;             //make player count available before Scene- change
+    public event Action<int, int, bool> ReadyPlayersChanged;  //! Subscribed by UpgradeController
 
     public PlayerObjectController LocalPlayer
     {
@@ -111,6 +113,8 @@ public class GameOrchestrator : NetworkBehaviour
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
+
+    
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
@@ -189,7 +193,12 @@ public class GameOrchestrator : NetworkBehaviour
             return;
 
         ShouldSwitchGameState();
-    }
+        
+        ReadyPlayersChanged?.Invoke(
+            readyPlayers.Count,
+            Players.Count,
+            readyPlayers.Contains(LocalPlayer));
+        }
 
     void EnterUpgradeState()
     {
@@ -220,6 +229,7 @@ public class GameOrchestrator : NetworkBehaviour
         StartCoroutine(SwitchSceneAfterDelay(GameState.Game, randomScene, () => RpcSpawnPlayersGame()));
     }
 
+    
     private IEnumerator SwitchSceneAfterDelay(GameState nextState, string sceneName, Action preparePlayers)
     {
         if (isSwitchingScene)

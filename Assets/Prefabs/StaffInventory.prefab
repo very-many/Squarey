@@ -69,5 +69,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StaffDragAndDrop
   styleSheet: {fileID: 7433441132597879392, guid: 22545b7d187bce044b8be22d00764f5f, type: 3}
+  commonStyleSheet: {fileID: 7433441132597879392, guid: 05cc30269ec61804fa0106f406a72d37, type: 3}
   staffMulti: {fileID: 0}
   playerMainCoordinator: {fileID: 0}

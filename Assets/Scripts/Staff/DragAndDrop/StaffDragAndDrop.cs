@@ -3,16 +3,24 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System;
+using System.Collections;
 
 public class StaffDragAndDrop : MonoBehaviour
 {
     [SerializeField]
     private StyleSheet styleSheet;
+    public StyleSheet commonStyleSheet;
     public MultiStaffObject staffMulti;
     public PlayerMainCoordinator playerMainCoordinator;
 
     private VisualElement _root;
     private PlayerMenuCaller _caller;
+
+    public event Action StaffUIReady;    //! Subscribed by UpgradeController
+    public Label ReadyPlayersLabel { get; private set; }
+
+    private float wait_screen_delay = 2f;
 
     public void Start()
     {
@@ -24,10 +32,10 @@ public class StaffDragAndDrop : MonoBehaviour
 
     public void OpenUI(PlayerMenuCaller caller)
     {
-        _caller = caller;
-        _root.visible = true;
         InitializeUI();
         LoadStaff();
+        _caller = caller;
+        _root.visible = true;
     }
 
     public void CloseUI()
@@ -35,15 +43,62 @@ public class StaffDragAndDrop : MonoBehaviour
         _root.visible = false;
         _root.Clear();
     }
+    public void OpenWaitingUI()
+    {
+        _root.Clear();
+        _root.visible = true;
+    
+        VisualElement screenContainer = new VisualElement();
+        screenContainer.AddToClassList("screen-container");
+        _root.Add(screenContainer);
+
+        VisualElement readyPlayersContainer = new VisualElement();
+        readyPlayersContainer.AddToClassList("readyPlayers-container");
+        screenContainer.Add(readyPlayersContainer);
+
+        ReadyPlayersLabel = new Label();
+        ReadyPlayersLabel.AddToClassList("readyPlayers-label");
+        readyPlayersContainer.Add(ReadyPlayersLabel);
+
+        VisualElement readyContainer = new VisualElement();
+        readyContainer.AddToClassList("ready-container");
+        screenContainer.Add(readyContainer);
+    
+        Label readyLabel = new Label("You are ready.");
+        readyLabel.AddToClassList("ready-message");
+        readyContainer.Add(readyLabel);
+
+        StaffUIReady?.Invoke();
+    }
+
+    public void SetReadyPlayersText(string text)
+    {
+        if (ReadyPlayersLabel != null)
+            ReadyPlayersLabel.text = text;
+    }
 
     private void InitializeUI()
     {
         _root = GetComponent<UIDocument>().rootVisualElement;
 
         if (styleSheet != null) _root.styleSheets.Add(styleSheet);
+        if (commonStyleSheet != null) { _root.styleSheets.Add(commonStyleSheet); }
+
+        VisualElement screenContainer = new VisualElement();
+        screenContainer.AddToClassList("screen-container");
+        _root.Add(screenContainer);
+
+        VisualElement readyPlayersContainer = new VisualElement();
+        readyPlayersContainer.AddToClassList("readyPlayers-container");
+        screenContainer.Add(readyPlayersContainer);
 
         VisualElement mainContainer = new VisualElement() { name = "slots-container" };
-        _root.Add(mainContainer);
+        screenContainer.Add(mainContainer);
+
+        ReadyPlayersLabel = new Label();
+        ReadyPlayersLabel.AddToClassList("readyPlayers-label");
+        readyPlayersContainer.Add(ReadyPlayersLabel);
+        StaffUIReady?.Invoke();
 
         // Create 5 Rows (3 Staff, 2 for storage)
         for (int i = 0; i < 5; i++)
@@ -101,11 +156,20 @@ public class StaffDragAndDrop : MonoBehaviour
         //set local player ready in GameOrchestrator
         if (GameOrchestrator.Instance != null && GameOrchestrator.Instance.CurrentGameState == GameOrchestrator.GameState.Upgrade)
         {
-            PlayerObjectController player = playerMainCoordinator.GetComponent<PlayerObjectController>();
-            if (player != null)
-            {
-                player.SetUpgradeReady();
-            }
+            OpenWaitingUI();
+
+            StartCoroutine(ReadyAfterDelay());
+        }
+    }
+
+    private IEnumerator ReadyAfterDelay()
+    {
+        yield return new WaitForSeconds(wait_screen_delay); // Preview waiting screen for 5 seconds
+    
+        PlayerObjectController player = playerMainCoordinator.GetComponent<PlayerObjectController>();
+        if (player != null)
+        {
+            player.SetUpgradeReady();
         }
     }
 

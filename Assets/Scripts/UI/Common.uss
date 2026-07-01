@@ -1,0 +1,36 @@
+.screen-container {
+    width: 100%;
+    height: 100%;
+
+    flex-direction: column;
+}
+
+.ready-container {
+    flex-grow: 1;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.ready-message {
+    color: white;
+    font-size: 45px;
+    -unity-font-style: bold;
+    unity-text-align: middle-center;
+}
+
+.readyPlayers-container {
+    height: 50px;
+
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(255, 0, 55, 0.5);
+}
+
+.readyPlayers-label {
+    color: white;
+    font-size: 20px;
+    -unity-font-style: bold;
+    unity-text-align: middle-center;
+}

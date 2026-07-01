@@ -6,54 +6,111 @@ public class UpgradeController : MonoBehaviour
 {
     private const float timeoutSeconds = 5f;
 
-    void Start()
+    private UpgradeUI upgradeUI;
+    private StaffDragAndDrop staffUI;
+
+    private void Awake()
+    {
+        upgradeUI = FindFirstObjectByType<UpgradeUI>();
+        staffUI = FindFirstObjectByType<StaffDragAndDrop>();
+
+        if (upgradeUI != null)
+            upgradeUI.UpgradeUIReady += OnUIReady;
+
+        if (staffUI != null)
+            staffUI.StaffUIReady += OnUIReady;
+    }
+
+    private void OnDestroy()
+    {
+        if (upgradeUI != null)
+            upgradeUI.UpgradeUIReady -= OnUIReady;
+
+        if (staffUI != null)
+            staffUI.StaffUIReady -= OnUIReady;
+    }
+
+    private void Start()
     {
         StartCoroutine(WaitAndWireUI());
+    }
+
+    private void OnEnable()
+    {
+        if (GameOrchestrator.Instance != null)
+            GameOrchestrator.Instance.ReadyPlayersChanged += UpdateReadyPlayersText;
+    }
+
+    private void OnDisable()
+    {
+        if (GameOrchestrator.Instance != null)
+            GameOrchestrator.Instance.ReadyPlayersChanged -= UpdateReadyPlayersText;
+    }
+
+    private void OnUIReady()
+    {
+        if (GameOrchestrator.Instance == null)
+            return;
+
+        UpdateReadyPlayersText(
+            GameOrchestrator.Instance.readyPlayers.Count,
+            GameOrchestrator.Instance.PlayerCount,
+            GameOrchestrator.Instance.readyPlayers.Contains(GameOrchestrator.Instance.LocalPlayer));
+    }
+
+    public void UpdateReadyPlayersText(int readyCount, int playerCount, bool localPlayerReady)
+    {
+        string text;
+    
+        if (playerCount > 1 && readyCount == playerCount - 1)
+        {
+            text = localPlayerReady
+                ? "Waiting for one player..."
+                : "Everyone is waiting for you!";
+        }
+        else
+        {
+            text = $"{readyCount}/{playerCount} Players ready!";
+        }
+    
+        upgradeUI?.SetReadyPlayersText(text);
+        staffUI?.SetReadyPlayersText(text);
     }
 
     private IEnumerator WaitAndWireUI()
     {
         float elapsed = 0f;
-        GameObject upgradePicker = null;
-        GameObject staffInventory = null;
 
         while (elapsed < timeoutSeconds)
         {
-            upgradePicker = GameObject.FindGameObjectWithTag("UpgradePicker");
-            staffInventory = GameObject.FindGameObjectWithTag("StaffInventory");
-            if (upgradePicker != null && staffInventory != null)
+            if (GameObject.FindGameObjectWithTag("UpgradePicker") != null &&
+                GameObject.FindGameObjectWithTag("StaffInventory") != null)
+            {
                 break;
+            }
 
             elapsed += Time.deltaTime;
             yield return null;
         }
 
         elapsed = 0f;
+
         while (elapsed < timeoutSeconds)
         {
             if (NetworkClient.ready)
             {
-                var playerCallers = FindObjectsOfType<PlayerMenuCaller>();
-                bool foundOwned = false;
-                foreach (var caller in playerCallers)
+                foreach (var caller in FindObjectsOfType<PlayerMenuCaller>())
                 {
                     if (caller.isOwned)
                     {
-                        foundOwned = true;
-                        break;
+                        caller.WireAndOpenUpgrade();
+                        yield break;
                     }
                 }
-                if (foundOwned) break;
             }
+
             elapsed += Time.deltaTime;
             yield return null;
-        }
-
-        var allCallers = FindObjectsOfType<PlayerMenuCaller>();
-        foreach (var caller in allCallers)
-        {
-            if (!caller.isOwned) continue;
-            caller.WireAndOpenUpgrade();
         }
     }
 }
