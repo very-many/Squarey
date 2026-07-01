@@ -45,6 +45,7 @@ public class PlayerMovementController : NetworkBehaviour
     MultiStaffObject staffMulti;
     DirectStaff directStaff;
 
+    private bool isGrounded = false;
     public Vector2 knockback = new Vector2(0, 0);
     public bool RequestTeleport { get; set; } = true;
 
@@ -127,9 +128,18 @@ public class PlayerMovementController : NetworkBehaviour
             }
 
             wallJumped = false;
-            spellJumped = false;
+
+            isGrounded = true;
+            lastCyoteTime = Time.time;
         }
-                 
+        else
+        {
+            if (Time.time > lastCyoteTime + cyoteTime)
+            {
+                isGrounded = false;
+            }
+        }
+
         if (coll.onWall && !coll.onGround && x != 0 && rb.linearVelocity.y <= 0f)
         {
             wallSlide = true;
