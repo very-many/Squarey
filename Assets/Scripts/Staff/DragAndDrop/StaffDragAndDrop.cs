@@ -47,7 +47,7 @@ public class StaffDragAndDrop : MonoBehaviour
     {
         _root.Clear();
         _root.visible = true;
-    
+
         VisualElement screenContainer = new VisualElement();
         screenContainer.AddToClassList("screen-container");
         _root.Add(screenContainer);
@@ -63,7 +63,7 @@ public class StaffDragAndDrop : MonoBehaviour
         VisualElement readyContainer = new VisualElement();
         readyContainer.AddToClassList("ready-container");
         screenContainer.Add(readyContainer);
-    
+
         Label readyLabel = new Label("You are ready.");
         readyLabel.AddToClassList("ready-message");
         readyContainer.Add(readyLabel);
@@ -157,20 +157,18 @@ public class StaffDragAndDrop : MonoBehaviour
         if (GameOrchestrator.Instance != null && GameOrchestrator.Instance.CurrentGameState == GameOrchestrator.GameState.Upgrade)
         {
             OpenWaitingUI();
-
-            StartCoroutine(ReadyAfterDelay());
+            PlayerObjectController player = playerMainCoordinator.GetComponent<PlayerObjectController>();
+            if (player != null)
+            {
+                player.SetUpgradeReady();
+            }
+            StartCoroutine(Delay());
         }
     }
 
-    private IEnumerator ReadyAfterDelay()
+    private IEnumerator Delay()       // Preview waiting screen
     {
-        yield return new WaitForSeconds(wait_screen_delay); // Preview waiting screen for 5 seconds
-    
-        PlayerObjectController player = playerMainCoordinator.GetComponent<PlayerObjectController>();
-        if (player != null)
-        {
-            player.SetUpgradeReady();
-        }
+        yield return new WaitForSeconds(wait_screen_delay);
     }
 
     private void CreateDragLayer()
@@ -272,7 +270,8 @@ public class StaffDragAndDrop : MonoBehaviour
         List<Spell> spellPool1 = new List<Spell>();
         List<Spell> spellPool2 = new List<Spell>();
 
-        foreach (VisualElement row in rows) {
+        foreach (VisualElement row in rows)
+        {
             if (row.Q<Label>() == null) { break; }
             if (row.Q<Label>().text == "Staff 1")
             {
@@ -304,7 +303,7 @@ public class StaffDragAndDrop : MonoBehaviour
     private List<Spell> WriteSpellsToStaff(VisualElement staffRow)
     {
         List<Spell> spellList = new List<Spell>();
-        List <VisualElement> slots = staffRow.Query<VisualElement>(className: "slot").ToList();
+        List<VisualElement> slots = staffRow.Query<VisualElement>(className: "slot").ToList();
         foreach (VisualElement slot in slots)
         {
             if (slot.childCount > 0)
