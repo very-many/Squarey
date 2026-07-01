@@ -7,6 +7,7 @@ using Steamworks;
 public class CustomNetworkManager : NetworkManager
 {
     [SerializeField] private PlayerObjectController GamePlayerPrefab;
+    [SerializeField] private GameOrchestrator gameOrchestratorPrefab;
     //public List<PlayerObjectController> GamePlayers { get; } = new List<PlayerObjectController>();
     public List<PlayerObjectController> GamePlayers = new List<PlayerObjectController>();
 
@@ -24,6 +25,11 @@ public class CustomNetworkManager : NetworkManager
 
         if (bulletPool != null)
             bulletPool.PrewarmServer();
+
+        if (SceneManager.GetActiveScene().name == "Lobby")
+        {
+            TrySpawnGameOrchestrator();
+        }
     }
 
     public override void OnStartClient()
@@ -32,6 +38,37 @@ public class CustomNetworkManager : NetworkManager
 
         if (bulletPool != null)
             bulletPool.RegisterClientHandlers();
+    }
+
+    public override void OnServerSceneChanged(string sceneName)
+    {
+        base.OnServerSceneChanged(sceneName);
+
+        if (sceneName == "Lobby")
+        {
+            TrySpawnGameOrchestrator();
+        }
+    }
+
+    private void TrySpawnGameOrchestrator()
+    {
+        if (SceneManager.GetActiveScene().name != "Lobby")
+            return;
+
+        if (GameOrchestrator.Instance != null)
+            return;
+
+        if (gameOrchestratorPrefab == null)
+        {
+            Debug.LogError("Cannot spawn GameOrchestrator: prefab reference is missing.");
+            return;
+        }
+
+        if (!NetworkServer.active)
+            return;
+
+        GameOrchestrator orchestratorInstance = Instantiate(gameOrchestratorPrefab);
+        NetworkServer.Spawn(orchestratorInstance.gameObject);
     }
 
     public override void OnServerAddPlayer(NetworkConnectionToClient conn)

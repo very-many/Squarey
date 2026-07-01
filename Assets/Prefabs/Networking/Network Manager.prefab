@@ -65,9 +65,14 @@ MonoBehaviour:
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs:
+  - {fileID: 5995972970576921285, guid: f9fbd1683bccf5845bacd0465a610ad5, type: 3}
   - {fileID: 8869757529965471399, guid: 0489f229c938ba7409033cd0eee6ee91, type: 3}
   - {fileID: 4335131577718741092, guid: d341f4f7ce4c4204998252b45bef758e, type: 3}
+  - {fileID: 7407786158499650943, guid: 5e57e21e1e0db134c8bc38f8e1d1f276, type: 3}
+  - {fileID: 7407786158499650943, guid: 9c95d769f33612e419014e913c4efab1, type: 3}
+  - {fileID: 4272999406706618827, guid: 55c05d56fca4df24f8e7558e4e99d4ae, type: 3}
   - {fileID: 4063772565889404392, guid: a48533eb30c45b9438aecbeb67db160f, type: 3}
+  - {fileID: 7407786158499650943, guid: a64cb8bba4cb30945b303edddbe57e4c, type: 3}
   - {fileID: 6837416952839969178, guid: 10034c82fac8e924eaa66472d0023250, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
@@ -85,6 +90,7 @@ MonoBehaviour:
   evaluationInterval: 3
   timeInterpolationGui: 0
   GamePlayerPrefab: {fileID: 7295890605878831580, guid: a48533eb30c45b9438aecbeb67db160f, type: 3}
+  gameOrchestratorPrefab: {fileID: 5997489117747912347, guid: 0489f229c938ba7409033cd0eee6ee91, type: 3}
   GamePlayers: []
   bulletPool: {fileID: 8997071280269341182}
 --- !u!114 &1926786700883623263
