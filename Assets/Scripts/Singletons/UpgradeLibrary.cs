@@ -9,7 +9,7 @@ public class UpgradeLibrary : MonoBehaviour
 
     private void Start()
     {
-        _allUpgradesList = new List<Upgrade> { new SpellUpgrade(), new SpeedBoots(), new StaffOfPower(), new ArmourOfHealth() };
+        _allUpgradesList = new List<Upgrade> { new SpellUpgrade(), new SpeedBoots(), new StaffOfPower(), new ArmourOfHealth(), new JumpBoots() };
     }
 
     public Upgrade RandomUpgrade()
@@ -49,7 +49,6 @@ public class UpgradeLibrary : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {

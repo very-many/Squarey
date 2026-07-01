@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using static Bullet;
+using SmallHedge.SoundManager;
 
 public class AcidSplash : Spell
 {
     public string spellTitle => "Acid Splash";
 
-    public float spellRecoveryTime => 4f;
+    public float spellRecoveryTime => 3.5f;
 
     public float spellCastTime => 0.3f;
 
@@ -16,6 +17,9 @@ public class AcidSplash : Spell
 
     public void CastSpell(MultiStaffObject multiStaff, SingleStaff singleStaff)
     {
+        // Play sound effect
+        SoundManager.PlaySound(SoundType.Spell_AcidSplash);
+
         List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Physics, BulletType.Trail, BulletType.Split, BulletType.BounceOnWall };
         float bulletDamage = 0.5f * multiStaff.bulletDamageMult * multiStaff.MagicPower;
         float bulletHealth = 0.7f * multiStaff.bulletHealthMult * multiStaff.MagicPower;

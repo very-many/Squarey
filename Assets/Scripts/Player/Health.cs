@@ -2,6 +2,7 @@ using Mirror;
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using SmallHedge.SoundManager;
 
 public class Health : NetworkBehaviour
 {
@@ -71,11 +72,20 @@ public class Health : NetworkBehaviour
         }
     }
 
+    public void Kill()
+    {
+        if (!isServer)
+            return;
+
+        TakeDamage(maxHealth);
+    }
+
     [ClientRpc]
     private void TakeHitOnClient()
     {
         //spawn hit effect bzw. particles
         //spawn hit sound
+        SoundManager.PlaySound(SoundType.Hit);
     }
 
     [ClientRpc]

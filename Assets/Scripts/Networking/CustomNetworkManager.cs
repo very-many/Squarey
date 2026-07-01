@@ -47,8 +47,14 @@ public class CustomNetworkManager : NetworkManager
         }
     }
 
-    public void StartGame(string SceneName)
+    public void StartGame()
     {
-        GameOrchestrator.Instance.NextGameState();
+        if (GameOrchestrator.Instance != null)
+        {
+            GameOrchestrator.Instance.NextGameState();
+            return;
+        }
+
+        Debug.LogError($"Cannot start game: GameOrchestrator is not available.");
     }
 }

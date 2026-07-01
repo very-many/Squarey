@@ -16,9 +16,9 @@ public class BetterJumping : NetworkBehaviour
 
     [Space]
     [Header("Stats")]
-    public float FallMultiplier = 2.5f;
-    public float JumpMultiplier = 2f;
-    public float JumpSpellMultiplier = 1.7f;
+    public float FallMultiplier = 3f;
+    public float LowJumpMultiplier = 8f;
+    public float JumpSpellMultiplier = 1.4f;
 
     void Start()
     {
@@ -30,17 +30,17 @@ public class BetterJumping : NetworkBehaviour
     {
         if (!isOwned)
             return;
-        if (playerMovement.floatyTimeInSec > 0)
+        if (playerMovement.spellJumped)
         {
             rb.linearVelocity += (JumpSpellMultiplier - 1) * Physics2D.gravity.y * Time.deltaTime * Vector2.up;
         }
-        else if (rb.linearVelocity.y < 0 && !playerMovement.spellJumped)
+        else if (rb.linearVelocity.y < 0)
         {
             rb.linearVelocity += (FallMultiplier - 1) * Physics2D.gravity.y * Time.deltaTime * Vector2.up;
         }
         else if (rb.linearVelocity.y > 0 && !JumpAction.action.IsPressed())
         {
-            rb.linearVelocity += (JumpMultiplier - 1) * Physics2D.gravity.y * Time.deltaTime * Vector2.up;
+            rb.linearVelocity += (LowJumpMultiplier - 1) * Physics2D.gravity.y * Time.deltaTime * Vector2.up;
         }
     }
 }

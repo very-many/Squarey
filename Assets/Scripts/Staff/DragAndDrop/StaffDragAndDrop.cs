@@ -1,20 +1,26 @@
-using Mono.Cecil;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System;
+using System.Collections;
 
 public class StaffDragAndDrop : MonoBehaviour
 {
-    public StyleSheet styleSheet;
+    [SerializeField]
+    private StyleSheet styleSheet;
+    public StyleSheet commonStyleSheet;
     public MultiStaffObject staffMulti;
     public PlayerMainCoordinator playerMainCoordinator;
 
     private VisualElement _root;
     private PlayerMenuCaller _caller;
+
+    public event Action StaffUIReady;    //! Subscribed by UpgradeController
+    public Label ReadyPlayersLabel { get; private set; }
+
+    private float wait_screen_delay = 0f;
 
     public void Start()
     {
@@ -26,10 +32,10 @@ public class StaffDragAndDrop : MonoBehaviour
 
     public void OpenUI(PlayerMenuCaller caller)
     {
-        _caller = caller;
-        _root.visible = true;
         InitializeUI();
         LoadStaff();
+        _caller = caller;
+        _root.visible = true;
     }
 
     public void CloseUI()
@@ -37,16 +43,62 @@ public class StaffDragAndDrop : MonoBehaviour
         _root.visible = false;
         _root.Clear();
     }
+    public void OpenWaitingUI()
+    {
+        _root.Clear();
+        _root.visible = true;
+
+        VisualElement screenContainer = new VisualElement();
+        screenContainer.AddToClassList("screen-container");
+        _root.Add(screenContainer);
+
+        VisualElement readyPlayersContainer = new VisualElement();
+        readyPlayersContainer.AddToClassList("readyPlayers-container");
+        screenContainer.Add(readyPlayersContainer);
+
+        ReadyPlayersLabel = new Label();
+        ReadyPlayersLabel.AddToClassList("readyPlayers-label");
+        readyPlayersContainer.Add(ReadyPlayersLabel);
+
+        VisualElement readyContainer = new VisualElement();
+        readyContainer.AddToClassList("ready-container");
+        screenContainer.Add(readyContainer);
+
+        Label readyLabel = new Label("You are ready.");
+        readyLabel.AddToClassList("ready-message");
+        readyContainer.Add(readyLabel);
+
+        StaffUIReady?.Invoke();
+    }
+
+    public void SetReadyPlayersText(string text)
+    {
+        if (ReadyPlayersLabel != null)
+            ReadyPlayersLabel.text = text;
+    }
 
     private void InitializeUI()
     {
         _root = GetComponent<UIDocument>().rootVisualElement;
 
-        var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/Staff/DragAndDrop/StaffDragAndDrop.uss");
         if (styleSheet != null) _root.styleSheets.Add(styleSheet);
+        if (commonStyleSheet != null) { _root.styleSheets.Add(commonStyleSheet); }
+
+        VisualElement screenContainer = new VisualElement();
+        screenContainer.AddToClassList("screen-container");
+        _root.Add(screenContainer);
+
+        VisualElement readyPlayersContainer = new VisualElement();
+        readyPlayersContainer.AddToClassList("readyPlayers-container");
+        screenContainer.Add(readyPlayersContainer);
 
         VisualElement mainContainer = new VisualElement() { name = "slots-container" };
-        _root.Add(mainContainer);
+        screenContainer.Add(mainContainer);
+
+        ReadyPlayersLabel = new Label();
+        ReadyPlayersLabel.AddToClassList("readyPlayers-label");
+        readyPlayersContainer.Add(ReadyPlayersLabel);
+        StaffUIReady?.Invoke();
 
         // Create 5 Rows (3 Staff, 2 for storage)
         for (int i = 0; i < 5; i++)
@@ -104,12 +156,19 @@ public class StaffDragAndDrop : MonoBehaviour
         //set local player ready in GameOrchestrator
         if (GameOrchestrator.Instance != null && GameOrchestrator.Instance.CurrentGameState == GameOrchestrator.GameState.Upgrade)
         {
+            OpenWaitingUI();
             PlayerObjectController player = playerMainCoordinator.GetComponent<PlayerObjectController>();
             if (player != null)
             {
                 player.SetUpgradeReady();
             }
+            StartCoroutine(Delay());
         }
+    }
+
+    private IEnumerator Delay()       // Preview waiting screen
+    {
+        yield return new WaitForSeconds(wait_screen_delay);
     }
 
     private void CreateDragLayer()
@@ -211,7 +270,8 @@ public class StaffDragAndDrop : MonoBehaviour
         List<Spell> spellPool1 = new List<Spell>();
         List<Spell> spellPool2 = new List<Spell>();
 
-        foreach (VisualElement row in rows) {
+        foreach (VisualElement row in rows)
+        {
             if (row.Q<Label>() == null) { break; }
             if (row.Q<Label>().text == "Staff 1")
             {
@@ -243,7 +303,7 @@ public class StaffDragAndDrop : MonoBehaviour
     private List<Spell> WriteSpellsToStaff(VisualElement staffRow)
     {
         List<Spell> spellList = new List<Spell>();
-        List <VisualElement> slots = staffRow.Query<VisualElement>(className: "slot").ToList();
+        List<VisualElement> slots = staffRow.Query<VisualElement>(className: "slot").ToList();
         foreach (VisualElement slot in slots)
         {
             if (slot.childCount > 0)

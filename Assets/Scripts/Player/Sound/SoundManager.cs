@@ -5,11 +5,13 @@ using UnityEngine.Audio;
 namespace SmallHedge.SoundManager
 {
     [RequireComponent(typeof(AudioSource))]
+
     public class SoundManager : MonoBehaviour
     {
         [SerializeField] private SoundsSO SO;
         private static SoundManager instance = null;
         private AudioSource audioSource;
+        public static float Volume = 1f;
 
         private void Awake()
         {
@@ -20,7 +22,7 @@ namespace SmallHedge.SoundManager
             }
         }
 
-        public static void PlaySound(SoundType sound, AudioSource source = null, float volume = 1)
+        public static void PlaySound(SoundType sound, AudioSource source = null, float volume = 1f)
         {
             SoundList soundList = instance.SO.sounds[(int)sound];
             AudioClip[] clips = soundList.sounds;
@@ -30,13 +32,13 @@ namespace SmallHedge.SoundManager
             {
                 source.outputAudioMixerGroup = soundList.mixer;
                 source.clip = randomClip;
-                source.volume = volume * soundList.volume;
+                source.volume = volume * soundList.volume * Volume;
                 source.Play();
             }
             else
             {
                 instance.audioSource.outputAudioMixerGroup = soundList.mixer;
-                instance.audioSource.PlayOneShot(randomClip, volume * soundList.volume);
+                instance.audioSource.PlayOneShot(randomClip, volume * soundList.volume * Volume);
             }
         }
     }

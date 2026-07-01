@@ -28,7 +28,7 @@ public class PlayerListItem : MonoBehaviour
         }
         else
         {
-            PlayerReadyText.text = "Uneady";
+            PlayerReadyText.text = "Unready";
             PlayerReadyText.color = Color.red;
         }
     }

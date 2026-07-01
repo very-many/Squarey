@@ -3,16 +3,17 @@ using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static UnityEngine.Rendering.DebugUI.Table;
 public class PlayerUI : MonoBehaviour
 {
-    public StyleSheet styleSheet;
     public MultiStaffObject staffMulti;
 
     private VisualElement _root;
+
+    [SerializeField]
+    private StyleSheet styleSheet;
 
     List<VisualElement> dynamicIcons = new List<VisualElement> { null, null, null };
 
@@ -53,20 +54,10 @@ public class PlayerUI : MonoBehaviour
 
         _root.visible = true;
 
-        var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/Player/PlayerUI/PlayerUI.uss");
         if (styleSheet != null) _root.styleSheets.Add(styleSheet);
 
         VisualElement mainContainer = new VisualElement() { name = "main-container" };
         mainContainer.AddToClassList("main-container");
-
-
-        mainContainer.style.position = Position.Absolute;
-
-        mainContainer.style.flexDirection = FlexDirection.Row;
-
-        mainContainer.style.left = Length.Percent(50);
-        mainContainer.style.bottom = 20;
-        mainContainer.style.translate = new Translate(Length.Percent(-50), 0);
 
         _root.Add(mainContainer);
 

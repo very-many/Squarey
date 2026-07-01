@@ -2,7 +2,6 @@ using Mirror;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -24,6 +23,9 @@ public class PlayerMovementController : NetworkBehaviour
     public float jumpForce = 12;
     public float slideSpeed = 1;
     public float wallJumpLerp = 5;
+    public float cyoteTime = 0.05f;
+
+    private float lastCyoteTime;
 
     [Space]
     [Header("Booleans")]
@@ -33,8 +35,6 @@ public class PlayerMovementController : NetworkBehaviour
     public bool spellJumped;
 
     public int side = 1;
-
-    public float floatyTimeInSec = 0;
 
     [Space]
     [Header("Input")]
@@ -121,18 +121,27 @@ public class PlayerMovementController : NetworkBehaviour
 
         if (coll.onGround)
         {
+            if (Time.time > lastCyoteTime + 0.2)
+            {
+                spellJumped = false;
+            }
+
             wallJumped = false;
             spellJumped = false;
         }
-
-        if (coll.onWall && !coll.onGround && x != 0)
+                 
+        if (coll.onWall && !coll.onGround && x != 0 && rb.linearVelocity.y <= 0f)
         {
             wallSlide = true;
             WallSlide();
+            lastCyoteTime = Time.time;
         }
         else
         {
-            wallSlide = false;
+            if (Time.time > lastCyoteTime + cyoteTime)
+            {
+                wallSlide = false;
+            }
         }
 
         if (x > 0)
@@ -150,9 +159,9 @@ public class PlayerMovementController : NetworkBehaviour
         if (!context.performed || !isOwned)
             return;
 
-        if (coll.onGround)
+        if (coll.onGround || isGrounded)
             Jump(Vector2.up);
-        else if (coll.onWall)
+        else if (coll.onWall || wallSlide)
             WallJump();
     }
 
@@ -201,7 +210,7 @@ public class PlayerMovementController : NetworkBehaviour
 
     private void Jump(Vector2 dir)
     {
-        spellJumped = true;
+        spellJumped = false;
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
         rb.linearVelocity += dir * jumpForce;
     }
@@ -215,8 +224,7 @@ public class PlayerMovementController : NetworkBehaviour
 
     public void SpellJump(Vector2 dir)
     {
-        spellJumped = false;
-        floatyTimeInSec = 1;
+        spellJumped = true;
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
         rb.linearVelocity += dir * 12;
     }

@@ -15,7 +15,7 @@ MonoBehaviour:
   sounds:
   - name: Footstep
     volume: 1
-    mixer: {fileID: 24300002, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
+    mixer: {fileID: -8462307222511073752, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
     sounds:
     - {fileID: 8300000, guid: 23934290577273b41b5c4879f5cdf3c2, type: 3}
     - {fileID: 8300000, guid: f6089d99df191ad47b1f964465b2c23d, type: 3}
@@ -24,42 +24,62 @@ MonoBehaviour:
     - {fileID: 8300000, guid: c2b115cb02380bd4abdf20a0dd352a80, type: 3}
     - {fileID: 8300000, guid: 456c0e58543e97846bf6f133cb992fac, type: 3}
   - name: Jump
-    volume: 1
-    mixer: {fileID: 24300002, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
+    volume: 0.102
+    mixer: {fileID: -8462307222511073752, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
     sounds:
     - {fileID: 8300000, guid: 39101dd1705d5d34893c6dcc64188f1d, type: 3}
-  - name: PowerJump
-    volume: 1
-    mixer: {fileID: 24300002, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
-    sounds:
-    - {fileID: 8300000, guid: 1be5351c6a185c047ba2bd9d5dedf4c2, type: 3}
   - name: Land
-    volume: 1
-    mixer: {fileID: 24300002, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
+    volume: 0.346
+    mixer: {fileID: -8462307222511073752, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
     sounds:
     - {fileID: 8300000, guid: 1a6f2440b2c4e6c4eb3c0494f8d4f2d4, type: 3}
-  - name: Slide
-    volume: 1
-    mixer: {fileID: 24300002, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
-    sounds: []
-  - name: Attack
-    volume: 1
-    mixer: {fileID: 24300002, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
-    sounds:
-    - {fileID: 8300000, guid: ecebc49a8e788944f90daa8dc3c53d84, type: 3}
-    - {fileID: 8300000, guid: ba2f09edce8457641afc6d355f54b89b, type: 3}
-    - {fileID: 8300000, guid: b02d05ba07b99c043ade4cbfe40cf6f6, type: 3}
-    - {fileID: 8300000, guid: 5cd25faa0c354724492d4569440a8727, type: 3}
-    - {fileID: 8300000, guid: e85cc237d09f2514783434876a42795b, type: 3}
-    - {fileID: 8300000, guid: 5193b46874eab82428e911b331c7d82d, type: 3}
   - name: Death
     volume: 1
-    mixer: {fileID: 24300002, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
-    sounds: []
-  - name: Hurt
-    volume: 1
-    mixer: {fileID: 24300002, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
+    mixer: {fileID: -8462307222511073752, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
     sounds:
-    - {fileID: 8300000, guid: 85e312cdff710804cac5e876f5bd6b03, type: 3}
-    - {fileID: 8300000, guid: 3e305b0ece50af44f98746279209bd86, type: 3}
-    - {fileID: 8300000, guid: 4aa26862d88cd2b48b8210c5fccc0341, type: 3}
+    - {fileID: 0}
+  - name: Hit
+    volume: 1
+    mixer: {fileID: -8462307222511073752, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
+    sounds:
+    - {fileID: 8300000, guid: 0a38ee096a981ef4487a3adac367d086, type: 3}
+  - name: Spell_Jump
+    volume: 1
+    mixer: {fileID: -8462307222511073752, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
+    sounds:
+    - {fileID: 8300000, guid: 031fb8e3ccd326f468dbf79bbaec12c6, type: 3}
+  - name: Spell_AcidSplash
+    volume: 1
+    mixer: {fileID: -8462307222511073752, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
+    sounds:
+    - {fileID: 8300000, guid: c354832508d895646b7854fb8e68f105, type: 3}
+  - name: Spell_AcidSpray
+    volume: 1
+    mixer: {fileID: -8462307222511073752, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
+    sounds:
+    - {fileID: 8300000, guid: e4e0c8c0b41ec6348b48c8df3a64fe85, type: 3}
+  - name: Spell_Firebolt
+    volume: 1
+    mixer: {fileID: -8462307222511073752, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
+    sounds:
+    - {fileID: 8300000, guid: 70f6446c665059247b4a5713552854e2, type: 3}
+  - name: Spell_ForceBeam
+    volume: 1
+    mixer: {fileID: -8462307222511073752, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
+    sounds:
+    - {fileID: 8300000, guid: 556f71f94333bc24888edb9a772fc254, type: 3}
+  - name: Spell_LightningBolt
+    volume: 1
+    mixer: {fileID: -8462307222511073752, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
+    sounds:
+    - {fileID: 8300000, guid: 2aa688f7979680c499249142f7c94558, type: 3}
+  - name: Spell_Snowball
+    volume: 1
+    mixer: {fileID: -8462307222511073752, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
+    sounds:
+    - {fileID: 8300000, guid: 9ee6ff619821d2640bac7f75b33a2cc0, type: 3}
+  - name: Spell_Thunderwave
+    volume: 1
+    mixer: {fileID: -8462307222511073752, guid: b449596e3fe05fa46a4fe3828628fb45, type: 2}
+    sounds:
+    - {fileID: 8300000, guid: ff93afaa303fe494d844e5b2a8fe73cc, type: 3}

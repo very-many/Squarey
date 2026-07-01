@@ -210,16 +210,19 @@ public class LobbyController : MonoBehaviour
         {
             foreach (PlayerListItem playerListItemToRemove in PlayerListItemToRemove)
             {
-                GameObject ObjectToRemove = playerListItemToRemove.gameObject;
-                PlayerListItems.Remove(playerListItemToRemove);
-                Destroy(ObjectToRemove);
-                ObjectToRemove = null;
+                if (playerListItemToRemove != null)
+                {
+                    GameObject ObjectToRemove = playerListItemToRemove.gameObject;
+                    PlayerListItems.Remove(playerListItemToRemove);
+                    Destroy(ObjectToRemove);
+                    ObjectToRemove = null;
+                }
             }
         }
     }
 
-    public void StartGame(string SceneName)
+    public void StartGame()
     {
-        LocalPlayerController.CanStartGame(SceneName);
+        LocalPlayerController.CanStartGame();
     }
 }

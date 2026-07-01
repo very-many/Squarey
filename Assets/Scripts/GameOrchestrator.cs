@@ -11,9 +11,6 @@ using UnityEngine.SceneManagement;
 
 public class GameOrchestrator : NetworkBehaviour
 {
-    private static readonly int EndHash = Animator.StringToHash("End");
-    private static readonly int StartHash = Animator.StringToHash("Start");
-
     public enum GameState
     {
         Initial,
@@ -24,7 +21,6 @@ public class GameOrchestrator : NetworkBehaviour
     public static GameOrchestrator Instance { get; private set; }
 
     [SerializeField] private TMPro.TextMeshProUGUI timer;
-    [SerializeField] private Animator transitionAnimation;
 
     [Header("State")]
     [SyncVar]
@@ -41,19 +37,20 @@ public class GameOrchestrator : NetworkBehaviour
     public int CurrentCountdown => currentCountdown;
 
     [Header("Scenes")]
-    [SerializeField] private List<UnityEngine.Object> GameScenes;
-    [SerializeField] private UnityEngine.Object UpgradeScene;
+    [SerializeField] private List<string> GameScenes;
+    [SerializeField] private string UpgradeScene;
 
     [Header("Settings")]
-    [SerializeField] private float sceneSwitchDelay = 3f;
-    [SerializeField] private float transitionDelay = 0.5f;
+    [SerializeField] private const int countdownStart = 3;
 
 
     public readonly SyncList<PlayerObjectController> readyPlayers = new();
 
     private CustomNetworkManager manager;
     private bool isSwitchingScene;
-    private bool startTransitionAfterSceneLoad;
+    private bool startPostSceneCountdownAfterLoad;
+
+    private PlayerObjectController localPlayer;
 
     private CustomNetworkManager Manager
     {
@@ -75,6 +72,22 @@ public class GameOrchestrator : NetworkBehaviour
             return Manager.GamePlayers;
         }
     }
+    public int PlayerCount => Players.Count;             //make player count available before Scene- change
+    public event Action<int, int, bool> ReadyPlayersChanged;  //! Subscribed by UpgradeController
+
+    public PlayerObjectController LocalPlayer
+    {
+        get
+        {
+            if (Players == null || Players.Count == 0)
+                return null;
+            if (localPlayer == null)
+            {
+                localPlayer = Players.FirstOrDefault(p => p.GetComponent<NetworkIdentity>().isLocalPlayer);
+            }
+            return localPlayer;
+        }
+    }
 
     private void Awake()
     {
@@ -86,6 +99,7 @@ public class GameOrchestrator : NetworkBehaviour
         }
         else
         {
+            Debug.Log("GameOrchestrator already exists, destroying duplicate.");
             Destroy(gameObject);
         }
     }
@@ -100,26 +114,29 @@ public class GameOrchestrator : NetworkBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (!startTransitionAfterSceneLoad)
+        if (startPostSceneCountdownAfterLoad && isServer)
         {
-            return;
+            startPostSceneCountdownAfterLoad = false;
+            StartCoroutine(PostSceneCountdown());
         }
 
-        startTransitionAfterSceneLoad = false;
-
-        if (transitionAnimation != null)
-        {
-            transitionAnimation.SetTrigger(StartHash);
-        }
+        SyncCountdownLabel();
     }
 
     private void OnCountdownChanged(int oldValue, int newValue)
     {
+        SyncCountdownLabel();
+    }
+
+    private void SyncCountdownLabel()
+    {
         if (timer != null)
         {
-            timer.text = newValue > 0 ? newValue.ToString() : "";
+            timer.text = currentCountdown > 0 ? currentCountdown.ToString() : "";
         }
     }
 
@@ -176,7 +193,12 @@ public class GameOrchestrator : NetworkBehaviour
             return;
 
         ShouldSwitchGameState();
-    }
+        
+        ReadyPlayersChanged?.Invoke(
+            readyPlayers.Count,
+            Players.Count,
+            readyPlayers.Contains(LocalPlayer));
+        }
 
     void EnterUpgradeState()
     {
@@ -189,7 +211,7 @@ public class GameOrchestrator : NetworkBehaviour
             return;
         }
 
-        StartCoroutine(SwitchSceneAfterDelay(GameState.Upgrade, UpgradeScene.name, () => RpcSpawnPlayersUpgrade()));
+        StartCoroutine(SwitchSceneAfterDelay(GameState.Upgrade, UpgradeScene, () => RpcSpawnPlayersUpgrade()));
     }
 
     void EnterGameState()
@@ -203,53 +225,56 @@ public class GameOrchestrator : NetworkBehaviour
             return;
         }
 
-        string randomScene = GameScenes[UnityEngine.Random.Range(0, GameScenes.Count)].name;
+        string randomScene = GameScenes[UnityEngine.Random.Range(0, GameScenes.Count)];
         StartCoroutine(SwitchSceneAfterDelay(GameState.Game, randomScene, () => RpcSpawnPlayersGame()));
     }
 
+    
     private IEnumerator SwitchSceneAfterDelay(GameState nextState, string sceneName, Action preparePlayers)
     {
+        if (isSwitchingScene)
+            yield break;
+
         isSwitchingScene = true;
 
-        float elapsedTime = 0f;
-        bool transitionStarted = false;
-        float transitionStartTime = Mathf.Max(0f, sceneSwitchDelay - transitionDelay);
+        currentCountdown = 0;
 
-        while (elapsedTime < sceneSwitchDelay)
+        RpcPlayTransitionEnd();
+        yield return new WaitForSeconds(SceneTransitionManager.Instance != null
+            ? SceneTransitionManager.Instance.TransitionDelay
+            : 0.5f);
+
+        Action finishSceneSwitch = () =>
         {
-            if (nextState == GameState.Game)
+            currentGameState = nextState;
+            readyPlayers.Clear();
+
+            ResetUpgradeReadyStatus();
+
+            preparePlayers?.Invoke();
+
+            if (Manager != null)
             {
-                int countdownValue = Mathf.CeilToInt(sceneSwitchDelay - elapsedTime);
-                currentCountdown = countdownValue;
+                startPostSceneCountdownAfterLoad = nextState == GameState.Game;
+                Manager.ServerChangeScene(sceneName);
             }
 
-            if (!transitionStarted && elapsedTime >= transitionStartTime)
-            {
-                transitionStarted = true;
-                RpcPlayTransitionEnd();
-            }
+            isSwitchingScene = false;
+        };
 
-            elapsedTime += Time.deltaTime;
-            yield return null;
+        finishSceneSwitch();
+    }
+
+    private IEnumerator PostSceneCountdown()
+    {
+        for (int countdown = countdownStart; countdown > 0; countdown--)
+        {
+            currentCountdown = countdown;
+            yield return new WaitForSeconds(1f);
         }
 
         currentCountdown = 0;
-        currentGameState = nextState;
-        readyPlayers.Clear();
-
-        ResetUpgradeReadyStatus();
-
-        preparePlayers?.Invoke();
-
-        if (Manager != null)
-        {
-            RpcPlayTransitionStart();
-            Manager.ServerChangeScene(sceneName);
-        }
-
-        startTransitionAfterSceneLoad = true;
-
-        isSwitchingScene = false;
+        RpcEnablePlayerCasting();
     }
 
     private void ResetUpgradeReadyStatus()
@@ -266,15 +291,7 @@ public class GameOrchestrator : NetworkBehaviour
     [ClientRpc]
     private void RpcPlayTransitionEnd()
     {
-        if (transitionAnimation != null)
-        {
-            transitionAnimation.SetTrigger(EndHash);
-        }
-    }
-    [ClientRpc]
-    private void RpcPlayTransitionStart()
-    {
-        startTransitionAfterSceneLoad = true;
+        SceneTransitionManager.Instance?.PlayTransitionEnd();
     }
 
     [ClientRpc]
@@ -284,13 +301,18 @@ public class GameOrchestrator : NetworkBehaviour
         {
             player.gameObject.SetActive(true);
             player.GetComponent<PlayerCosmeticController>().PlayerCosmeticsSetup();
-            player.transform.GetChild(0).gameObject.SetActive(true);
-            player.GetComponent<PlayerInput>().enabled = true;
+
+            var visualRoot = player.transform.childCount > 0 ? player.transform.GetChild(0).gameObject : null;
+            if (visualRoot != null)
+            {
+                visualRoot.SetActive(true);
+            }
 
             // Only the local player's controller should start UI and request teleport
-            var playerNetworkIdentity = player.GetComponent<NetworkIdentity>();
-            if (playerNetworkIdentity != null && playerNetworkIdentity.isLocalPlayer)
+            if (player == LocalPlayer)
             {
+                EnableLocalPlayerInput();
+                player.GetComponent<MultiStaffObject>().castLocked = true;
                 player.GetComponent<PlayerMenuCaller>().playerUI.StartUI();
                 player.GetComponent<PlayerMovementController>().RequestTeleport = true;
             }
@@ -310,12 +332,24 @@ public class GameOrchestrator : NetworkBehaviour
                 visualRoot.SetActive(false);
             }
 
-            player.GetComponent<PlayerInput>().enabled = false;
+            if (player == LocalPlayer) DisableLocalPlayerInput();
 
             //ready players for game state -- in upgrade state
             player.GetComponent<MultiStaffObject>().castBlocked = false;
             player.GetComponent<Health>().ResetHealth();
             player.GetComponent<PlayerMovementController>().canMove = true;
+        }
+    }
+
+    [ClientRpc]
+    private void RpcEnablePlayerCasting()
+    {
+        foreach (var player in Players)
+        {
+            if (player != null)
+            {
+                player.GetComponent<MultiStaffObject>().castLocked = false;
+            }
         }
     }
 
@@ -338,4 +372,83 @@ public class GameOrchestrator : NetworkBehaviour
             readyPlayers.Remove(player);
         }
     }
+
+    internal void LeaveGame()
+    {
+        string offlineScene = "";
+
+        if (Manager != null)
+        {
+            offlineScene = Manager.offlineScene;
+            Manager.offlineScene = string.Empty;
+
+            if (NetworkServer.active && NetworkClient.isConnected)
+            {
+                Manager.StopHost();
+                Debug.Log("Manager still alive? " + NetworkManager.singleton.isActiveAndEnabled, NetworkManager.singleton);
+            }
+            else if (NetworkClient.isConnected)
+            {
+                Manager.StopClient();
+            }
+            else if (NetworkServer.active)
+            {
+                Manager.StopServer();
+            }
+        }
+
+        PauseMenu.Instance.DisableAllMenus();
+
+        if (!string.IsNullOrWhiteSpace(offlineScene))
+        {
+            SceneManager.LoadScene(offlineScene);
+
+            if (Manager != null)
+            {
+                Manager.offlineScene = offlineScene;
+            }
+        }
+
+        Destroy(gameObject);
+
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+    }
+
+    internal void DisableLocalPlayerInput()
+    {
+        if (LocalPlayer != null)
+        {
+            LocalPlayer.GetComponent<PlayerInput>().enabled = false;
+        }
+        else
+        {
+            Debug.LogWarning("No local player found to disable input.");
+        }
+    }
+
+    internal void EnableLocalPlayerInput()
+    {
+        if (currentGameState != GameState.Game)
+        {
+            //Debug.LogWarning("Cannot enable local player input: not in Game state.");
+            return;
+        }
+
+        if (LocalPlayer != null)
+        {
+            LocalPlayer.GetComponent<PlayerInput>().enabled = true;
+        }
+        else
+        {
+            Debug.LogWarning("No local player found to enable input.");
+        }
+    }
+
 }

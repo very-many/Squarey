@@ -151,18 +151,18 @@ public class PlayerObjectController : NetworkBehaviour
         }
     }
 
-    public void CanStartGame(string SceneName)
+    public void CanStartGame()
     {
         if (isOwned)
         {
-            CmdCanStartGame(SceneName);
+            CmdCanStartGame();
         }
     }
 
     [Command]
-    public void CmdCanStartGame(string SceneName)
+    public void CmdCanStartGame()
     {
-        manager.StartGame(SceneName);
+        manager.StartGame();
     }
 
     //Cosmetics

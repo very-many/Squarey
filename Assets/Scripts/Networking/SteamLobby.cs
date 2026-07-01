@@ -18,7 +18,8 @@ public class SteamLobby : MonoBehaviour
 
     private void Start()
     {
-        if(!SteamManager.Initialized) { return; }
+        if(!SteamManager.Initialized) return; 
+
         if(Instance == null)
         {
             Instance = this;

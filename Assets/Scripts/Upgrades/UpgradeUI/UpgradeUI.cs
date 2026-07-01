@@ -1,20 +1,22 @@
-using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static UnityEngine.Rendering.DebugUI.Table;
+using System;
+
 
 public class UpgradeUI : MonoBehaviour
 {
     public StyleSheet styleSheet;
+    public StyleSheet commonStyleSheet;
+
     public PlayerMainCoordinator playerMainCoordinator;
     
     private List<Upgrade> _upgradeChoices = new List<Upgrade>();
     private VisualElement _root;
     private PlayerMenuCaller _caller;
+
+    public event Action UpgradeUIReady;    //! Subscribed by UpgradeController
+    public Label ReadyPlayersLabel { get; private set; }
 
     public void Start()
     {
@@ -27,10 +29,10 @@ public class UpgradeUI : MonoBehaviour
 
     public void OpenUI(PlayerMenuCaller caller)
     {
+        GetRandomizedUpgrades();    // changed order here
+        InitializeUI();
         _caller = caller;
         _root.visible = true;
-        GetRandomizedUpgrades();
-        InitializeUI();
     }
 
     public void CloseUI()
@@ -49,23 +51,44 @@ public class UpgradeUI : MonoBehaviour
         
     }
 
+    public void SetReadyPlayersText(string text)
+    {
+        if (ReadyPlayersLabel != null)
+            ReadyPlayersLabel.text = text;
+    }
+    
+
     private void InitializeUI()
     {
-        if (styleSheet != null) { _root.styleSheets.Add(styleSheet); }      
+        if (styleSheet != null) { _root.styleSheets.Add(styleSheet); }
+        if (commonStyleSheet != null) { _root.styleSheets.Add(commonStyleSheet); }
 
         // Main Container
         VisualElement mainContainer = new VisualElement();
         mainContainer.AddToClassList("slots-container");
         _root.Add(mainContainer);
 
+        VisualElement screenContainer = new VisualElement();
+        screenContainer.AddToClassList("screen-container");
+        mainContainer.Add(screenContainer);
+
+        VisualElement readyPlayersContainer = new VisualElement();
+        readyPlayersContainer.AddToClassList("readyPlayers-container");
+        screenContainer.Add(readyPlayersContainer);
+
+        ReadyPlayersLabel = new Label();
+        ReadyPlayersLabel.AddToClassList("readyPlayers-label");
+        readyPlayersContainer.Add(ReadyPlayersLabel);
+        UpgradeUIReady?.Invoke();
+
         // Rows
         VisualElement row1 = new VisualElement();
         row1.AddToClassList("upgrade-row");
-        mainContainer.Add(row1);
+        screenContainer.Add(row1);
 
         VisualElement row2 = new VisualElement();
         row2.AddToClassList("upgrade-row");
-        mainContainer.Add(row2);
+        screenContainer.Add(row2);
 
         // Loop through choices
         for (int i = 0; i < _upgradeChoices.Count;  i++)
@@ -117,6 +140,7 @@ public class UpgradeUI : MonoBehaviour
 
     private void ChooseUpgrade(Button upgradeChoiceCard)
     {
+        if (upgradeChoiceCard == null) { return; }
         Upgrade selectedUpgrade = upgradeChoiceCard.userData as Upgrade;
 
         playerMainCoordinator.Upgrades.Add(selectedUpgrade);
