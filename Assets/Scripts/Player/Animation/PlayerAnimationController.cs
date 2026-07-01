@@ -1,4 +1,3 @@
-using Edgegap.Editor.Api.Models.Requests;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerCollisionController))]
