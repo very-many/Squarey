@@ -20,7 +20,7 @@ public class BulletStats
     public SpriteLibrary.SpriteType sprite = SpriteLibrary.SpriteType.Capsule;
 
     public float timeToLive = 5;
-    public float timeToEscape = 0.1f;
+    public float timeToEscape = 0.05f;
 
     public float trailLength = 1;
 

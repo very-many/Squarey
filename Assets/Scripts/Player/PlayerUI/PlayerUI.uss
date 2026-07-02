@@ -23,7 +23,7 @@
 }
 
 .hud-charge-container {
-    flex-direction: row;
+    flex-direction: row-reverse;
     align-items: center;
     margin-right: 2px;
 }

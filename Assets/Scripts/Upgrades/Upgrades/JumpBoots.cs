@@ -10,7 +10,7 @@ public class JumpBoots : Upgrade
 
     public int probabilityWeight => 10;
 
-    private float _jumpIncrease = ((float)(15 + Random.Range(1, 7))) / 20;
+    private float _jumpIncrease = ((float)(40 + Random.Range(1, 10))) / 20;
 
     public void ApplyUpgrade(PlayerMainCoordinator stats)
     {
