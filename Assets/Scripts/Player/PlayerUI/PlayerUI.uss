@@ -1,5 +1,3 @@
-@import url("Theme.uss");
-
 .hud-bar {
     flex-direction: row;
     align-items: flex-start;

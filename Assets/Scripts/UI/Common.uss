@@ -1,4 +1,3 @@
-@import url("Theme.uss");
 
 .screen-container {
     width: 100%;
