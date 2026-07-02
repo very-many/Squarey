@@ -7,11 +7,11 @@ public class StaffOfPower : Upgrade
 
     public string upgradeTitle => "Staff Of Power";
 
-    public string upgradeDescription => "Increases your magic power by " + _magicPowerIncrease + " and increases your bullet damage by 1%";
+    public string upgradeDescription => "Increases your magic power by " + _magicPowerIncrease + " and increases your bullet damage by 10%";
 
     public int probabilityWeight => 20;
 
-    private int _magicPowerIncrease = 10 + Random.Range(1, 6);
+    private int _magicPowerIncrease = 30 + Random.Range(1, 16);
 
     public void ApplyUpgrade(PlayerMainCoordinator stats)
     {
@@ -27,6 +27,6 @@ public class StaffOfPower : Upgrade
     {
         float newPower = stats.GetStaffPower() + _magicPowerIncrease;
         stats.SetStaffPower(newPower);
-        stats.SetBulletDamageMult(stats.GetBulletDamageMult() * 1.01f);
+        stats.SetBulletDamageMult(stats.GetBulletDamageMult() * 1.10f);
     }
 }

@@ -9,7 +9,10 @@ public class UpgradeLibrary : MonoBehaviour
 
     private void Start()
     {
-        _allUpgradesList = new List<Upgrade> { new SpellUpgrade(), new SpeedBoots(), new StaffOfPower(), new ArmourOfHealth(), new JumpBoots() };
+        _allUpgradesList = new List<Upgrade> {
+            new SpellUpgrade(), new SpeedBoots(), new StaffOfPower(),
+            new ArmourOfHealth(), new JumpBoots(), new HatOfHeavySpells(),
+            new HeartOfTheGiant(), new SpellSniper(), new StaffOfFlowing()};
     }
 
     public Upgrade RandomUpgrade()

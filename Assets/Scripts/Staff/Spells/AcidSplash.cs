@@ -20,18 +20,17 @@ public class AcidSplash : Spell
         // Play sound effect
         SoundManager.PlaySound(SoundType.Spell_AcidSplash);
 
-        List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Physics, BulletType.Trail, BulletType.Split, BulletType.BounceOnWall };
+        List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Physics, BulletType.Trail, BulletType.Split};
         float bulletDamage = 0.5f * multiStaff.bulletDamageMult * multiStaff.MagicPower;
         float bulletHealth = 0.7f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
         float bulletSize = 0.2f * multiStaff.ProjectileSize;
-        float bulletSpeed = 0.8f * multiStaff.ProjectileSpeed;
+        float bulletSpeed = 0.9f * multiStaff.ProjectileSpeed;
 
         DirectStaff directionalInfo = multiStaff.directionalInfo;
 
         BulletStats bulletStats = new BulletStats(bulletTypes, bulletDamage, bulletHealth, bulletSize, bulletSpeed, Color.greenYellow, multiStaff.player);
-        bulletStats.timeToLive = 2.5f;
+        bulletStats.timeToLive = 1f;
         bulletStats.trailLength = 0.04f;
-        bulletStats.bounces = 1;
         bulletStats.sprite = SpriteLibrary.SpriteType.Circle;
 
 

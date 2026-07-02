@@ -10,7 +10,7 @@ public class SpellUpgrade : Upgrade
 
     public int probabilityWeight => 100;
 
-    private int _recoveryBonus = 8 + Random.Range(1, 5);
+    private int _recoveryBonus = 15 + Random.Range(1, 10);
 
     private Spell _upgradeSpell = SpellLibrary.instance.RandomSpell();
 

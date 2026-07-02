@@ -29,7 +29,7 @@ public class Firebolt : Spell
         float bulletDamage = 1f * multiStaff.bulletDamageMult * multiStaff.MagicPower;
         float bulletHealth = 1f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
         float bulletSize = 0.05f * multiStaff.ProjectileSize;
-        float bulletSpeed = multiStaff.ProjectileSpeed;
+        float bulletSpeed = 1.2f * multiStaff.ProjectileSpeed;
 
         DirectStaff directionalInfo = multiStaff.directionalInfo;
 

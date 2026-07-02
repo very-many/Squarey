@@ -25,6 +25,9 @@ public class PlayerMainCoordinator : MonoBehaviour
     private float _baseBulletDamageMultiplier;
     private float _baseBulletHealthMultiplier;
 
+    private float _healthModifier = 1f;
+    private float _recoveryModifier = 1f;
+
     public void Awake()
     {
         player = gameObject;
@@ -54,6 +57,9 @@ public class PlayerMainCoordinator : MonoBehaviour
         }
 
         Upgrades.Last().ApplyUpgrade(this);
+
+        SetStaffRecovery(GetStaffRecovery() * _recoveryModifier);
+        SetMaxHealth((int)(GetMaxHealth() * _healthModifier));
     }
 
     public void ResetStats()
@@ -67,11 +73,18 @@ public class PlayerMainCoordinator : MonoBehaviour
         SetStaffProjectileSpeed(_baseProjectileSpeed);
         SetBulletDamageMult(_baseBulletDamageMultiplier);
         SetBulletHealthMult(_baseBulletHealthMultiplier);
+
+        _healthModifier = 1f;
+        _recoveryModifier = 1f;
     }
+
 
     public void SetMaxHealth(int maxHealth) { healthObject.SetMaxHealth(maxHealth); }
     public int GetMaxHealth () {  return healthObject.maxHealth; }
     public int GetCurrentHealth() { return healthObject.currentHealth; }
+
+    public void SetHealthModifier(float modifier) { _healthModifier = modifier; }
+    public float GetHealthModifier() { return _healthModifier; }
 
     public void SetMovementSpeed(float movementSpeed) { playerMovementController.speed = movementSpeed; }
     public float GetMovementSpeed() { return playerMovementController.speed; }
@@ -93,6 +106,9 @@ public class PlayerMainCoordinator : MonoBehaviour
 
     public void SetStaffRecovery(float recovery) { staffMulti.Recovery = recovery; }
     public float GetStaffRecovery() { return staffMulti.Recovery; }
+
+    public void SetRecoveryModifier(float modifier) { _recoveryModifier = modifier; }
+    public float GetRecoveryModifier() { return _recoveryModifier; }
 
     public void SetStaffProjectileSize(float size) { staffMulti.ProjectileSize = size; }
     public float GetStaffProjectileSize() { return staffMulti.ProjectileSize; }
