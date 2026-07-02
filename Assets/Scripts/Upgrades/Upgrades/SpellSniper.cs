@@ -12,7 +12,7 @@ public class SpellSniper : Upgrade
 
     private int _magicPowerIncrease = 10 + Random.Range(1, 6);
 
-    private float _projectileSpeedIncrease = 20f + Random.Range(1, 6);
+    private float _projectileSpeedIncrease = 15f + Random.Range(1, 6);
 
     public void ApplyUpgrade(PlayerMainCoordinator stats)
     {

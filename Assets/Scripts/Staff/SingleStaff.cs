@@ -74,7 +74,7 @@ public class SingleStaff
 
         int spellIndex = SpellList.IndexOf(currentSpell);
 
-        float amountModifier = (float)(Math.Pow(0.9, spellIndex));
+        float amountModifier = (float)(1 - 0.1 * spellIndex);
 
         float uniqueModifier = 1f;
 
