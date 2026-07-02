@@ -116,10 +116,16 @@ public class PlayerMenuCaller : NetworkBehaviour
         if (GameOrchestrator.Instance.LastWinner == player)
         {
             // Auto-ready the winner without showing upgrade UI
+            //OPTION 1: send to staffDragAndDrop
+            //staffManager.OpenUI(this);
+
+            //Option2: send to waiting screen
+            staffManager.OpenWaitingUI(this);
             player.SetUpgradeReady();
         }
         else
         {
+            //usually open the upgrade UI for non-winners
             upgradeUI.OpenUI(this);
         }
     }

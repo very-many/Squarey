@@ -17,10 +17,11 @@
     color: white;
     font-size: 45px;
     -unity-font-style: bold;
-    unity-text-align: middle-center;
+    -unity-text-align: middle-center;
 }
 
 .readyPlayers-container {
+    display: flex;
     height: 50px;
 
     justify-content: center;
@@ -33,5 +34,5 @@
     color: white;
     font-size: 20px;
     -unity-font-style: bold;
-    unity-text-align: middle-center;
+    -unity-text-align: middle-center;
 }

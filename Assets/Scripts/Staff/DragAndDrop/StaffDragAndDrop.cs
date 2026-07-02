@@ -20,7 +20,8 @@ public class StaffDragAndDrop : MonoBehaviour
     public event Action StaffUIReady;    //! Subscribed by UpgradeController
     public Label ReadyPlayersLabel { get; private set; }
 
-    private float wait_screen_delay = 0f;
+    private VisualElement screenContainer;
+    private float wait_screen_delay = 5f;
 
     public void Start()
     {
@@ -38,17 +39,32 @@ public class StaffDragAndDrop : MonoBehaviour
         _root.visible = true;
     }
 
+    public void OpenWaitingUI(PlayerMenuCaller caller)
+    {
+        InitializeWaitingUI();
+        LoadStaff();
+        _caller = caller;
+        _root.visible = true;
+    }
+
     public void CloseUI()
     {
         _root.visible = false;
         _root.Clear();
     }
-    public void OpenWaitingUI()
+
+    private void InitializeUIRoot()
     {
+        if (_root == null)
+        {
+            _root = GetComponent<UIDocument>().rootVisualElement;
+        }
         _root.Clear();
         _root.visible = true;
+        if (styleSheet != null) _root.styleSheets.Add(styleSheet);
+        if (commonStyleSheet != null) { _root.styleSheets.Add(commonStyleSheet); }
 
-        VisualElement screenContainer = new VisualElement();
+        screenContainer = new VisualElement();
         screenContainer.AddToClassList("screen-container");
         _root.Add(screenContainer);
 
@@ -59,7 +75,13 @@ public class StaffDragAndDrop : MonoBehaviour
         ReadyPlayersLabel = new Label();
         ReadyPlayersLabel.AddToClassList("readyPlayers-label");
         readyPlayersContainer.Add(ReadyPlayersLabel);
-
+        StaffUIReady?.Invoke();
+    }
+    private void InitializeWaitingUI()
+    {
+        InitializeUIRoot();
+        Debug.Log("OpenWaitingUI");
+        
         VisualElement readyContainer = new VisualElement();
         readyContainer.AddToClassList("ready-container");
         screenContainer.Add(readyContainer);
@@ -68,7 +90,11 @@ public class StaffDragAndDrop : MonoBehaviour
         readyLabel.AddToClassList("ready-message");
         readyContainer.Add(readyLabel);
 
-        StaffUIReady?.Invoke();
+
+        Debug.Log($"Ready label: {readyLabel.text}");
+        Debug.Log($"ReadyPlayersLabel: {ReadyPlayersLabel}");
+        Debug.Log($"Children: {screenContainer.childCount}");
+        Debug.Log("Finished OpenWaitingUI");
     }
 
     public void SetReadyPlayersText(string text)
@@ -79,26 +105,10 @@ public class StaffDragAndDrop : MonoBehaviour
 
     private void InitializeUI()
     {
-        _root = GetComponent<UIDocument>().rootVisualElement;
-
-        if (styleSheet != null) _root.styleSheets.Add(styleSheet);
-        if (commonStyleSheet != null) { _root.styleSheets.Add(commonStyleSheet); }
-
-        VisualElement screenContainer = new VisualElement();
-        screenContainer.AddToClassList("screen-container");
-        _root.Add(screenContainer);
-
-        VisualElement readyPlayersContainer = new VisualElement();
-        readyPlayersContainer.AddToClassList("readyPlayers-container");
-        screenContainer.Add(readyPlayersContainer);
-
+        InitializeUIRoot();
+        
         VisualElement mainContainer = new VisualElement() { name = "slots-container" };
         screenContainer.Add(mainContainer);
-
-        ReadyPlayersLabel = new Label();
-        ReadyPlayersLabel.AddToClassList("readyPlayers-label");
-        readyPlayersContainer.Add(ReadyPlayersLabel);
-        StaffUIReady?.Invoke();
 
         // Create 5 Rows (3 Staff, 2 for storage)
         for (int i = 0; i < 5; i++)
@@ -156,7 +166,7 @@ public class StaffDragAndDrop : MonoBehaviour
         //set local player ready in GameOrchestrator
         if (GameOrchestrator.Instance != null && GameOrchestrator.Instance.CurrentGameState == GameOrchestrator.GameState.Upgrade)
         {
-            OpenWaitingUI();
+            InitializeWaitingUI();
             PlayerObjectController player = playerMainCoordinator.GetComponent<PlayerObjectController>();
             if (player != null)
             {

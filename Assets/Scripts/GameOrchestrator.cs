@@ -140,6 +140,7 @@ public class GameOrchestrator : NetworkBehaviour
         }
     }
 
+
     public void NextGameState()
     {
         ShouldSwitchGameState();
@@ -149,6 +150,8 @@ public class GameOrchestrator : NetworkBehaviour
     {
         if (!isServer)
             return;
+
+        Debug.Log($"Switch? {readyPlayers.Count}/{Players.Count}");
 
         switch (CurrentGameState)
         {
