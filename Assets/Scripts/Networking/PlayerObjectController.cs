@@ -119,8 +119,7 @@ public class PlayerObjectController : NetworkBehaviour
     {
         Manager.GamePlayers.Add(this);
         LobbyController.Instance.UpdateLobbyName();
-        LobbyController.Instance.UpdatePlayerList();
-
+        LobbyController.Instance.UpdatePlayerList();    // + Notify the GameOrchestrator that the player list has changed
     }
 
     public override void OnStopClient()

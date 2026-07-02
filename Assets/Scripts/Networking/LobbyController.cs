@@ -106,6 +106,8 @@ public class LobbyController : MonoBehaviour
 
     public void UpdatePlayerList()
     {
+        GameOrchestrator.Instance?.OnPlayersChanged();  // Notify the GameOrchestrator that the player list has changed
+
         if (!PlayerItemCreated)
         {
             CreateHostPlayerItem();

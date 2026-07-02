@@ -8,17 +8,20 @@ public class UpgradeController : MonoBehaviour
 
     private UpgradeUI upgradeUI;
     private StaffDragAndDrop staffUI;
+    private bool readyCached;
+    private int currentReady;
+    private int currentPlayers;
+    private bool currentLocalReady;
 
-    private void Awake()
+
+    private void Awake ()
     {
         upgradeUI = FindFirstObjectByType<UpgradeUI>();
         staffUI = FindFirstObjectByType<StaffDragAndDrop>();
 
-        if (upgradeUI != null)
-            upgradeUI.UpgradeUIReady += OnUIReady;
-
-        if (staffUI != null)
-            staffUI.StaffUIReady += OnUIReady;
+        upgradeUI.UpgradeUIReady += OnUIReady;
+        staffUI.StaffUIReady += OnUIReady;
+        GameOrchestrator.Instance.PlayerCountChanged += OnPlayerCountChanged;
     }
 
     private void OnDestroy()
@@ -28,6 +31,13 @@ public class UpgradeController : MonoBehaviour
 
         if (staffUI != null)
             staffUI.StaffUIReady -= OnUIReady;
+        if(GameOrchestrator.Instance != null)
+            GameOrchestrator.Instance.PlayerCountChanged -= OnPlayerCountChanged;
+    }
+
+    private void OnEnable()
+    {
+        readyCached = false;    //reset readyCached when the object is enabled
     }
 
     private void Start()
@@ -35,44 +45,42 @@ public class UpgradeController : MonoBehaviour
         StartCoroutine(WaitAndWireUI());
     }
 
-    private void OnEnable()
+    private void OnUIReady()    //OnUIReady -> RefreshPlayerCount -> OnPlayerCountChanged -> UpdateReadyPlayersText
     {
-        if (GameOrchestrator.Instance != null)
-            GameOrchestrator.Instance.ReadyPlayersChanged += UpdateReadyPlayersText;
+        if(!readyCached)
+        {
+            readyCached = true;
+            GameOrchestrator.Instance?.RefreshPlayerCount();
+        }
+        UpdateReadyPlayersText();
+
     }
 
-    private void OnDisable()
+    private void OnPlayerCountChanged(int readyCount, int playerCount, bool localReady) //OnPlayerCountChanged -> UpdateReadyPlayersText 
     {
-        if (GameOrchestrator.Instance != null)
-            GameOrchestrator.Instance.ReadyPlayersChanged -= UpdateReadyPlayersText;
+        currentReady = readyCount;
+        currentPlayers = playerCount;
+        currentLocalReady = localReady;
+
+        UpdateReadyPlayersText();
     }
 
-    private void OnUIReady()
-    {
-        if (GameOrchestrator.Instance == null)
-            return;
 
-        UpdateReadyPlayersText(
-            GameOrchestrator.Instance.readyPlayers.Count,
-            GameOrchestrator.Instance.PlayerCount,
-            GameOrchestrator.Instance.readyPlayers.Contains(GameOrchestrator.Instance.LocalPlayer));
-    }
-
-    public void UpdateReadyPlayersText(int readyCount, int playerCount, bool localPlayerReady)
+    public void UpdateReadyPlayersText()
     {
         string text;
-    
-        if (playerCount > 1 && readyCount == playerCount - 1)
+
+        if (currentPlayers > 1 && currentReady == currentPlayers - 1)
         {
-            text = localPlayerReady
+            text = currentLocalReady
                 ? "Waiting for one player..."
                 : "Everyone is waiting for you!";
         }
         else
         {
-            text = $"{readyCount}/{playerCount} Players ready!";
+            text = $"{currentReady}/{currentPlayers} Players ready!";
         }
-    
+
         upgradeUI?.SetReadyPlayersText(text);
         staffUI?.SetReadyPlayersText(text);
     }
