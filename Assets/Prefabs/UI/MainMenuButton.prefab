@@ -121,24 +121,28 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: e73a58f6e2794ae7b1b7e50b7fb811b0, type: 2}
     - target: {fileID: 7594610305706721603, guid: e16256786330a8e45832e72eac2a64d1, type: 3}
+      propertyPath: m_Transition
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7594610305706721603, guid: e16256786330a8e45832e72eac2a64d1, type: 3}
       propertyPath: m_Navigation.m_Mode
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7594610305706721603, guid: e16256786330a8e45832e72eac2a64d1, type: 3}
       propertyPath: m_Colors.m_NormalColor.a
-      value: 1
+      value: 0.8156863
       objectReference: {fileID: 0}
     - target: {fileID: 7594610305706721603, guid: e16256786330a8e45832e72eac2a64d1, type: 3}
       propertyPath: m_Colors.m_NormalColor.b
-      value: 0.7735849
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7594610305706721603, guid: e16256786330a8e45832e72eac2a64d1, type: 3}
       propertyPath: m_Colors.m_NormalColor.g
-      value: 0.7735849
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7594610305706721603, guid: e16256786330a8e45832e72eac2a64d1, type: 3}
       propertyPath: m_Colors.m_NormalColor.r
-      value: 0.7735849
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7594610305706721603, guid: e16256786330a8e45832e72eac2a64d1, type: 3}
       propertyPath: m_Colors.m_PressedColor.a
@@ -178,15 +182,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7594610305706721603, guid: e16256786330a8e45832e72eac2a64d1, type: 3}
       propertyPath: m_Colors.m_HighlightedColor.b
-      value: 0.5849056
+      value: 0.27862513
       objectReference: {fileID: 0}
     - target: {fileID: 7594610305706721603, guid: e16256786330a8e45832e72eac2a64d1, type: 3}
       propertyPath: m_Colors.m_HighlightedColor.g
-      value: 0.5849056
+      value: 0.31132078
       objectReference: {fileID: 0}
     - target: {fileID: 7594610305706721603, guid: e16256786330a8e45832e72eac2a64d1, type: 3}
       propertyPath: m_Colors.m_HighlightedColor.r
-      value: 0.5849056
+      value: 0.2305536
       objectReference: {fileID: 0}
     - target: {fileID: 7594610305706721603, guid: e16256786330a8e45832e72eac2a64d1, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -218,18 +222,77 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7784313207077605822, guid: e16256786330a8e45832e72eac2a64d1, type: 3}
       propertyPath: m_Color.b
-      value: 1
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 7784313207077605822, guid: e16256786330a8e45832e72eac2a64d1, type: 3}
       propertyPath: m_Color.g
-      value: 1
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 7784313207077605822, guid: e16256786330a8e45832e72eac2a64d1, type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2652071299790787467, guid: e16256786330a8e45832e72eac2a64d1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8632161255234206986}
+    - targetCorrespondingSourceObject: {fileID: 2652071299790787467, guid: e16256786330a8e45832e72eac2a64d1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3288925885713393896}
+    - targetCorrespondingSourceObject: {fileID: 2652071299790787467, guid: e16256786330a8e45832e72eac2a64d1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2923349392251912844}
   m_SourcePrefab: {fileID: 100100000, guid: e16256786330a8e45832e72eac2a64d1, type: 3}
+--- !u!1 &1755236863100683284 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2652071299790787467, guid: e16256786330a8e45832e72eac2a64d1, type: 3}
+  m_PrefabInstance: {fileID: 4365631169505548191}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8632161255234206986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1755236863100683284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Outline
+  m_EffectColor: {r: 0.06300273, g: 0, b: 0.3490566, a: 0.6862745}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
+--- !u!114 &3288925885713393896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1755236863100683284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Outline
+  m_EffectColor: {r: 0.87843144, g: 0.80392164, b: 0.6509804, a: 1}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
+--- !u!114 &2923349392251912844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1755236863100683284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Outline
+  m_EffectColor: {r: 0.87843144, g: 0.80392164, b: 0.6509804, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
