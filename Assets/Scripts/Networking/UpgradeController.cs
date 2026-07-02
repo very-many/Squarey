@@ -9,25 +9,18 @@ public class UpgradeController : MonoBehaviour
     private UpgradeUI upgradeUI;
     private StaffDragAndDrop staffUI;
 
-    private void Awake()
-    {
-        upgradeUI = FindFirstObjectByType<UpgradeUI>();
-        staffUI = FindFirstObjectByType<StaffDragAndDrop>();
+    // private void Awake()
+    // {
 
-        if (upgradeUI != null)
-            upgradeUI.UpgradeUIReady += OnUIReady;
-
-        if (staffUI != null)
-            staffUI.StaffUIReady += OnUIReady;
-    }
+    // }
 
     private void OnDestroy()
     {
-        if (upgradeUI != null)
-            upgradeUI.UpgradeUIReady -= OnUIReady;
+        // if (upgradeUI != null)
+        //     upgradeUI.UpgradeUIReady -= OnUIReady;
 
-        if (staffUI != null)
-            staffUI.StaffUIReady -= OnUIReady;
+        // if (staffUI != null)
+        //     staffUI.StaffUIReady -= OnUIReady;
     }
 
     private void Start()
@@ -38,13 +31,34 @@ public class UpgradeController : MonoBehaviour
     private void OnEnable()
     {
         if (GameOrchestrator.Instance != null)
+        {
             GameOrchestrator.Instance.ReadyPlayersChanged += UpdateReadyPlayersText;
+        }
+
+        upgradeUI = FindFirstObjectByType<UpgradeUI>();
+        staffUI = FindFirstObjectByType<StaffDragAndDrop>();
+
+        if (upgradeUI != null)
+            upgradeUI.UpgradeUIReady += OnUIReady;
+
+        if (staffUI != null)
+            staffUI.StaffUIReady += OnUIReady;
+
     }
 
     private void OnDisable()
     {
         if (GameOrchestrator.Instance != null)
+        {
             GameOrchestrator.Instance.ReadyPlayersChanged -= UpdateReadyPlayersText;
+            staffUI.StaffUIReady -= OnUIReady;
+        }
+        if (upgradeUI != null)
+            upgradeUI.UpgradeUIReady -= OnUIReady;
+
+        if (staffUI != null)
+            staffUI.StaffUIReady -= OnUIReady;
+
     }
 
     private void OnUIReady()
@@ -61,7 +75,7 @@ public class UpgradeController : MonoBehaviour
     public void UpdateReadyPlayersText(int readyCount, int playerCount, bool localPlayerReady)
     {
         string text;
-    
+
         if (playerCount > 1 && readyCount == playerCount - 1)
         {
             text = localPlayerReady
@@ -72,7 +86,7 @@ public class UpgradeController : MonoBehaviour
         {
             text = $"{readyCount}/{playerCount} Players ready!";
         }
-    
+
         upgradeUI?.SetReadyPlayersText(text);
         staffUI?.SetReadyPlayersText(text);
     }
