@@ -13,7 +13,7 @@ public class SpeedBoots : Upgrade
 
     private float _speedIncrease = ((float)(25 + Random.Range(1, 11))) /10;
 
-    private float _jumpIncrease = ((float)(25 + Random.Range(1, 10))) / 30;
+    private float _jumpIncrease = ((float)(15 + Random.Range(1, 7))) / 30;
 
     public void ApplyUpgrade(PlayerMainCoordinator stats)
     {
