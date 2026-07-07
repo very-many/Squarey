@@ -49,7 +49,7 @@ public class PlayerListItem : MonoBehaviour
         int ImageID = SteamFriends.GetLargeFriendAvatar((CSteamID)PlayerSteamID);
         if (ImageID == -1)
         {
-            Debug.LogError("Failed to get avatar image!");
+            Debug.LogError("Failed to get avatar image for " + PlayerName);
             return;
         }
         PlayerIcon.texture = GetSteamImageAsTexture(ImageID);
@@ -59,8 +59,10 @@ public class PlayerListItem : MonoBehaviour
     {
         PlayerNameText.text = PlayerName;
         ChangeReadyStatus();
+        Debug.Log("PlayerListItem: SetPlayerValues called for " + PlayerName + " Avatar: " + AvatarReceived);
         if (!AvatarReceived)
         {
+            Debug.Log("PlayerListItem: Avatar not received, calling GetPlayerIcon for " + PlayerName);
             GetPlayerIcon();
         }
     }
@@ -70,10 +72,11 @@ public class PlayerListItem : MonoBehaviour
         if (callback.m_steamID.m_SteamID == PlayerSteamID)
         {
             PlayerIcon.texture = GetSteamImageAsTexture(callback.m_iImage);
+            Debug.Log("PlayerListItem: Avatar received for " + PlayerName);
         }
         else
         {
-            Debug.LogError("Received avatar for wrong player!");
+            Debug.LogError("Received avatar for wrong player! " + callback.m_steamID.m_SteamID + " expected: " + PlayerSteamID);
             return;
         }
     }

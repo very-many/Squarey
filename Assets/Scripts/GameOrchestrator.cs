@@ -146,6 +146,11 @@ public class GameOrchestrator : NetworkBehaviour
         ShouldSwitchGameState();
     }
 
+    internal void PrepareForManualDisconnect()
+    {
+        Manager?.PrepareForManualDisconnect();
+    }
+
     void ShouldSwitchGameState()
     {
         if (!isServer)
@@ -401,8 +406,11 @@ public class GameOrchestrator : NetworkBehaviour
 
         if (Manager != null)
         {
+            PrepareForManualDisconnect();
             offlineScene = Manager.offlineScene;
-            Manager.offlineScene = string.Empty;
+            Manager.offlineScene = "";
+
+            Manager.GetComponent<SteamLobby>()?.LeaveLobby();
 
             if (NetworkServer.active && NetworkClient.isConnected)
             {
@@ -419,7 +427,18 @@ public class GameOrchestrator : NetworkBehaviour
             }
         }
 
-        PauseMenu.Instance.DisableAllMenus();
+        ExitToOfflineScene(offlineScene);
+    }
+
+    internal void HandleClientDisconnect(string offlineScene)
+    {
+        Manager?.GetComponent<SteamLobby>()?.LeaveLobby();
+        ExitToOfflineScene(offlineScene);
+    }
+
+    private void ExitToOfflineScene(string offlineScene)
+    {
+        PauseMenu.Instance?.DisableAllMenus();
 
         if (!string.IsNullOrWhiteSpace(offlineScene))
         {
@@ -432,7 +451,6 @@ public class GameOrchestrator : NetworkBehaviour
         }
 
         Destroy(gameObject);
-
     }
 
     private void OnDestroy()

@@ -46,10 +46,12 @@ public class SteamLobby : MonoBehaviour
         }
         Debug.Log("Lobby created Succesfully");
 
+        CurrentLobbyID = callback.m_ulSteamIDLobby;
+
         manager.StartHost();
 
         SteamMatchmaking.SetLobbyData(new CSteamID(callback.m_ulSteamIDLobby), HostAddressKey, SteamUser.GetSteamID().ToString());
-        SteamMatchmaking.SetLobbyData(new CSteamID(callback.m_ulSteamIDLobby), "name",SteamFriends.GetPersonaName().ToString() + "'S Lobby");
+        SteamMatchmaking.SetLobbyData(new CSteamID(callback.m_ulSteamIDLobby), "name",SteamFriends.GetPersonaName().ToString() + "'s Lobby");
         //HostButton.SetActive(false);
         //LobbyNameText.text = "Lobby Name: " + SteamMatchmaking.GetLobbyData(new CSteamID(CurrentLobbyID), "name");
     }
@@ -71,6 +73,17 @@ public class SteamLobby : MonoBehaviour
         string hostAddress = SteamMatchmaking.GetLobbyData(new CSteamID(callback.m_ulSteamIDLobby), HostAddressKey);
         manager.networkAddress = hostAddress;
         manager.StartClient();
+    }
+
+    public void LeaveLobby()
+    {
+        if (CurrentLobbyID == 0)
+        {
+            return;
+        }
+
+        SteamMatchmaking.LeaveLobby(new CSteamID(CurrentLobbyID));
+        CurrentLobbyID = 0;
     }
 
 
