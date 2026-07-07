@@ -73,7 +73,7 @@ public class GameOrchestrator : NetworkBehaviour
         }
     }
     public int PlayerCount => Players.Count;             //make player count available before Scene- change
-    public event Action<int, int, bool> PlayerCountChanged;     //! Subscribed by UpgradeController
+    public event Action<int, int> PlayerCountChanged;     //! Subscribed by UpgradeController
 
     public PlayerObjectController LocalPlayer
     {
@@ -222,8 +222,12 @@ public class GameOrchestrator : NetworkBehaviour
     {
         PlayerCountChanged?.Invoke(
             readyPlayers.Count,
-            PlayerCount,
-            readyPlayers.Contains(LocalPlayer));
+            PlayerCount);
+    }
+
+    public bool RefreshLocalPlayerReadyStatus()
+    {
+        return LocalPlayer != null && readyPlayers.Contains(LocalPlayer);
     }
 
 

@@ -11,7 +11,6 @@ public class UpgradeController : MonoBehaviour
     private bool readyCached;
     private int currentReady;
     private int currentPlayers;
-    private bool currentLocalReady;
 
 
     private void Awake ()
@@ -52,15 +51,16 @@ public class UpgradeController : MonoBehaviour
             readyCached = true;
             GameOrchestrator.Instance?.RefreshPlayerCount();
         }
+        
+
         UpdateReadyPlayersText();
 
     }
 
-    private void OnPlayerCountChanged(int readyCount, int playerCount, bool localReady) //OnPlayerCountChanged -> UpdateReadyPlayersText 
+    private void OnPlayerCountChanged(int readyCount, int playerCount) //OnPlayerCountChanged -> UpdateReadyPlayersText 
     {
         currentReady = readyCount;
         currentPlayers = playerCount;
-        currentLocalReady = localReady;
 
         UpdateReadyPlayersText();
     }
@@ -69,10 +69,12 @@ public class UpgradeController : MonoBehaviour
     public void UpdateReadyPlayersText()
     {
         string text;
+        bool localReady = GameOrchestrator.Instance?.RefreshLocalPlayerReadyStatus() ?? false;
+
 
         if (currentPlayers > 1 && currentReady == currentPlayers - 1)
         {
-            text = currentLocalReady
+            text = localReady
                 ? "Waiting for one player..."
                 : "Everyone is waiting for you!";
         }

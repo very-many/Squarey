@@ -157,6 +157,7 @@ public class CustomNetworkManager : NetworkManager
     {
         if (GameOrchestrator.Instance != null)
         {
+            SteamLobby.Instance?.SetLobbyJoinable(false);
             GameOrchestrator.Instance.NextGameState();
             return;
         }

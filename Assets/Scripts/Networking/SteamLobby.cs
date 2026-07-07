@@ -37,6 +37,16 @@ public class SteamLobby : MonoBehaviour
         SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypePublic, manager.maxConnections);
     }
 
+    public void SetLobbyJoinable(bool joinable)
+    {
+        if (!SteamManager.Initialized || CurrentLobbyID == 0)
+        {
+            return;
+        }
+
+        SteamMatchmaking.SetLobbyJoinable(new CSteamID(CurrentLobbyID), joinable);
+    }
+
     private void OnLobbyCreated(LobbyCreated_t callback)
     {
         if(callback.m_eResult != EResult.k_EResultOK)
@@ -47,6 +57,7 @@ public class SteamLobby : MonoBehaviour
         Debug.Log("Lobby created Succesfully");
 
         CurrentLobbyID = callback.m_ulSteamIDLobby;
+        SetLobbyJoinable(true);
 
         manager.StartHost();
 
