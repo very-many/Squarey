@@ -17,8 +17,6 @@ public class LightningBolt : Spell
 
     public void CastSpell(MultiStaffObject multiStaff, SingleStaff singleStaff)
     {
-        // Play sound effect
-        SoundManager.PlaySound(SoundType.Spell_LightningBolt);
 
         List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Normal, BulletType.BounceOnWall, BulletType.Trail};
         float bulletDamage = 0.7f * multiStaff.bulletDamageMult * multiStaff.MagicPower;
@@ -29,6 +27,8 @@ public class LightningBolt : Spell
         DirectStaff directionalInfo = multiStaff.directionalInfo;
 
         BulletStats bulletStats = new BulletStats(bulletTypes, bulletDamage, bulletHealth, bulletSize, bulletSpeed, Color.purple, multiStaff.player);
+
+        bulletStats.sound = SoundType.Spell_LightningBolt;
 
         multiStaff.spellcasting.CastBullet(directionalInfo.castDirection, directionalInfo.castPosition, directionalInfo.castAngle, bulletStats);
     }

@@ -1,4 +1,5 @@
 using Mirror;
+using SmallHedge.SoundManager;
 using System.Collections.Generic;
 using UnityEngine;
 using static Bullet;
@@ -37,6 +38,8 @@ public class BulletStats
     public float explosionDamageMultMaxRange = 1;
 
     public float knockbackForce = 10;
+
+    public SoundType sound = new SoundType();
 
     //public float bulletScaleX = 1;
     //public float bulletScaleY = 1;

@@ -8,6 +8,7 @@ using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static UnityEngine.ParticleSystem;
+using SmallHedge.SoundManager;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Bullet : NetworkBehaviour
@@ -239,6 +240,8 @@ public class Bullet : NetworkBehaviour
     [Server]
     public void LaunchServer(Vector2 direction, Quaternion rotation, Vector2 position, BulletStats stats)
     {
+        SoundManager.PlaySound(stats.sound);
+
         this.stats = stats;
         renderer.material.color = stats.bulletColor;
         renderer.sprite = SpriteLibrary.instance.GetSprite(stats.sprite);
@@ -254,7 +257,8 @@ public class Bullet : NetworkBehaviour
     [ClientRpc]
     public void RpcLaunch(Vector2 direction, Quaternion rotation, Vector2 position, BulletStats stats)
     {
-        // In host mode, the server already initialized the bullet.
+        SoundManager.PlaySound(stats.sound);
+
         if (isServer) return;
         this.stats = stats;
         renderer.material.color = stats.bulletColor;

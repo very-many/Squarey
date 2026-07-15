@@ -17,9 +17,6 @@ public class AcidSpray : Spell
 
     public void CastSpell(MultiStaffObject multiStaff, SingleStaff singleStaff)
     {
-        // Play sound effect
-        SoundManager.PlaySound(SoundType.Spell_AcidSpray);
-
         List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Physics };
         float bulletDamage = 0.65f * multiStaff.bulletDamageMult * multiStaff.MagicPower;
         float bulletHealth = 0.7f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
@@ -28,7 +25,9 @@ public class AcidSpray : Spell
 
         BulletStats bulletStats = new BulletStats(bulletTypes, bulletDamage, bulletHealth, bulletSize, bulletSpeed, Color.greenYellow, multiStaff.player);
 
-        CastAtAngle(0, multiStaff, singleStaff, bulletStats.Clone());
+        bulletStats.sound = SoundType.Spell_AcidSpray;
+
+        CastAtAngle(0, multiStaff, singleStaff, bulletStats);
         CastAtAngle(5, multiStaff, singleStaff, bulletStats.Clone());
         CastAtAngle(-5, multiStaff, singleStaff, bulletStats.Clone());
         CastAtAngle(10, multiStaff, singleStaff, bulletStats.Clone());
