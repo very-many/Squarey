@@ -68,6 +68,11 @@ public class Spellcasting : NetworkBehaviour
         if (playerMovement == null) { return; }
         playerMovement.SpellJump(Vector2.up);
 
+        CommandRpcPlayJumpSound();
+    }
+
+    private void CommandRpcPlayJumpSound() {
+        SoundManager.PlaySound(SoundType.Spell_Jump);
         RpcPlayJumpSound();
     }
 
