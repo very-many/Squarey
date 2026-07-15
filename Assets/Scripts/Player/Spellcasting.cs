@@ -1,4 +1,5 @@
 using Mirror;
+using SmallHedge.SoundManager;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -66,13 +67,14 @@ public class Spellcasting : NetworkBehaviour
     {
         if (playerMovement == null) { return; }
         playerMovement.SpellJump(Vector2.up);
+
+        RpcPlayJumpSound();
     }
 
-    [Command]
-    private void CmdJump()
+    [ClientRpc]
+    private void RpcPlayJumpSound()
     {
-        if (playerMovement == null) { return; }
-        playerMovement.SpellJump(Vector2.up);
+        SoundManager.PlaySound(SoundType.Spell_Jump);
     }
 
     public void Explosion(Vector2 explosionPosition, float explosionRadius, float explosionDamage, float explosionDamageMultMaxRange)

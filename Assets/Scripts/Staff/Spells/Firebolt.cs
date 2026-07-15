@@ -21,10 +21,6 @@ public class Firebolt : Spell
             return;
         }
 
-        // Play sound effect
-        Debug.Log("Firebolt: Playing sound effect for Firebolt spell.");
-        SoundManager.PlaySound(SoundType.Spell_Firebolt);
-
         List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Normal, BulletType.Trail };
         float bulletDamage = 1f * multiStaff.bulletDamageMult * multiStaff.MagicPower;
         float bulletHealth = 1f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
@@ -36,6 +32,8 @@ public class Firebolt : Spell
         BulletStats bulletStats = new BulletStats(bulletTypes, bulletDamage, bulletHealth, bulletSize, bulletSpeed, Color.orangeRed, multiStaff.player);
 
         bulletStats.trailLength = 0.04f;
+
+        bulletStats.sound = SoundType.Spell_Firebolt;
 
         multiStaff.spellcasting.CastBullet(directionalInfo.castDirection, directionalInfo.castPosition, directionalInfo.castAngle, bulletStats);
     }

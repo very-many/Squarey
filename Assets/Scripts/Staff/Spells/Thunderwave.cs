@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Bullet;
 using SmallHedge.SoundManager;
+using UnityEngine.UIElements;
 
 public class Thunderwave : Spell
 {
@@ -17,9 +18,6 @@ public class Thunderwave : Spell
 
     public void CastSpell(MultiStaffObject multiStaff, SingleStaff singleStaff)
     {
-        // Play sound effect
-        SoundManager.PlaySound(SoundType.Spell_Thunderwave);
-
         List<BulletType> bulletTypes = new List<BulletType> { BulletType.Normal, BulletType.Trail, BulletType.KnockBackFromPlayer };
         float bulletDamage = 0.4f * multiStaff.bulletDamageMult * multiStaff.ProjectileSize * multiStaff.MagicPower;
         float bulletHealth = 2.5f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
@@ -35,9 +33,11 @@ public class Thunderwave : Spell
         bulletStats.timeToLive = 0.07f;
         bulletStats.knockbackForce = 30f;
 
+        bulletStats.sound = SoundType.Spell_Thunderwave;
+
         CastAtAngle(-24, multiStaff, singleStaff, bulletStats);
         CastAtAngle(-12, multiStaff, singleStaff, bulletStats);
-        CastAtAngle(0, multiStaff, singleStaff, bulletStats);
+        multiStaff.spellcasting.CastBullet(directionalInfo.castDirection, directionalInfo.castPosition, directionalInfo.castAngle, bulletStats);
         CastAtAngle(12, multiStaff, singleStaff, bulletStats);
         CastAtAngle(24, multiStaff, singleStaff, bulletStats);
     }
@@ -46,7 +46,7 @@ public class Thunderwave : Spell
     {
         DirectStaff directionalInfo = multiStaff.directionalInfo;
         RotateAngle(angle, directionalInfo.castAngle, directionalInfo.castDirection, out Quaternion newAngle, out Vector2 newDirection);
-        multiStaff.spellcasting.CastBullet(newDirection, directionalInfo.castPosition, newAngle, bulletStats);
+        multiStaff.spellcasting.CastBullet(newDirection, directionalInfo.castPosition, newAngle, bulletStats.Clone());
     }
 
     private void RotateAngle(float angle, Quaternion orientationToChange, Vector2 directionToChange, out Quaternion newOrientation, out Vector2 newDirection)

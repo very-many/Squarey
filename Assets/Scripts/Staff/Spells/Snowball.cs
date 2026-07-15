@@ -18,9 +18,6 @@ public class Snowball : Spell
 
     public void CastSpell(MultiStaffObject multiStaff, SingleStaff singleStaff)
     {
-        // Play sound effect
-        SoundManager.PlaySound(SoundType.Spell_Snowball);
-
         List<BulletType> bulletTypes = new List<BulletType> { BulletType.Physics, BulletType.Trail, BulletType.BounceOnWall, BulletType.IncreaseSizeOnBounce, BulletType.DamageScaleWithSize, BulletType.KnockBackFromBullet };
         float bulletDamage = 0.7f * multiStaff.bulletDamageMult * multiStaff.ProjectileSize * multiStaff.MagicPower;
         float bulletHealth = 1f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
@@ -36,6 +33,8 @@ public class Snowball : Spell
         bulletStats.bounciness = 0.875f;
         bulletStats.growthMod = 0.05f * multiStaff.ProjectileSize;
         bulletStats.sprite = SpriteLibrary.SpriteType.Circle;
+
+        bulletStats.sound = SoundType.Spell_Snowball;
 
         multiStaff.spellcasting.CastBullet(directionalInfo.castDirection, directionalInfo.castPosition, directionalInfo.castAngle, bulletStats);
     }

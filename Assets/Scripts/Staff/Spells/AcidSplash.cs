@@ -17,9 +17,6 @@ public class AcidSplash : Spell
 
     public void CastSpell(MultiStaffObject multiStaff, SingleStaff singleStaff)
     {
-        // Play sound effect
-        SoundManager.PlaySound(SoundType.Spell_AcidSplash);
-
         List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Physics, BulletType.Trail, BulletType.Split};
         float bulletDamage = 0.5f * multiStaff.bulletDamageMult * multiStaff.MagicPower;
         float bulletHealth = 0.7f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
@@ -51,6 +48,8 @@ public class AcidSplash : Spell
             miniBulletStats.splitAngleOffset += 36;
             bulletStats.splitBullets.Add(miniBulletStats.Clone());
         }
+
+        bulletStats.sound = SoundType.Spell_AcidSplash;
 
         multiStaff.spellcasting.CastBullet(directionalInfo.castDirection, directionalInfo.castPosition, directionalInfo.castAngle, bulletStats);
     }

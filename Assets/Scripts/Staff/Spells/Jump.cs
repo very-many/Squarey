@@ -15,10 +15,6 @@ public class Jump : Spell
 
     public void CastSpell(MultiStaffObject multiStaff, SingleStaff singleStaff)
     {
-        // Play sound effect
-        SoundManager.PlaySound(SoundType.Spell_Jump);
-
         multiStaff.spellcasting.Jump();
-
     }
 }

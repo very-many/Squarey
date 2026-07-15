@@ -17,9 +17,6 @@ public class ForceBean : Spell
 
     public void CastSpell(MultiStaffObject multiStaff, SingleStaff singleStaff)
     {
-        // Play sound effect
-        SoundManager.PlaySound(SoundType.Spell_ForceBeam);
-
         List<BulletType> bulletTypes = new List<BulletType> { Bullet.BulletType.Physics, BulletType.Trail, BulletType.BounceOnWall, BulletType.DamageScaleWithSpeed};
         float bulletDamage = 0.8f * multiStaff.bulletDamageMult * multiStaff.MagicPower * multiStaff.ProjectileSpeed;
         float bulletHealth = 1.4f * multiStaff.bulletHealthMult * multiStaff.MagicPower;
@@ -34,6 +31,8 @@ public class ForceBean : Spell
         bulletStats.bounciness = 1.2f;
         bulletStats.bounces = 10;
         bulletStats.timeToLive = 10f;
+
+        bulletStats.sound = SoundType.Spell_ForceBeam;
 
         multiStaff.spellcasting.CastBullet(directionalInfo.castDirection, directionalInfo.castPosition, directionalInfo.castAngle, bulletStats);
     }
