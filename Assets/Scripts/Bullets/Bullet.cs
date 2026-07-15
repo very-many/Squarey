@@ -111,6 +111,11 @@ public class Bullet : NetworkBehaviour
             this.transform.localScale = Vector3.one * stats.bulletSize * currentSizeMod;
         }
 
+        if (justBounced)
+        {
+            rb.linearVelocity = bounceVelocity;
+        }
+
         if (stats.bulletTypes.Contains(BulletType.Physics))
         {
             //rotate bullet in direction of velocity;
@@ -188,13 +193,7 @@ public class Bullet : NetworkBehaviour
                 DestroyBullet();
                 Debug.Log("hit Wall");
             }
-        }
-
-        if (justBounced)
-        {
-            rb.linearVelocity = bounceVelocity;
-            justBounced = false;
-        }
+        } else {justBounced = false; }
     }
 
     private void BulletCollision(Collider2D collision)
